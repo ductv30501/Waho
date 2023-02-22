@@ -1,0 +1,42 @@
+﻿@page
+@model Waho.Pages.Admin.Ships.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Shipper[0].ShipperName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Shipper[0].Phone)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Shipper) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipperName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ShipperId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ShipperId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ShipperId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

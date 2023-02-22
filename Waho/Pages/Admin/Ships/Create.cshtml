@@ -1,0 +1,44 @@
+﻿@page
+@model Waho.Pages.Admin.Ships.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Shipper</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Shipper.ShipperId" class="control-label"></label>
+                <input asp-for="Shipper.ShipperId" class="form-control" />
+                <span asp-validation-for="Shipper.ShipperId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Shipper.ShipperName" class="control-label"></label>
+                <input asp-for="Shipper.ShipperName" class="form-control" />
+                <span asp-validation-for="Shipper.ShipperName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Shipper.Phone" class="control-label"></label>
+                <input asp-for="Shipper.Phone" class="form-control" />
+                <span asp-validation-for="Shipper.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

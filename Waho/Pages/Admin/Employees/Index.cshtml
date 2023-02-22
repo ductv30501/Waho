@@ -1,0 +1,96 @@
+﻿@page
+@model Waho.Pages.Admin.Employees.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].EmployeeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Dob)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].HireDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Region)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Note)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Waho)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Employee) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dob)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HireDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Region)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Waho.WahoId)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.UserName">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.UserName">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.UserName">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

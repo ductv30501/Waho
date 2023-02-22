@@ -1,0 +1,45 @@
+﻿@page
+@model Waho.Pages.Cashier.Bills.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Bill</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Bill.BillId" />
+            <div class="form-group">
+                <label asp-for="Bill.UserName" class="control-label"></label>
+                <select asp-for="Bill.UserName" class="form-control" asp-items="ViewBag.UserName"></select>
+                <span asp-validation-for="Bill.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bill.CustomerId" class="control-label"></label>
+                <select asp-for="Bill.CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
+                <span asp-validation-for="Bill.CustomerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bill.Date" class="control-label"></label>
+                <input asp-for="Bill.Date" class="form-control" />
+                <span asp-validation-for="Bill.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
