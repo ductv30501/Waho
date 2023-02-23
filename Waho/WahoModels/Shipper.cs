@@ -11,8 +11,8 @@ namespace Waho.WahoModels
         }
 
         public int ShipperId { get; set; }
-        public string ShipperName { get; set; }
-        public string Phone { get; set; }
+        public string? ShipperName { get; set; }
+        public string? Phone { get; set; }
 
         public virtual ICollection<Oder> Oders { get; set; }
     }

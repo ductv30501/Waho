@@ -5,8 +5,16 @@ namespace Waho.WahoModels
 {
     public partial class Product
     {
+        public Product()
+        {
+            BillDetails = new HashSet<BillDetail>();
+            InventorySheetDetails = new HashSet<InventorySheetDetail>();
+            OderDetails = new HashSet<OderDetail>();
+            ReturnOrderProducts = new HashSet<ReturnOrderProduct>();
+        }
+
         public int ProductId { get; set; }
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; }
         public int? ImportPrice { get; set; }
         public int? UnitPrice { get; set; }
         public int? UnitInStock { get; set; }
@@ -23,7 +31,11 @@ namespace Waho.WahoModels
         public int SubCategoryId { get; set; }
         public int SupplierId { get; set; }
 
-        public virtual SubCategory? SubCategory { get; set; }
-        public virtual Supplier? Supplier { get; set; }
+        public virtual SubCategory SubCategory { get; set; }
+        public virtual Supplier Supplier { get; set; }
+        public virtual ICollection<BillDetail> BillDetails { get; set; }
+        public virtual ICollection<InventorySheetDetail> InventorySheetDetails { get; set; }
+        public virtual ICollection<OderDetail> OderDetails { get; set; }
+        public virtual ICollection<ReturnOrderProduct> ReturnOrderProducts { get; set; }
     }
 }
