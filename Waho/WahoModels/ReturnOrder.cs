@@ -3,20 +3,22 @@ using System.Collections.Generic;
 
 namespace Waho.WahoModels
 {
-    public partial class Bill
+    public partial class ReturnOrder
     {
-        public Bill()
+        public ReturnOrder()
         {
-            BillDetails = new HashSet<BillDetail>();
+            ReturnOrderProducts = new HashSet<ReturnOrderProduct>();
         }
 
-        public int BillId { get; set; }
+        public int ReturnOrderId { get; set; }
         public string UserName { get; set; }
         public int CustomerId { get; set; }
+        public bool? State { get; set; }
         public DateTime? Date { get; set; }
+        public string? Description { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Employee UserNameNavigation { get; set; }
-        public virtual ICollection<BillDetail> BillDetails { get; set; }
+        public virtual ICollection<ReturnOrderProduct> ReturnOrderProducts { get; set; }
     }
 }

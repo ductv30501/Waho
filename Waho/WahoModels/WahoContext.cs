@@ -21,9 +21,13 @@ namespace Waho.WahoModels
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<InventorySheet> InventorySheets { get; set; }
+        public virtual DbSet<InventorySheetDetail> InventorySheetDetails { get; set; }
         public virtual DbSet<Oder> Oders { get; set; }
         public virtual DbSet<OderDetail> OderDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ReturnOrder> ReturnOrders { get; set; }
+        public virtual DbSet<ReturnOrderProduct> ReturnOrderProducts { get; set; }
         public virtual DbSet<Shipper> Shippers { get; set; }
         public virtual DbSet<SubCategory> SubCategories { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
@@ -47,9 +51,7 @@ namespace Waho.WahoModels
             {
                 entity.ToTable("Bill");
 
-                entity.Property(e => e.BillId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("billID");
+                entity.Property(e => e.BillId).HasColumnName("billID");
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
@@ -77,24 +79,24 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<BillDetail>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.BillId, e.ProductId });
 
                 entity.Property(e => e.BillId).HasColumnName("billID");
 
-                entity.Property(e => e.Discount).HasColumnName("discount");
-
                 entity.Property(e => e.ProductId).HasColumnName("productID");
+
+                entity.Property(e => e.Discount).HasColumnName("discount");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Bill)
-                    .WithMany()
+                    .WithMany(p => p.BillDetails)
                     .HasForeignKey(d => d.BillId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BillDetails_Bill");
 
                 entity.HasOne(d => d.Product)
-                    .WithMany()
+                    .WithMany(p => p.BillDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BillDetails_Products");
@@ -102,9 +104,7 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.Property(e => e.CategoryId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("categoryID");
+                entity.Property(e => e.CategoryId).HasColumnName("categoryID");
 
                 entity.Property(e => e.CategoryName)
                     .IsRequired()
@@ -121,9 +121,7 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<Customer>(entity =>
             {
-                entity.Property(e => e.CustomerId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("customerID");
+                entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
                 entity.Property(e => e.Adress)
                     .HasMaxLength(50)
@@ -204,11 +202,59 @@ namespace Waho.WahoModels
                     .HasConstraintName("FK_WahoInformation_Employees");
             });
 
+            modelBuilder.Entity<InventorySheet>(entity =>
+            {
+                entity.Property(e => e.InventorySheetId).HasColumnName("inventorySheetID");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(100)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("userName");
+
+                entity.HasOne(d => d.UserNameNavigation)
+                    .WithMany(p => p.InventorySheets)
+                    .HasForeignKey(d => d.UserName)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_InventorySheets_Employees");
+            });
+
+            modelBuilder.Entity<InventorySheetDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.InventorySheetId, e.ProductId })
+                    .HasName("PK__Inventor__30B6C99160DCE9FB");
+
+                entity.ToTable("InventorySheetDetail");
+
+                entity.Property(e => e.InventorySheetId).HasColumnName("inventorySheetID");
+
+                entity.Property(e => e.ProductId).HasColumnName("productID");
+
+                entity.Property(e => e.CurNwareHouse).HasColumnName("curNWareHouse");
+
+                entity.HasOne(d => d.InventorySheet)
+                    .WithMany(p => p.InventorySheetDetails)
+                    .HasForeignKey(d => d.InventorySheetId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Inventory__inven__5441852A");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.InventorySheetDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Inventory__produ__5535A963");
+            });
+
             modelBuilder.Entity<Oder>(entity =>
             {
-                entity.Property(e => e.OderId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("oderID");
+                entity.Property(e => e.OderId).HasColumnName("oderID");
 
                 entity.Property(e => e.Cod)
                     .HasMaxLength(10)
@@ -253,24 +299,24 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<OderDetail>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.Property(e => e.Discount).HasColumnName("discount");
+                entity.HasKey(e => new { e.OderId, e.ProductId });
 
                 entity.Property(e => e.OderId).HasColumnName("oderID");
 
                 entity.Property(e => e.ProductId).HasColumnName("productID");
 
+                entity.Property(e => e.Discount).HasColumnName("discount");
+
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Oder)
-                    .WithMany()
+                    .WithMany(p => p.OderDetails)
                     .HasForeignKey(d => d.OderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OderDetails_Oders");
 
                 entity.HasOne(d => d.Product)
-                    .WithMany()
+                    .WithMany(p => p.OderDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OderDetails_Products");
@@ -278,9 +324,7 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.Property(e => e.ProductId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("productID");
+                entity.Property(e => e.ProductId).HasColumnName("productID");
 
                 entity.Property(e => e.DateOfManufacture)
                     .HasColumnType("date")
@@ -342,11 +386,69 @@ namespace Waho.WahoModels
                     .HasConstraintName("FK_Products_Suppliers");
             });
 
+            modelBuilder.Entity<ReturnOrder>(entity =>
+            {
+                entity.Property(e => e.ReturnOrderId).HasColumnName("returnOrderID");
+
+                entity.Property(e => e.CustomerId).HasColumnName("customerID");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(50)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.State).HasColumnName("state");
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("userName");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.ReturnOrders)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReturnOrders_Customers");
+
+                entity.HasOne(d => d.UserNameNavigation)
+                    .WithMany(p => p.ReturnOrders)
+                    .HasForeignKey(d => d.UserName)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ReturnOrders_Employees");
+            });
+
+            modelBuilder.Entity<ReturnOrderProduct>(entity =>
+            {
+                entity.HasKey(e => new { e.ProductId, e.ReturnOrderId })
+                    .HasName("PK__ReturnOr__5C6645AC82D41644");
+
+                entity.ToTable("ReturnOrderProduct");
+
+                entity.Property(e => e.ProductId).HasColumnName("productID");
+
+                entity.Property(e => e.ReturnOrderId).HasColumnName("returnOrderID");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ReturnOrderProducts)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ReturnOrd__produ__5BE2A6F2");
+
+                entity.HasOne(d => d.ReturnOrder)
+                    .WithMany(p => p.ReturnOrderProducts)
+                    .HasForeignKey(d => d.ReturnOrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ReturnOrd__retur__5CD6CB2B");
+            });
+
             modelBuilder.Entity<Shipper>(entity =>
             {
-                entity.Property(e => e.ShipperId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("shipperID");
+                entity.Property(e => e.ShipperId).HasColumnName("shipperID");
 
                 entity.Property(e => e.Phone)
                     .HasMaxLength(50)
@@ -359,9 +461,7 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<SubCategory>(entity =>
             {
-                entity.Property(e => e.SubCategoryId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("subCategoryID");
+                entity.Property(e => e.SubCategoryId).HasColumnName("subCategoryID");
 
                 entity.Property(e => e.CategoryId).HasColumnName("categoryID");
 
@@ -382,9 +482,7 @@ namespace Waho.WahoModels
 
             modelBuilder.Entity<Supplier>(entity =>
             {
-                entity.Property(e => e.SupplierId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("supplierID");
+                entity.Property(e => e.SupplierId).HasColumnName("supplierID");
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(150)
@@ -425,9 +523,7 @@ namespace Waho.WahoModels
 
                 entity.ToTable("WahoInformation");
 
-                entity.Property(e => e.WahoId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("wahoID");
+                entity.Property(e => e.WahoId).HasColumnName("wahoID");
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(50)
