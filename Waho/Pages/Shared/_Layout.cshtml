@@ -7,12 +7,31 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
+    <style>
+        .bg-linear-gradient {
+            background-image: linear-gradient(#f53d2d, #ff6533);
+        }
+        
+        .waho-logo{
+            font-weight:bolder;
+            font-size:30px;
+        }
+        
+        .nav-item:hover{
+            opacity:0.5;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 bg-linear-gradient">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Waho</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3 waho-logo">
+                        <span class="text-light">Wa</span>Ho
+                    </h1>
+                </a>
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,19 +39,19 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Index">Admin</a>
+                            <a class="nav-link text-light" asp-area="" asp-page="/Admin/Index">Admin</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/WarehouseStaff/Index">Nhân viên kho</a>
+                            <a class="nav-link text-light" asp-area="" asp-page="/WarehouseStaff/Index">Nhân viên kho</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Cashier/Index">Nhân viên Thu Ngân</a>
+                            <a class="nav-link text-light" asp-area="" asp-page="/Cashier/Index">Nhân viên Thu Ngân</a>
                         </li>
                     </ul>
                 </div>
