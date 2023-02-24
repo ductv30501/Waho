@@ -41,18 +41,23 @@ namespace Waho.Pages.WarehouseStaff.Products
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(string? ID)
         {
-            if (id == null || _context.Products == null)
+            Console.WriteLine(HttpContext.Request.Form["productID"] + "haiz");
+            //int productID = Int32.Parse(HttpContext.Request.Form["productID"]);
+            int productID = Int32.Parse(ID);
+            if (productID == null || _context.Products == null)
             {
+                Console.WriteLine(productID + "null roi ");
                 return NotFound();
             }
-            var product = await _context.Products.FindAsync(id);
-
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productID);
             if (product != null)
             {
+                Console.WriteLine(productID + "null roi ");
                 Product = product;
-                _context.Products.Remove(Product);
+                Product.Active = false;
+                _context.Attach(Product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
 

@@ -326,6 +326,11 @@ namespace Waho.WahoModels
             {
                 entity.Property(e => e.ProductId).HasColumnName("productID");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.DateOfManufacture)
                     .HasColumnType("date")
                     .HasColumnName("dateOfManufacture");

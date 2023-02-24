@@ -83,6 +83,7 @@ namespace Waho.Pages.WarehouseStaff.Products
                                 || p.Supplier.Branch.Contains(textSearch)
                                 || p.SubCategory.SubCategoryName.Contains(textSearch))
                                 && (p.SubCategoryId == subCategoryID || subCategoryID == -1))
+                            .Where(p => p.Active == true)
                             .Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter
             if((pageIndex - 1)  > (TotalCount / pageSize)){
