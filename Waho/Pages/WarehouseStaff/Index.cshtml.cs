@@ -20,7 +20,7 @@ namespace Waho.Pages.WarehouseStaff
 
         public void OnGet()
         {
-            Categories = _dataService.GetCategories();
+            //Categories = _dataService.GetCategories();
         }
     }
 }
