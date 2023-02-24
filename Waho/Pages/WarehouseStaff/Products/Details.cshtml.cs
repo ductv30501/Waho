@@ -20,14 +20,16 @@ namespace Waho.Pages.WarehouseStaff.Products
 
       public Product Product { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? productID)
         {
-            if (id == null || _context.Products == null)
+            productID = Int32.Parse(HttpContext.Request.Query["productID"]);
+            if (productID == null || _context.Products == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == id);
+
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productID);
             if (product == null)
             {
                 return NotFound();
@@ -36,7 +38,8 @@ namespace Waho.Pages.WarehouseStaff.Products
             {
                 Product = product;
             }
-            return Page();
+
+            return new JsonResult(product);
         }
     }
 }

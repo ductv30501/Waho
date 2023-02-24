@@ -1,0 +1,77 @@
+﻿.message {
+    text-align: right;
+    color: red;
+    font-size: 14px;
+    margin: 2px 6px;
+    animation-name: myAnimation;
+    animation-duration: 10000ms;
+    animation-fill-mode: forwards;
+}
+
+.input-box.button {
+    color: #fff;
+    letter-spacing: 1px;
+    border: none;
+    background: #FF6600;
+    cursor: pointer;
+}
+
+    .input-box.button:hover {
+        background: #0e4bf1;
+    }
+
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    transform: scale(0);
+    transition-duration: 0s;
+    z-index: 99;
+    display: flex;
+}
+
+#insert-product-modal {
+    margin: auto;
+    width: 60%;
+    padding: 15px 35px 15px 35px;
+    background: #fff;
+    transform: scale(0);
+    transition-duration: 0.4s;
+    z-index: 99;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px 1px #ccc;
+}
+
+#more-modal {
+    margin: auto;
+    width: 40%;
+    padding: 15px 35px 15px 35px;
+    background: #fff;
+    transform: scale(0);
+    transition-duration: 0.4s;
+    z-index: 99;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px 1px #ccc;
+}
+
+#update-product-modal {
+    margin: auto;
+    width: 60%;
+    display: block;
+    padding: 15px 35px 15px 35px;
+    background: #fff;
+    transform: scale(0);
+    transition-duration: 0.4s;
+    z-index: 99;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px 1px #ccc;
+}
+
+.active {
+    z-index: 3;
+}

@@ -13,86 +13,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true"/>
-    <style>
-        .message {
-            text-align: right;
-            color: red;
-            font-size: 14px;
-            margin: 2px 6px;
-            animation-name: myAnimation;
-            animation-duration: 10000ms;
-            animation-fill-mode: forwards;
-        }
-
-        .input-box.button {
-            color: #fff;
-            letter-spacing: 1px;
-            border: none;
-            background: #FF6600;
-            cursor: pointer;
-        }
-
-            .input-box.button:hover {
-                background: #0e4bf1;
-            }
-
-
-        .modal {
-            position: fixed;
-            left: 0;
-            top: 0;
-            display: block;
-            background: rgba(0, 0, 0, 0.5);
-            height: 100%;
-            width: 100%;
-            transform: scale(0);
-            transition-duration: 0s;
-            z-index: 99;
-            display: flex;
-        }
-
-        #insert-product-modal {
-            margin: auto;
-            width: 60%;
-            padding: 15px 35px 15px 35px;
-            background: #fff;
-            transform: scale(0);
-            transition-duration: 0.4s;
-            z-index: 99;
-            border-radius: 5px;
-            box-shadow: 0px 0px 1px 1px #ccc;
-        }
-
-        #more-modal {
-            margin: auto;
-            width: 40%;
-            padding: 15px 35px 15px 35px;
-            background: #fff;
-            transform: scale(0);
-            transition-duration: 0.4s;
-            z-index: 99;
-            border-radius: 5px;
-            box-shadow: 0px 0px 1px 1px #ccc;
-        }
-
-        #update-product-modal {
-            margin: auto;
-            width: 60%;
-            display: block;
-            padding: 15px 35px 15px 35px;
-            background: #fff;
-            transform: scale(0);
-            transition-duration: 0.4s;
-            z-index: 99;
-            border-radius: 5px;
-            box-shadow: 0px 0px 1px 1px #ccc;
-        }
-
-        .active {
-            z-index: 3;
-        }
-    </style>
-
+    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
 </head>
 <body style="background: #f2f2f2">
     @*insert model*@
@@ -130,7 +51,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Vị trí</label><br />
-                        <input name="location" type="text" class="form-control input" placeholder="Trọng lượng" required/>
+                        <input name="location" type="text" class="form-control input" placeholder="Vị trí" required/>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -178,11 +99,11 @@
                         </select>
                     </div>
                     <div class="col-md-6 mt-4" >
-                        <input id="checkBoxDate" type="checkbox"/>
+                        <input id="checkBoxDate" class="checkBoxDate" type="checkbox" />
                         <label class="labels" onclick="showInsertDate()">Sản phẩm có hạn sử dụng</label>
                     </div>
                 </div>
-                <div class="row mt-2" style="display:none" id="insertDate">
+                <div class="row mt-2 insertDate" style="display:none" id="insertDate">
                     <div class="col-md-6">
                         <label class="labels">ngày sản xuất</label>
                         <input name="dateOfManufacture" id="dateOfManufactureInput" type="date" class="form-control input"/>
@@ -287,69 +208,70 @@
     @*update model*@
     <div class="modal">
         <div id="update-product-modal">
-            <form id="insertForm" asp-page="./Create" method="post">
+            <form id="insertForm" asp-page="./Edit" method="post">
                 <div class="col-md-6">
-                    <h4 class="text-right">Thêm sản phẩm mới</h4>
+                    <h4 class="text-right">Chi tiết sản phẩm</h4>
                     <div id="notification"></div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Tên sản phẩm</label>
-                        <input name="productName" class="form-control input" type="text" placeholder="Nhập tên sản phẩm" required />
+                        <input name="productNameUpdate" id="productNameUpdate" class="form-control input" type="text" placeholder="Nhập tên sản phẩm" required />
+                        <input name="productIDUpdate" id="productIDUpdate" type="hidden"/>
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Giá nhập</label>
-                        <input name="importPrice" class="form-control input" type="number" min="1000" placeholder="Điền Giá nhập" required />
+                        <input name="importPriceUpdate" id="importPriceUpdate" class="form-control input" type="number" min="1000" placeholder="Điền Giá nhập" required />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Giá tại cửa hàng</label>
-                        <input name="unitInStock" type="number" min="1000" class="form-control input" placeholder="Nhập giá tại cửa hàng" required />
+                        <input name="unitInStockUpdate" id="unitInStockUpdate" type="number" min="1000" class="form-control input" placeholder="Nhập giá tại cửa hàng" required />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Thương hiệu</label>
-                        <input name="trademark" type="text" class="form-control input" placeholder="Nhập tên thương hiệu" required />
+                        <input name="trademarkUpdate" id="trademarkUpdate" type="text" class="form-control input" placeholder="Nhập tên thương hiệu" required />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Trọng lượng</label>
-                        <input name="weight" ype="number" min="1" class="form-control input" placeholder="Trọng lượng" required />
+                        <input name="weightUpdate" id="weightUpdate" type="number" min="1" class="form-control input" placeholder="Trọng lượng" required />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Vị trí</label><br />
-                        <input name="location" type="text" class="form-control input" placeholder="Trọng lượng" required />
+                        <input name="locationUpdate" id="locationUpdateUpdate" type="text" class="form-control input" placeholder="Vị trí" required />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Đơn vị</label>
-                        <input name="unit" type="text" class="form-control input" placeholder="Đơn vị" required />
+                        <input name="unitUpdate" id="unitUpdate" type="text" class="form-control input" placeholder="Đơn vị" required />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Đơn giá</label>
-                        <input name="unitPrice" type="number" min="1000" class="form-control input" placeholder="Đơn giá" required />
+                        <input name="unitPriceUpdate" id="unitPriceUpdate" type="number" min="1000" class="form-control input" placeholder="Đơn giá" required />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Định mức tồn min</label>
-                        <input name="inventoryLevelMin" type="number" min="1" class="form-control input" placeholder="Định mức tồn min" required />
+                        <input name="inventoryLevelMinUpdate" id="inventoryLevelMinUpdate" type="number" min="1" class="form-control input" placeholder="Định mức tồn min" required />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Định mức tồn max</label>
-                        <input name="inventoryLevelMax" type="number" min="1" class="form-control input" placeholder="Định mức tồn max" required />
+                        <input name="inventoryLevelMaxUpdate" id="inventoryLevelMaxUpdate" type="number" min="1" class="form-control input" placeholder="Định mức tồn max" required />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Miêu tả</label>
-                        <input name="description" type="text" class="form-control input" placeholder="nhập Miêu tả" required />
+                        <input name="descriptionUpdate" id="descriptionUpdate" type="text" class="form-control input" placeholder="nhập Miêu tả" required />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Loại sản phẩm</label>
-                        <select name="subCategory" class="form-select input" aria-label="Default select example">
+                        <select name="subCategoryUpdate" id="subCategoryUpdate" class="form-select input" aria-label="Default select example">
                             @foreach (var s in Model.subCategories)
                             {
                                 <option value="@(s.SubCategoryId)">@s.SubCategoryName</option>
@@ -360,7 +282,7 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Nhà cung cấp</label>
-                        <select name="supplierID" class="form-select input" aria-label="Default select example">
+                        <select name="supplierIDUpdate" id="supplierIDUpdate" class="form-select input" aria-label="Default select example">
                             @foreach (var s in Model.suppliers)
                             {
                                 <option value="@(s.SupplierId)">@s.CompanyName</option>
@@ -368,22 +290,23 @@
                         </select>
                     </div>
                     <div class="col-md-6 mt-4">
-                        <input id="checkBoxDate" type="checkbox" />
+                        <input id="checkBoxDateUpdate" name="checkBoxDateUpdate" class="checkBoxDate" type="checkbox" />
                         <label class="labels" onclick="showInsertDate()">Sản phẩm có hạn sử dụng</label>
                     </div>
                 </div>
-                <div class="row mt-2" style="display:none" id="insertDate">
+                <div class="row mt-2 insertDate" style="display:none" id="insertDate" >
                     <div class="col-md-6">
                         <label class="labels">ngày sản xuất</label>
-                        <input name="dateOfManufacture" id="dateOfManufactureInput" type="date" class="form-control input" />
+                        <input name="dateOfManufactureUpdate" id="dateOfManufactureUpdate" type="date" class="form-control input" />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Ngày hết hạn</label>
-                        <input name="expiry" id="expiryInput" type="date" class="form-control input" />
+                        <input name="expiryUpdate" id="expiryUpdate" type="date" class="form-control input" />
                     </div>
                 </div>
                 <div class="text-center mt-5">
-                    <button id="btnSubmit" class="input-box button" type="button" style="padding: 5px;border-radius: 5px" onclick="this.form.submit()">Thêm sản phẩm</button>
+                    <button id="btnSubmit" class="input-box button" type="button" style="padding: 5px;border-radius: 5px" onclick="this.form.submit()">Lưu</button>
+                    <button id="btnSubmit" class="input-box button" type="button" style="padding: 5px;border-radius: 5px" onclick="DeleteProduct()">Xóa</button>
                     <button style="margin-left: 10px;padding:5px;border-radius: 5px" class="input-box button btn btn-primary profile-button" type="button" onclick="modal('update-product-modal', 2, 'scale(0)')">Đóng</button>
                 </div>
             </form>
@@ -552,9 +475,8 @@
                                         @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
                                     </td>
                                     <td>
-                                        <a class="bi bi-123" asp-page="./Edit" asp-route-id="@item.ProductId">Sửa</a> |
-                                        <a onclick="modal('update-product-modal', 2, 'scale(1)')" >Chi tiết</a> |
-                                        @*<a asp-page="./Details" asp-route-id="@item.ProductId">Chi tiết</a> |*@
+                                        <a onclick="getProductDetail(@(item.ProductId))" >Chi tiết</a> |
+                                        @*<a asp-page="./Details" asp-route-productID="@item.ProductId">Chi tiết</a> |*@
                                         <a class="bi bi-6-square-fill" asp-page="./Delete" asp-route-id="@item.ProductId">xóa</a>
                                     </td>
                                 </tr>
@@ -604,13 +526,13 @@
         }
 
         function showInsertDate(){
-            if ($("#checkBoxDate").prop('checked')) {
-                $('#checkBoxDate').prop('checked', false)
+            if ($(".checkBoxDate").prop('checked')) {
+                $('.checkBoxDate').prop('checked', false)
             } else {
                 console.log("check box")
-                $('#checkBoxDate').prop('checked', true)
+                $('.checkBoxDate').prop('checked', true)
             }
-            $('#insertDate').toggle();
+            $('.insertDate').toggle();
         }
 
         //function submitFormInput() {
@@ -632,7 +554,80 @@
         //        });
         //}
 
+        // product details
+        function getProductDetail(productID) {
+            $.ajax({
+                url: "/WarehouseStaff/Products/Details",
+                type: "GET",
+                data: { productID: productID },
+                success: function (data) {
+                    // Gán dữ liệu vào các trường của form
+                    $("#productIDUpdate").val(productID)
+                    $("#productNameUpdate").val(data.productName);
+                    $("#importPriceUpdate").val(data.importPrice);
+                    $("#unitInStockUpdate").val(data.unitInStock);
+                    $("#trademarkUpdate").val(data.trademark);
+                    $("#weightUpdate").val(data.weight);
+                    $("#locationUpdate").val(data.location);
+                    $("#unitUpdate").val(data.unit);
+                    $("#unitPriceUpdate").val(data.unitPrice);
+                    $("#inventoryLevelMinUpdate").val(data.inventoryLevelMin);
+                    $("#inventoryLevelMaxUpdate").val(data.inventoryLevelMax);
+                    $("#descriptionUpdate").val(data.description);
+                    $("#subCategoryUpdate").val(data.subCategoryId);
+                    $("#supplierIDUpdate").val(data.supplierId);
+                    if (data.haveDate) {
+                        $('#checkBoxDateUpdate').prop('checked', true);
+                        $('.insertDate').show();
+                        $("#expiryUpdate").val(formatDate(data.expiry));
+                        $("#dateOfManufactureUpdate").val(formatDate(data.dateOfManufacture));
+                    }else{
+                        $('#checkBoxDate').prop('checked', false);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                },
+                 beforeSend: function(xhr) {
+                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+              }
+            });
+            modal('update-product-modal', 2, 'scale(1)')
+        }
+        //format date
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
 
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+
+        //delete Product
+        function DeleteProduct() {
+            var productID = $("#productIDUpdate").val().toString();
+            console.log(productID);
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+                $.ajax({
+                    url: '/WarehouseStaff/Products/Delete',
+                    type: 'POST',
+                    data: { productID: productID },
+                    success: function (data) {
+                        // handle success
+                         alert("Xóa sản phẩm thành công");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            }
+        }
         //sort table
         $(document).ready(function () {
             $("th").click(function () {

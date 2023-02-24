@@ -27,6 +27,7 @@ namespace Waho.DataService
         public List<Product> GetProductsByCateID(int id) {
             return _context.Products
                             .Where(p => p.SubCategory.CategoryId == id)
+                            .Where(p => p.Active == true)
                             .Include(p => p.SubCategory)
                             .ThenInclude(s => s.Category)
                             .ToList();
@@ -34,7 +35,9 @@ namespace Waho.DataService
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
 
             List < Product > products = new List < Product >();
-            var query = _context.Products.Where(p => p.SubCategory.CategoryId == categoryID);
+            //default 
+            var query = _context.Products.Where(p => p.SubCategory.CategoryId == categoryID)
+                                         .Where(p => p.Active == true);
             if (subCategoryID > 0 )
             {
                 query = query.Where(p => p.SubCategoryId == subCategoryID);

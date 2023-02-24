@@ -16,7 +16,7 @@ namespace Waho.WahoModels
         public string? CustomerName { get; set; }
         public string? Phone { get; set; }
         public DateTime? Dob { get; set; }
-        public string? Adress { get; set; }
+        public string Adress { get; set; }
         public bool? TypeOfCustomer { get; set; }
         public string? TaxCode { get; set; }
         public string? Email { get; set; }
