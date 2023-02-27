@@ -17,6 +17,8 @@ namespace Waho.Pages.WarehouseStaff.Products
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly IFileProvider _fileProvider;
+        public string message { get; set; }
+        public string successMessage { get; set; }
         public UploadFileExcelModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider)
         {
             _context = context;
@@ -28,15 +30,40 @@ namespace Waho.Pages.WarehouseStaff.Products
         [BindProperty]
         public string ExcelFile { get; set; }
 
-        public string Message { get; set; }
 
+        public IActionResult OnGetAsync()
+        {
+            // Lấy thông tin file từ IFileProvider
+            IFileInfo fileInfo = _fileProvider.GetFileInfo("Products.xlsx");
+            if (fileInfo.Exists)
+            {
+                // Đọc nội dung file và trả về file download
+                var stream = new MemoryStream();
+                using (var fileStream = fileInfo.CreateReadStream())
+                {
+                    fileStream.CopyTo(stream);
+                }
+                stream.Position = 0;
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "template.xlsx");
+            }
+            else
+            {
+                // messagse
+                message = "file không tồn tại";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var req = HttpContext.Request;
-            if ( string.IsNullOrEmpty(req.Form["ExcelFile"]))
+            if (string.IsNullOrEmpty(req.Form["ExcelFile"]))
             {
-                return Page();
+                // messagse
+                message = "đường dẫn file trống, null";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
             }
             else
             {
@@ -46,8 +73,10 @@ namespace Waho.Pages.WarehouseStaff.Products
             }
             if (ExcelFile == null || ExcelFile.Length == 0)
             {
-                Message = "Please select a file";
-                return Page();
+                // messagse
+                message = "hãy chọn file trước khi gửi";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
             }
             else
             {
@@ -56,19 +85,22 @@ namespace Waho.Pages.WarehouseStaff.Products
                     var products = ReadExcel(ExcelFile);
                     if (products == null)
                     {
-                        Message = "No products found in file";
-                        Console.WriteLine(Message);
+                        // messagse
+                        message = "trong file không có sản phẩm nào";
+                        TempData["message"] = message;
+                        return RedirectToPage("./Index");
                     }
                     else
                     {
                         await _context.BulkInsertAsync(products);
-                        Message = $"{products.Count} products were uploaded successfully";
+                        successMessage = $"{products.Count} sản phẩm được thêm vào thành công";
+                        TempData["successMessage"] = successMessage;
                         return RedirectToPage("./Index");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Message = ex.Message;
+                    message = ex.Message;
                 }
             }
             return Page();
