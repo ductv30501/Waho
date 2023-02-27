@@ -22,7 +22,9 @@ namespace Waho.Pages.WarehouseStaff.Products
             _dataService = dataService;
         }
         [BindProperty(SupportsGet = true)]
-        public IList<Product> Product { get; set; } = default!;
+        public IList<Product> Products { get; set; } = default!;
+        [BindProperty]
+        public Product product { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int pageSize { get; set; } = 10;
@@ -93,7 +95,7 @@ namespace Waho.Pages.WarehouseStaff.Products
             if (_context.Products != null)
             {
                 // categoryid = 1 
-                Product = _dataService.GetProductsPagingAndFilter(pageIndex,pageSize,textSearch,subCategoryID,1) ;
+                Products = _dataService.GetProductsPagingAndFilter(pageIndex,pageSize,textSearch,subCategoryID,1) ;
             }
 
             suppliers = await _context.Suppliers.ToListAsync();

@@ -143,6 +143,8 @@ namespace Waho.Pages.WarehouseStaff.Products
             Product.SubCategoryId = subCategoryID;
             int supplierID = Int32.Parse(raw_supplierID);
             Product.SupplierId = supplierID;
+            //default
+            Product.Active = true;
 
             // process for product have date
             string raw_dateOfManufacture = req.Form["dateOfManufactureUpdate"];

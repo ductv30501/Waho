@@ -15,10 +15,10 @@ namespace Waho.DataService
             _context = context;
         }
 
-        //public List<Category> GetCategories()
-        //{
-        //    return _context.Categories.ToList();
-        //}
+        public List<Category> GetCategories()
+        {
+            return _context.Categories.ToList();
+        }
         public List<SubCategory> GetSubCategories(int id) {
             return _context.SubCategories
                     .Where(sb => sb.CategoryId == id)

@@ -58,6 +58,17 @@
     border-radius: 5px;
     box-shadow: 0px 0px 1px 1px #ccc;
 }
+#upload-products-modal {
+    margin: auto;
+    width: 40%;
+    padding: 15px 35px 15px 35px;
+    background: #fff;
+    transform: scale(0);
+    transition-duration: 0.4s;
+    z-index: 99;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px 1px #ccc;
+}
 
 #update-product-modal {
     margin: auto;
