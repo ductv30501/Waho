@@ -11,6 +11,11 @@ builder.Services.AddDbContext<WahoContext>(options => options.UseSqlServer(
     ));
 builder.Services.AddScoped<DataServiceManager>();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +32,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapRazorPages();
 
