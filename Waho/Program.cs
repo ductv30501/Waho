@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using OfficeOpenXml;
 using Waho.DataService;
 using Waho.WahoModels;
 
@@ -10,7 +12,8 @@ builder.Services.AddDbContext<WahoContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("Waho")
     ));
 builder.Services.AddScoped<DataServiceManager>();
-
+ExcelPackage.LicenseContext = LicenseContext.Commercial;
+builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ImportData")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -6,18 +6,21 @@
     <title>@ViewData["Title"] - Waho</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<<<<<<< HEAD
+    <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+=======
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow bg-linear-gradient">
+>>>>>>> 5a20903d6b98f661b3fa0deb53f820ca4012079f
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">
-                    <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3 waho-logo">
-                        <span class="text-light">Wa</span>Ho
-                    </h1>
-                </a>
-                
+                <a class="navbar-brand" asp-area="" asp-page="/WarehouseStaff/Index">Waho</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -25,19 +28,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/WarehouseStaff/Products/Index">Sản Phẩm</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Admin/Index">Admin</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/WarehouseStaff/Index">Nhân viên kho</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Cashier/Index">Nhân viên Thu Ngân</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/WarehouseStaff/InventorySheet/Index">Kiểm Kho</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">

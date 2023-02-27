@@ -15,6 +15,11 @@ namespace Waho.DataService
             _context = context;
         }
 
+<<<<<<< HEAD
+        public List<Category> GetCategories()
+        {
+            return _context.Categories.ToList();
+=======
         //public List<Category> GetCategories()
         //{
         //    return _context.Categories.ToList();
@@ -23,6 +28,7 @@ namespace Waho.DataService
         public Employee GetEmployeeByUserAndPass(string userName, string password)
         {
             return _context.Employees.FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
+>>>>>>> 5a20903d6b98f661b3fa0deb53f820ca4012079f
         }
         public List<SubCategory> GetSubCategories(int id) {
             return _context.SubCategories
