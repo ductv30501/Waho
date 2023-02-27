@@ -14,8 +14,10 @@ namespace Waho.WahoModels
             ReturnOrders = new HashSet<ReturnOrder>();
         }
 
-        [Display(Name ="Tên đăng nhập")]
-        public string UserName { get; set; }
+        [Display(Name = "Tên đăng nhập")]
+        public string? UserName { get; set; }
+
+        [Display(Name = "Tên người dùng")]
         public string? EmployeeName { get; set; }
         public string? Title { get; set; }
         public DateTime? Dob { get; set; }
@@ -27,10 +29,10 @@ namespace Waho.WahoModels
 
         [Display(Name = "Mật khẩu")]
         public string? Password { get; set; }
-        public int? WahoId { get; set; }
+        public int WahoId { get; set; }
         public int? Role { get; set; }
 
-        public virtual WahoInformation Waho { get; set; }
+        public virtual WahoInformation? Waho { get; set; }
         public virtual ICollection<Bill> Bills { get; set; }
         public virtual ICollection<InventorySheet> InventorySheets { get; set; }
         public virtual ICollection<Oder> Oders { get; set; }

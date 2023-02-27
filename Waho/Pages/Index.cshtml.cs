@@ -16,7 +16,7 @@ namespace Waho.Pages
         }
 
         [BindProperty]
-        public Employee? Employee { get; set; } = default!;
+        public Employee Employee { get; set; } = default!;
 
         public void OnGet()
         {
@@ -25,9 +25,9 @@ namespace Waho.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            Console.WriteLine(Employee.UserName);
             if (_dataService.GetEmployeeByUserAndPass(Employee.UserName, Employee.Password) != null)
             {
+                //HttpContext.Session.SetString("",Employee);
                 return RedirectToPage("./Admin/Index");
             }
             ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu");
