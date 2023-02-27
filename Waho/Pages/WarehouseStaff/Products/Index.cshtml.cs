@@ -22,7 +22,13 @@ namespace Waho.Pages.WarehouseStaff.Products
             _dataService = dataService;
         }
         [BindProperty(SupportsGet = true)]
-        public IList<Product> Product { get; set; } = default!;
+        public string message { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string successMessage { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public IList<Product> Products { get; set; } = default!;
+        [BindProperty]
+        public Product product { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int pageSize { get; set; } = 10;
@@ -51,19 +57,15 @@ namespace Waho.Pages.WarehouseStaff.Products
         {
             //get data from form
             raw_number = HttpContext.Request.Query["pageSize"];
-
             if (!string.IsNullOrEmpty(raw_number))
             {
                 pageSize = int.Parse(raw_number);
             }
-
             raw_subCategorySearch = HttpContext.Request.Query["subCategory"];
-
             if (!string.IsNullOrEmpty(raw_subCategorySearch))
             {
                 subCategoryID = int.Parse(raw_subCategorySearch);
             }
-
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
             {
@@ -89,13 +91,14 @@ namespace Waho.Pages.WarehouseStaff.Products
             if((pageIndex - 1)  > (TotalCount / pageSize)){
                 pageIndex = 1;
             }
-
+            message = TempData["message"] as string;
+            successMessage = TempData["successMessage"] as string;
             if (_context.Products != null)
             {
                 // categoryid = 1 
-                Product = _dataService.GetProductsPagingAndFilter(pageIndex,pageSize,textSearch,subCategoryID,1) ;
+                Products = _dataService.GetProductsPagingAndFilter(pageIndex,pageSize,textSearch,subCategoryID,1) ;
             }
-
+            //get message
             suppliers = await _context.Suppliers.ToListAsync();
         }
         

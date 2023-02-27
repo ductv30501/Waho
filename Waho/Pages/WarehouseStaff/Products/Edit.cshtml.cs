@@ -13,7 +13,8 @@ namespace Waho.Pages.WarehouseStaff.Products
     public class EditModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
+        public string message { get; set; }
+        public string successMessage { get; set; }
         public EditModel(Waho.WahoModels.WahoContext context)
         {
             _context = context;
@@ -24,19 +25,7 @@ namespace Waho.Pages.WarehouseStaff.Products
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Products == null)
-            {
-                return NotFound();
-            }
-
-            var product =  await _context.Products.FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            Product = product;
-           ViewData["SubCategoryId"] = new SelectList(_context.SubCategories, "SubCategoryId", "SubCategoryId");
-           ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierId");
+            
             return Page();
         }
 
@@ -73,6 +62,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 else
                 {
                     // messagse
+                    message = "Bạn cần nhập giá lớn hơn 0 đồng";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
             }
             if (string.IsNullOrWhiteSpace(raw_unitInStock))
@@ -85,6 +77,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 else
                 {
                     // messagse
+                    message = "Bạn cần nhập đơn vị giá tại cửa hàng lớn hơn 0 đồng";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
             }
             if (string.IsNullOrWhiteSpace(raw_unitPrice))
@@ -97,6 +92,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 else
                 {
                     // messagse
+                    message = "bạn cần nhập đơn vị giá lớn hơn 0 đồng";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
             }
             Product.Trademark = raw_trademark;
@@ -110,6 +108,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 else
                 {
                     // messagse
+                    message = "bạn cần nhập trọng lượng lớn hơn 0 đồng";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
             }
             Product.Location = raw_location;
@@ -125,6 +126,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 else
                 {
                     // messagse
+                    message = "bạn cần nhập số lượng tồn nhỏ nhất là 1";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
             }
             if (string.IsNullOrWhiteSpace(raw_inventoryLevelMax))
@@ -137,12 +141,17 @@ namespace Waho.Pages.WarehouseStaff.Products
                 else
                 {
                     // messagse
+                    message = "bạn cần nhập số lượng tồn nhỏ lớn nhất phải lớn hơn 0 ";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
             }
             int subCategoryID = Int32.Parse(raw_subCategory);
             Product.SubCategoryId = subCategoryID;
             int supplierID = Int32.Parse(raw_supplierID);
             Product.SupplierId = supplierID;
+            //default
+            Product.Active = true;
 
             // process for product have date
             string raw_dateOfManufacture = req.Form["dateOfManufactureUpdate"];
@@ -160,6 +169,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 if (dateOfManufacture.CompareTo(dateNow) > 0 || expiry.CompareTo(dateOfManufacture) < 0 || expiry.CompareTo(dateNow) < 0)
                 {
                     //message
+                    message = "bạn không được nhập HSD nhỏ hơn NSX hoặc NXS,HSD nhỏ hơn thời gian hiện tại";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
                 else
                 {
@@ -171,23 +183,26 @@ namespace Waho.Pages.WarehouseStaff.Products
 
             //update data
             _context.Attach(Product).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
+                
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!ProductExists(Product.ProductId))
                 {
-                    return NotFound();
+                    message = "không tồn tại sản phẩm này";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
                 else
                 {
                     throw;
                 }
             }
-
+            successMessage = "Đã sửa thành công thông tin sản phẩm";
+            TempData["successMessage"] = successMessage;
             return RedirectToPage("./Index");
         }
 

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using OfficeOpenXml;
 using Waho.DataService;
 using Waho.WahoModels;
 
@@ -16,6 +18,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
+ExcelPackage.LicenseContext = LicenseContext.Commercial;
+builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ImportData")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

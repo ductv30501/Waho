@@ -15,6 +15,10 @@ namespace Waho.DataService
             _context = context;
         }
 
+        public List<Category> GetCategories()
+        {
+            return _context.Categories.ToList();
+        }
         //public List<Category> GetCategories()
         //{
         //    return _context.Categories.ToList();
@@ -35,6 +39,7 @@ namespace Waho.DataService
                             .Where(p => p.Active == true)
                             .Include(p => p.SubCategory)
                             .ThenInclude(s => s.Category)
+                            .Include(p => p.Supplier)
                             .ToList();
         }
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
@@ -58,6 +63,7 @@ namespace Waho.DataService
             products = query.Where(p => p.SubCategory.CategoryId == categoryID)
                     .Include(p => p.SubCategory)
                     .ThenInclude(s => s.Category)
+                    .Include(p => p.Supplier)
                     .OrderBy(p => p.ProductName)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
