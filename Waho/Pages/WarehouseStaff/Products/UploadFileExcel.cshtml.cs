@@ -132,7 +132,8 @@ namespace Waho.Pages.WarehouseStaff.Products
                     Description = worksheet.Cells[row, 14].GetValue<string>(),
                     SubCategoryId = worksheet.Cells[row, 15].GetValue<int>(),
                     SupplierId = worksheet.Cells[row, 16].GetValue<int>(),
-                    Active = worksheet.Cells[row, 17].GetValue<bool>()
+                    Active = worksheet.Cells[row, 17].GetValue<bool>(),
+                    Quantity = worksheet.Cells[row, 18].GetValue<int>()
                 };
 
                 products.Add(product);

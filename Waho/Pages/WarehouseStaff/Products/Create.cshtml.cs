@@ -40,6 +40,7 @@ namespace Waho.Pages.WarehouseStaff.Products
             string raw_unitInStock = req.Form["unitInStock"];
             string raw_unitPrice = req.Form["unitPrice"];
             string raw_trademark = req.Form["trademark"];
+            string raw_quantity = req.Form["quantity"];
             string raw_weight = req.Form["weight"];
             string raw_location = req.Form["location"];
             string raw_unit = req.Form["unit"];
@@ -96,6 +97,21 @@ namespace Waho.Pages.WarehouseStaff.Products
                 }
             }
             Product.Trademark = raw_trademark ;
+            if (string.IsNullOrWhiteSpace(raw_quantity))
+            {
+                int quantity = Int32.Parse(raw_quantity);
+                if (quantity > 0)
+                {
+                    Product.Quantity = quantity;
+                }
+                else
+                {
+                    // messagse
+                    message = "bạn cần nhập số lượng lớn hơn 0";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
+                }
+            }
             if (string.IsNullOrWhiteSpace(raw_weight))
             {
                 int weight = Int32.Parse(raw_weight);

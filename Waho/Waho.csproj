@@ -24,7 +24,6 @@
   <ItemGroup>
     <Folder Include="Pages\Cashier\ReturnOrder\" />
     <Folder Include="Pages\Cashier\Orders\" />
-    <Folder Include="Pages\WarehouseStaff\InventorySheet\" />
   </ItemGroup>
 
 </Project>
