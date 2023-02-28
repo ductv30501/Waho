@@ -12,6 +12,12 @@ builder.Services.AddDbContext<WahoContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("Waho")
     ));
 builder.Services.AddScoped<DataServiceManager>();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
 ExcelPackage.LicenseContext = LicenseContext.Commercial;
 builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ImportData")));
 var app = builder.Build();
@@ -30,6 +36,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapRazorPages();
 

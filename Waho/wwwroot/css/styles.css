@@ -1,17 +1,6 @@
 ﻿:root {
-    --gradient-color-start: #f53d2d;
-    --gradient-color-end: #ff6533;
     --primary: #ff6533;
     --primary-active: #FF9966;
-}
-
-.bg-linear-gradient {
-    background-image: linear-gradient(var(--gradient-color-start), var(--gradient-color-end));
-}
-
-.waho-logo {
-    font-weight: bolder;
-    font-size: 30px;
 }
 
 .nav-item:hover {
@@ -24,36 +13,64 @@
 
 .btn-primary {
     background-color: var(--primary);
-    border: none;
+    border: solid 2px var(--primary);
     outline: none;
 }
 
-    .btn-primary:hover {
-        background-color: var(--primary-active);
-    }
-
-    .btn-primary:active {
-        background-color: var(--primary-active);
-    }
-
-.footer {
-    min-height: 80px;
-    position:absolute;
-    bottom:0;
-    width:100%;
+.btn-outline-primary {
+    color: var(--primary);
+    border: solid 2px var(--primary);
 }
 
-.content {
-    min-height: 550px;
+    .btn-outline-primary:hover {
+        background-color: var(--primary-active);
+        border: solid 2px var(--primary-active);
+    }
+
+    .btn-outline-primary:active {
+        background-color: var(--primary-active);
+    }
+
+.span-input-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-active);
+    border: solid 2px var(--primary-active);
+}
+
+.btn-primary:active {
+    background-color: var(--primary-active);
+    border: solid 2px var(--primary-active);
 }
 
 .bg-waho {
-    background-image: url('../img/bg.jfif');
+    background-image: url('../img/background.png');
     background-size: cover;
+    min-height: 100vh;
 }
 
 .form-container {
     background-color: white;
-    margin-top: 120px;
+    margin-top: 160px;
     border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+    a:hover {
+        color: var(--primary-active)
+    }
+
+.login-container {
+    margin-top:140px;
+}
+
+.reg-container {
+    margin-top: 40px;
 }
