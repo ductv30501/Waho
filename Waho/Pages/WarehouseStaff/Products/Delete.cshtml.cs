@@ -22,43 +22,11 @@ namespace Waho.Pages.WarehouseStaff.Products
         [BindProperty]
       public Product Product { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        
+        public async Task<IActionResult> OnGetAsync(string? productID)
         {
-            if (id == null || _context.Products == null)
-            {
-                message = "không tìm thấy sản phẩm";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
-            }
-
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == id);
-
-            if (product == null)
-            {
-                message = "không tìm thấy sản phẩm";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
-            }
-            else 
-            {
-                Product = product;
-            }
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync(string? ID)
-        {
-            Console.WriteLine(HttpContext.Request.Form["productID"] + "haiz");
-            //int productID = Int32.Parse(HttpContext.Request.Form["productID"]);
-            int productID = Int32.Parse(ID);
-            if (productID == null || _context.Products == null)
-            {
-                //message
-                message = "không tìm thấy sản phẩm";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
-            }
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productID);
+            int productId = Int32.Parse(productID);
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productId);
             if (product != null)
             {
                 
