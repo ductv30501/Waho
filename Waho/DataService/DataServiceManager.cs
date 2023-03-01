@@ -42,6 +42,7 @@ namespace Waho.DataService
                             .Include(p => p.Supplier)
                             .ToList();
         }
+        // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
 
             List < Product > products = new List < Product >();
@@ -70,7 +71,7 @@ namespace Waho.DataService
                     .ToList();
             return products;
         }
-
+        // paging inventory sheet
         public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize,string textSearch, string userName)
         {
             List<InventorySheet> inventories= new List<InventorySheet>();
@@ -89,6 +90,20 @@ namespace Waho.DataService
                          .Take(pageSize)
                          .ToList();
             return inventories;
+        }
+        //paging inventortSheetDetail
+        public List<InventorySheetDetail> getInventorySheetDetailPaging(int pageIndex, int pageSize,int id)
+        {
+            List<InventorySheetDetail> inventorySheetDetails = new List<InventorySheetDetail>();
+            inventorySheetDetails = _context.InventorySheetDetails.Include(i => i.InventorySheet)
+                         .Include(i => i.Product)
+                         .Include(i=> i.InventorySheet.UserNameNavigation)
+                         .Where(i => i.InventorySheetId == id)
+                         .OrderBy(i => i.InventorySheetId)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return inventorySheetDetails;
         }
     }
 }

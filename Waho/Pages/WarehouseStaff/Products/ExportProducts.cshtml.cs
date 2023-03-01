@@ -70,7 +70,7 @@ namespace Waho.Pages.WarehouseStaff.Products
                 worksheet.Cells[rowIndex, 16].Value = product.SubCategory.SubCategoryName;
                 worksheet.Cells[rowIndex, 17].Value = product.Supplier.CompanyName;
                 worksheet.Cells[rowIndex, 18].Value = (product.Active == true ? "Đang có" : "Không có");
-                worksheet.Cells[rowIndex, 18].Value = product.Quantity;
+                worksheet.Cells[rowIndex, 19].Value = product.Quantity;
                 rowIndex++;
             }
 
