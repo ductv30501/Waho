@@ -3,7 +3,7 @@ using Waho.WahoModels;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.CodeAnalysis.FlowAnalysis;
 
 namespace Waho.DataService
 {
@@ -42,6 +42,7 @@ namespace Waho.DataService
                             .Include(p => p.Supplier)
                             .ToList();
         }
+        // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
 
             List < Product > products = new List < Product >();
@@ -69,6 +70,40 @@ namespace Waho.DataService
                     .Take(pageSize)
                     .ToList();
             return products;
+        }
+        // paging inventory sheet
+        public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize,string textSearch, string userName)
+        {
+            List<InventorySheet> inventories= new List<InventorySheet>();
+            var query = _context.InventorySheets;
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                query.Where(i => i.UserName.Contains(userName));
+            }
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                query.Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch) || i.Description.Contains(textSearch) || i.UserNameNavigation.EmployeeName.Contains(textSearch));
+            }
+            inventories = query.Include(i => i.UserNameNavigation)
+                         .OrderBy(i => i.InventorySheetId)    
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return inventories;
+        }
+        //paging inventortSheetDetail
+        public List<InventorySheetDetail> getInventorySheetDetailPaging(int pageIndex, int pageSize,int id)
+        {
+            List<InventorySheetDetail> inventorySheetDetails = new List<InventorySheetDetail>();
+            inventorySheetDetails = _context.InventorySheetDetails.Include(i => i.InventorySheet)
+                         .Include(i => i.Product)
+                         .Include(i=> i.InventorySheet.UserNameNavigation)
+                         .Where(i => i.InventorySheetId == id)
+                         .OrderBy(i => i.InventorySheetId)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return inventorySheetDetails;
         }
     }
 }

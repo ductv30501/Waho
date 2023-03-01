@@ -86,3 +86,70 @@ a {
 .vertical{
     opacity:0.5;
 }
+
+.wt-widgettitle {
+    margin-bottom: 30px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #ddd;
+}
+
+.wt-widgettitle h2 {
+   margin: 0;
+   display: block;
+   font-weight: 400;
+   font-size: 15px;
+   line-height: 18px;
+}
+
+.wt-widgetcontent {
+    float: left;
+    width: 100%;
+}
+
+.wt-categoriescontent {
+    float: left;
+    width: 100%;
+    list-style: none;
+    line-height: 14px;
+}
+.wt-categoriescontent label{
+	float: left;
+	width: 100%;
+	line-height: inherit;
+	list-style-type: none;
+    margin-top: 20px;
+}
+.wt-categoriescontent input{
+	float: left;
+	width: 100%;
+	line-height: inherit;
+	list-style-type: none;
+    border-width: 0px;
+    border-bottom-width: 1px;
+    margin-top: 10px;
+    padding: 5px 10px 5px 10px;
+}
+    .wt-categoriescontent input:hover {
+        float: left;
+        width: 100%;
+        line-height: inherit;
+        list-style-type: none;
+        border-width: 0px;
+        border-bottom-width: 1px;
+        margin-top: 10px;
+        padding: 5px 10px 5px 10px;
+        border-color: #FF6600;
+    }
+.wt-categoriescontent div{
+	float: left;
+	width: 100%;
+	line-height: inherit;
+	list-style-type: none;
+    border-width: 0px;
+    border-bottom-width: 1px;
+    margin-top: 10px;
+    padding: 5px 10px 5px 10px;
+}
+
+
+
