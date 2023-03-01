@@ -134,25 +134,25 @@
                     <div class="col-lg-6">
                         <input type="checkbox" value="Tên sản phẩm" checked id="productName" onclick="showProperty('tbProductName')" class="col-lg-6 btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Tên sản phẩm</i>
+                    <i class="col-lg-6 labels">Tên sản phẩm</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Giá nhập" checked id="importPrice" onclick="showProperty('tbImportPrice')" class="col-lg-6 btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Giá nhập</i>
+                    <i class="col-lg-6 labels">Giá nhập</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Đơn giá" checked id="unitPrice" onclick="showProperty('tbUnitPrice')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Đơn giá</i>
+                    <i class="col-lg-6 labels">Đơn giá</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Giá tại kho" id="unitInStock" onclick="showProperty('tbUnitInStock')" class="col-lg-6 btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Giá tại kho</i>
+                    <i class="col-lg-6 labels">Giá tại kho</i>
                 </div>
             </div>
 
@@ -161,25 +161,25 @@
                     <div class="col-lg-6">
                         <input type="checkbox" value="Thương hiệu" id="trademark" onclick="showProperty('tbTrademark')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Thương hiệu</i>
+                    <i class="col-lg-6 labels">Thương hiệu</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Trọng lượng" id="weight" onclick="showProperty('tbWeight')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Trọng lượng</i>
+                    <i class="col-lg-6 labels">Trọng lượng</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Vị trí" id="location" checked onclick="showProperty('tbLocation')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Vị trí</i>
+                    <i class="col-lg-6 labels">Vị trí</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Đơn vị" id="unit" onclick="showProperty('tbUnit')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Đơn vị</i>
+                    <i class="col-lg-6 labels">Đơn vị</i>
                 </div>
             </div>
 
@@ -188,25 +188,25 @@
                     <div class="col-lg-6">
                         <input type="checkbox" value="Định Mức tồn Min" id="inventoryLevelMin" onclick="showProperty('tbInventoryLevelMin')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Định Mức tồn Min</i>
+                    <i class="col-lg-6 labels">Định Mức tồn Min</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Định Mức tồn Max" id="inventoryLevelMax" onclick="showProperty('tbInventoryLevelMax')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Định Mức tồn Max</i>
+                    <i class="col-lg-6 labels">Định Mức tồn Max</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Mô tả" id="description" onclick="showProperty('tbDescription')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Mô tả</i>
+                    <i class="col-lg-6 labels">Mô tả</i>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <input type="checkbox" value="Số lượng" checked id="description" onclick="showProperty('tbQuantity')" class="btn btn-primary w-75 m-2" />
                     </div>
-                    <i class="col-lg-6">Số lượng</i>
+                    <i class="col-lg-6 labels">Số lượng</i>
                 </div>
             </div>
             <div class="text-center mt-5">
@@ -429,9 +429,11 @@
                             @foreach (var item in Model.subCategories)
                             {
                                 <li class="m-1 pointer-event" onclick="this.form.submit()">
+                                    <button style="padding: 5px 15px 5px 15px;border-radius: 50px;text-align: center" class="link-filter">
                                     <a class="text-decoration-none" style="color: black" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@(item.SubCategoryId)">
                                         @(item.SubCategoryName)
                                     </a>
+                                    </button>
                                 </li>
                             }
                         </ul>

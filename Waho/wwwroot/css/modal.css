@@ -19,7 +19,16 @@
     .input-box.button:hover {
         background: #0e4bf1;
     }
+.link-filter {
+    color: #fff;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+}
 
+    .link-filter:hover {
+        background: #FF6600;
+    }
 
 .modal {
     position: fixed;
