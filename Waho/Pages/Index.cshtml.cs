@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Text.Json;
 using Waho.DataService;
 using Waho.WahoModels;
 
@@ -27,7 +29,8 @@ namespace Waho.Pages
         {
             if (_dataService.GetEmployeeByUserAndPass(Employee.UserName, Employee.Password) != null)
             {
-                //HttpContext.Session.SetString("",Employee);
+                HttpContext.Session.SetString("Employee", JsonSerializer.Serialize(Employee));
+
                 return RedirectToPage("./Admin/Index");
             }
             ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu");
