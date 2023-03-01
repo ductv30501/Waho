@@ -3,8 +3,16 @@
     --primary-active: #FF9966;
 }
 
+.nav-item p{
+    margin:0;
+}
+
+.nav-item:hover p{
+    color: var(--primary-active);
+}
+
 .nav-item:hover {
-    opacity: 0.5;
+    border-bottom: 2px solid var(--primary-active);
 }
 
 .primary-color {
@@ -68,9 +76,13 @@ a {
     }
 
 .login-container {
-    margin-top:140px;
+    margin-top: 140px;
 }
 
 .reg-container {
     margin-top: 40px;
+}
+
+.vertical{
+    opacity:0.5;
 }

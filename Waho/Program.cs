@@ -16,6 +16,8 @@ builder.Services.AddScoped<DataServiceManager>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 ExcelPackage.LicenseContext = LicenseContext.Commercial;
@@ -31,6 +33,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();

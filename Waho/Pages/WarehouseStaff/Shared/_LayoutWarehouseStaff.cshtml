@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,23 +8,41 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link href="~/css/styles.css" rel="stylesheet" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/WarehouseStaff/Index">Waho</a>
+                <a class="navbar-brand" asp-area="" asp-page="/WarehouseStaff/Index">
+                    <div class="d-flex">
+                        <h2 class="mx-auto d-flex align-items-center">
+                            <img src="~/img/wahologo.png" width="50px" height="50px" />Wa<span class="primary-color">Ho</span>
+                        </h2>
+                    </div>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/WarehouseStaff/Products/Index">Sản Phẩm</a>
+                        <li class="nav-item m-1">
+                            <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/Products/Index"><p><i class="bi bi-box-seam-fill"></i> Sản Phẩm</p></a>
                         </li>
+                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                        <li class="nav-item m-1">
+                            <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/InventorySheet/Index"><p><i class="bi bi-box2-fill"></i> Kiểm Kho</p></a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/WarehouseStaff/InventorySheet/Index">Kiểm Kho</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Register"><p><i class="bi bi-person-plus-fill"></i> Đăng ký</p></a>
+                        </li>
+                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index"><p><i class="bi bi-person-fill-lock"></i> Đăng nhập</p></a>
                         </li>
                     </ul>
                 </div>
@@ -37,8 +56,27 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - Waho - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        <div class="container-fluid bg-dark text-white border-top py-2 px-sm-3 px-md-5">
+            <div class="row">
+                <div class="col-lg-6 text-center text-md-left mb-3 mb-md-0">
+                    <p class="m-0 text-white">
+                        &copy; <a href="#">Bản quyền thuộc về Waho</a>. Thiết kế bởi <a href="#">Waho</a>
+                    </p>
+                </div>
+                <div class="col-lg-6 text-center text-md-right">
+                    <ul class="nav d-inline-flex">
+                        <li class="nav-item">
+                            <a class="nav-link text-white py-0" href="#"><p>Chính Sách Và Điều Khoản</p></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white py-0" href="#"><p>Câu Hỏi</p></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white py-0" href="#"><p>Trợ Giúp</p></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </footer>
 
