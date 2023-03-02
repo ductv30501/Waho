@@ -66,10 +66,14 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             {
                 InventorySheet.UserName= raw_employeeID;
             }
-            if (!string.IsNullOrEmpty(raw_date))
+            if (string.IsNullOrWhiteSpace(raw_date))
             {
-                InventorySheet.Date = DateTime.Parse(raw_date);
+                // messagse
+                message = "ngày kiểm kho không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
             }
+            InventorySheet.Date = DateTime.Parse(raw_date);
             if (!string.IsNullOrEmpty(raw_description))
             {
                 InventorySheet.Description = raw_description;
@@ -79,7 +83,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             if (string.IsNullOrEmpty(req.Form["ExcelFile"]))
             {
                 // messagse
-                message = "đường dẫn file trống, null";
+                message = "đường dẫn file trống, bạn cần chọn file trước khi gửi form";
                 TempData["message"] = message;
                 return RedirectToPage("./Index");
             }

@@ -85,7 +85,8 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             {
                 pageIndex = 1;
             }
-
+            message = TempData["message"] as string;
+            successMessage = TempData["successMessage"] as string;
             if (_context.InventorySheets != null)
             {
                 InventorySheetList = _dataService.getInventoryPagingAndFilter(pageIndex, pageSize, textSearch, employeeID);
