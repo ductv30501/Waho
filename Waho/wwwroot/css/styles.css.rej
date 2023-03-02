@@ -1,9 +1,0 @@
-diff a/Waho/wwwroot/css/styles.css b/Waho/wwwroot/css/styles.css	(rejected hunks)
-@@ -84,6 +84,5 @@
- }
- 
- .vertical{
--    opacity:0.5;
-     opacity:0.3;
- }
-\ No newline at end of file
