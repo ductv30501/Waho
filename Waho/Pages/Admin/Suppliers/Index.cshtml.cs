@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Admin.Suppliers
@@ -12,16 +13,52 @@ namespace Waho.Pages.Admin.Suppliers
     public class IndexModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
+        private readonly DataServiceManager _dataService;
+        //message
+        [BindProperty(SupportsGet = true)]
+        public string message { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string successMessage { get; set; }
+        // paging
+        [BindProperty(SupportsGet = true)]
+        public int pageSize { get; set; } = 10;
 
-        public IndexModel(Waho.WahoModels.WahoContext context)
+        [BindProperty(SupportsGet = true)]
+        public int pageIndex { get; set; } = 1;
+
+        [BindProperty(SupportsGet = true)]
+        public int TotalCount { get; set; } = 0;
+
+        [BindProperty(SupportsGet = true)]
+        public string textSearch { get; set; } = "";
+        private string raw_pageSize, raw_textSearch;
+        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
         {
             _context = context;
+            _dataService = dataService;
         }
-
+        [BindProperty(SupportsGet = true)]
         public IList<Supplier> Supplier { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
+            //get data from form
+            raw_pageSize = HttpContext.Request.Query["pageSize"];
+            if (!string.IsNullOrEmpty(raw_pageSize))
+            {
+                pageSize = int.Parse(raw_pageSize);
+            }
+            raw_textSearch = HttpContext.Request.Query["textSearch"];
+            if (!string.IsNullOrWhiteSpace(raw_textSearch))
+            {
+                textSearch = raw_textSearch;
+            }
+            else
+            {
+                textSearch = "";
+            }
+            TotalCount = _context.Suppliers.Count();
+
             if (_context.Suppliers != null)
             {
                 Supplier = await _context.Suppliers.ToListAsync();

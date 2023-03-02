@@ -16,9 +16,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
         //message
-        [BindProperty(SupportsGet = true)]
         public string message { get; set; }
-        [BindProperty(SupportsGet = true)]
         public string successMessage { get; set; }
         // paging
         [BindProperty(SupportsGet = true)]
@@ -92,7 +90,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             string raw_description = req.Form["description"];
             _inventorySheetUpdate.InventorySheetId = Int32.Parse(raw_inventorySheetID);
             _inventorySheetUpdate.UserName = raw_EmployeeID;
-            if (string.IsNullOrEmpty(raw_date))
+            if (string.IsNullOrWhiteSpace(raw_date))
             {
                 //message
                 message = "Ngày kiểm kho không được để trống";

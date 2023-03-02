@@ -32,7 +32,7 @@
                             }
                         </select>
                         <label class="labels">Ngày kiểm kho</label>
-                        <input name="date" id="date" type="date" class="form-control input" />
+                        <input name="date" id="date" type="date" class="form-control input" required />
                         <label class="labels">Miêu tả</label>
                         <input name="description" type="text" class="form-control input" placeholder="nhập Miêu tả" required />
                     </div>
@@ -54,8 +54,9 @@
     @*start filter*@
     <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
         <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID" style="margin-bottom: 20px; ">
-            <div class="row">
-                <div class="form-group col-md-1">
+            <div class="row d-flex justify-content-between" style="width:95%">
+                <div class="col-5 row">
+                <div class="form-group col-md-3">
                     <label for="inputState">Hiển thị</label>
                     <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
                         <option value="5"> 5 hàng</option>
@@ -64,7 +65,7 @@
                         <option value="20">20 hàng</option>
                     </select>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-9">
                     <div class="d-flex">
                         <div class="col-md-10">
                             <input type="text" asp-for="textSearch" class="w-100" placeholder="Nhập tên người tạo phiếu, mô tả" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
@@ -77,6 +78,7 @@
                             </button>
                         </div>
                     </div>
+                </div>
                 </div>
                 <div class="form-group col-md-2">
                     <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
@@ -93,11 +95,11 @@
         @*end filter*@
         @if (Model.message != null)
         {
-            <div id="notification" class="alert alert-danger">@Model.message</div>
+            <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
         }
         @if (Model.successMessage != null)
         {
-            <div id="notificationSuccess" class="alert alert-success">@Model.successMessage</div>
+            <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
         }
         <div class="row">
             <div class="col-lg-2" style="background-color: #fff; border-radius: 10px; padding:10px;margin-right: 10px">
@@ -169,15 +171,15 @@
                             <ul class="pagination">
                                 @if (Model.pageIndex > 1)
                                 {
-                                    <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Trước</a></li>
+                                    <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Trước</a></li>
                                 }
                                 @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                 {
-                                    <li class="page-item @(Model.pageIndex == i ? "active" : "")"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">@i</a></li>
+                                    <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">@i</a></li>
                                 }
                                 @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                 {
-                                    <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Sau</a></li>
+                                    <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Sau</a></li>
                                 }
                             </ul>
                         </div>

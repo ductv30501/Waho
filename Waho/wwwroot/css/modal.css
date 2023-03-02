@@ -24,6 +24,7 @@
     letter-spacing: 1px;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
     .link-filter:hover {
@@ -94,4 +95,18 @@
 
 .active {
     z-index: 3;
+}
+.link-paging {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s ease-in-out;
+}
+    .link-paging:hover {
+        background-color: #ff6533;
+        color: white;
+    }
+.page-item.active.link-active a {
+    background-color: #ff6533;
+    color: white;
+    border-color: #ff6533;
 }

@@ -42,6 +42,22 @@ namespace Waho.DataService
                             .Include(p => p.Supplier)
                             .ToList();
         }
+        public InventorySheet getInventorySheetByID(int id)
+        {
+            return _context.InventorySheets
+                                .Include(p => p.UserNameNavigation)
+                                .Where(i => i.InventorySheetId == id).FirstOrDefault();
+        }
+        public List<InventorySheetDetail> GetInventorySheetDetails(int inventorySheetID)
+        {
+            List<InventorySheetDetail> inventorySheetDetails= new List<InventorySheetDetail>();
+            inventorySheetDetails = _context.InventorySheetDetails
+                                            .Include(p => p.Product)
+                                            .Include(p => p.InventorySheet)
+                                            .Where(i => i.InventorySheetId == inventorySheetID)
+                                            .ToList() ;
+            return inventorySheetDetails;
+        }
         // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
 
@@ -105,5 +121,7 @@ namespace Waho.DataService
                          .ToList();
             return inventorySheetDetails;
         }
+        //paging suppliers
+        
     }
 }
