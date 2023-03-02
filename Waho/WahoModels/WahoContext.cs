@@ -360,6 +360,8 @@ namespace Waho.WahoModels
                     .HasMaxLength(150)
                     .HasColumnName("productName");
 
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
                 entity.Property(e => e.SubCategoryId).HasColumnName("subCategoryID");
 
                 entity.Property(e => e.SupplierId).HasColumnName("supplierID");

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Mvc;
@@ -11,30 +10,31 @@ using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
 using Waho.WahoModels;
 
-namespace Waho.Pages.WarehouseStaff.Products
+namespace Waho.Pages.WarehouseStaff.InventorySheetManager
 {
-    public class UploadFileExcelModel : PageModel
+    public class CreateModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly IFileProvider _fileProvider;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public UploadFileExcelModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider)
+        public CreateModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider)
         {
             _context = context;
             _fileProvider = fileProvider;
         }
 
+
         [BindProperty]
-        public List<Product> Products { get; set; }
+        public InventorySheet InventorySheet { get; set; }
+        List<InventorySheetDetail> inventorySheetDetails { get; set; }
         [BindProperty]
         public string ExcelFile { get; set; }
-
-
+        private int inventoryID;
         public IActionResult OnGetAsync()
         {
             // Lấy thông tin file từ IFileProvider
-            IFileInfo fileInfo = _fileProvider.GetFileInfo("Products.xlsx");
+            IFileInfo fileInfo = _fileProvider.GetFileInfo("Inventory.xlsx");
             if (fileInfo.Exists)
             {
                 // Đọc nội dung file và trả về file download
@@ -44,7 +44,7 @@ namespace Waho.Pages.WarehouseStaff.Products
                     fileStream.CopyTo(stream);
                 }
                 stream.Position = 0;
-                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "template.xlsx");
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "templateUploadInventory.xlsx");
             }
             else
             {
@@ -58,6 +58,24 @@ namespace Waho.Pages.WarehouseStaff.Products
         public async Task<IActionResult> OnPostAsync()
         {
             var req = HttpContext.Request;
+            //get data form form submit 
+            string raw_employeeID = req.Form["employeeID"];
+            string raw_date = req.Form["date"];
+            string raw_description = req.Form["description"];
+            if (!string.IsNullOrEmpty(raw_employeeID))
+            {
+                InventorySheet.UserName= raw_employeeID;
+            }
+            if (!string.IsNullOrEmpty(raw_date))
+            {
+                InventorySheet.Date = DateTime.Parse(raw_date);
+            }
+            if (!string.IsNullOrEmpty(raw_description))
+            {
+                InventorySheet.Description = raw_description;
+            }
+            
+            //add file product 
             if (string.IsNullOrEmpty(req.Form["ExcelFile"]))
             {
                 // messagse
@@ -67,7 +85,10 @@ namespace Waho.Pages.WarehouseStaff.Products
             }
             else
             {
-
+                // add inventory sheet
+                _context.InventorySheets.Add(InventorySheet);
+                await _context.SaveChangesAsync();
+                inventoryID = InventorySheet.InventorySheetId;
                 IFileInfo fileInfo = _fileProvider.GetFileInfo(req.Form["ExcelFile"]);
                 ExcelFile = fileInfo.PhysicalPath;
             }
@@ -82,8 +103,8 @@ namespace Waho.Pages.WarehouseStaff.Products
             {
                 try
                 {
-                    var products = ReadExcel(ExcelFile);
-                    if (products == null)
+                    var inventorySheetDetails = ReadExcel(ExcelFile);
+                    if (inventorySheetDetails == null)
                     {
                         // messagse
                         message = "trong file không có sản phẩm nào";
@@ -92,8 +113,8 @@ namespace Waho.Pages.WarehouseStaff.Products
                     }
                     else
                     {
-                        await _context.BulkInsertAsync(products);
-                        successMessage = $"{products.Count} sản phẩm được thêm vào thành công";
+                        await _context.BulkInsertAsync(inventorySheetDetails);
+                        successMessage = $"{inventorySheetDetails.Count} sản phẩm được thêm vào phiếu kiểm thành công";
                         TempData["successMessage"] = successMessage;
                         return RedirectToPage("./Index");
                     }
@@ -105,42 +126,25 @@ namespace Waho.Pages.WarehouseStaff.Products
             }
             return Page();
 
-
         }
-        private List<Product> ReadExcel(string path)
+        private List<InventorySheetDetail> ReadExcel(string path)
         {
             using var package = new ExcelPackage(new FileInfo(path));
             var worksheet = package.Workbook.Worksheets[0];
-            var products = new List<Product>();
+            var inventorySheetDetails = new List<InventorySheetDetail>();
             for (int row = 2; row <= worksheet.Dimension.Rows; row++)
             {
-                var product = new Product
+                var inventoryDetail = new InventorySheetDetail
                 {
-                    ProductName = worksheet.Cells[row, 1].GetValue<string>(),
-                    ImportPrice = worksheet.Cells[row, 2].GetValue<int>(),
-                    UnitPrice = worksheet.Cells[row, 3].GetValue<int>(),
-                    UnitInStock = worksheet.Cells[row, 4].GetValue<int>(),
-                    HaveDate = worksheet.Cells[row, 5].GetValue<bool>(),
-                    DateOfManufacture = worksheet.Cells[row, 6].GetValue<DateTime>(),
-                    Expiry = worksheet.Cells[row, 7].GetValue<DateTime>(),
-                    Trademark = worksheet.Cells[row, 8].GetValue<string>(),
-                    Weight = worksheet.Cells[row, 9].GetValue<int>(),
-                    Location = worksheet.Cells[row, 10].GetValue<string>(),
-                    Unit = worksheet.Cells[row, 11].GetValue<string>(),
-                    InventoryLevelMin = worksheet.Cells[row, 12].GetValue<int>(),
-                    InventoryLevelMax = worksheet.Cells[row, 13].GetValue<int>(),
-                    Description = worksheet.Cells[row, 14].GetValue<string>(),
-                    SubCategoryId = worksheet.Cells[row, 15].GetValue<int>(),
-                    SupplierId = worksheet.Cells[row, 16].GetValue<int>(),
-                    Active = worksheet.Cells[row, 17].GetValue<bool>(),
-                    Quantity = worksheet.Cells[row, 18].GetValue<int>()
+                    InventorySheetId = inventoryID,
+                    ProductId = worksheet.Cells[row, 1].GetValue<int>(),
+                    CurNwareHouse = worksheet.Cells[row, 19].GetValue<int>()
                 };
 
-                products.Add(product);
+                inventorySheetDetails.Add(inventoryDetail);
             }
 
-            return products;
+            return inventorySheetDetails;
         }
-
     }
 }

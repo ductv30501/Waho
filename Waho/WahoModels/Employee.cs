@@ -18,7 +18,7 @@ namespace Waho.WahoModels
         public string? UserName { get; set; }
 
         [Display(Name = "Tên người dùng")]
-        public string? EmployeeName { get; set; }
+        public string EmployeeName { get; set; }
         public string? Title { get; set; }
         public DateTime? Dob { get; set; }
         public DateTime? HireDate { get; set; }

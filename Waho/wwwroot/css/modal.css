@@ -19,7 +19,16 @@
     .input-box.button:hover {
         background: #0e4bf1;
     }
+.link-filter {
+    color: #fff;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+}
 
+    .link-filter:hover {
+        background: #FF6600;
+    }
 
 .modal {
     position: fixed;
@@ -35,7 +44,7 @@
     display: flex;
 }
 
-#insert-product-modal {
+#insert-modal {
     margin: auto;
     width: 60%;
     padding: 15px 35px 15px 35px;
@@ -70,7 +79,7 @@
     box-shadow: 0px 0px 1px 1px #ccc;
 }
 
-#update-product-modal {
+#update-modal {
     margin: auto;
     width: 60%;
     display: block;

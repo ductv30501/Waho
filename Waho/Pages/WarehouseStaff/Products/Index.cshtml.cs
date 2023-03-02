@@ -25,7 +25,6 @@ namespace Waho.Pages.WarehouseStaff.Products
         public string message { get; set; }
         [BindProperty(SupportsGet = true)]
         public string successMessage { get; set; }
-        [BindProperty(SupportsGet = true)]
         public IList<Product> Products { get; set; } = default!;
         [BindProperty]
         public Product product { get; set; }

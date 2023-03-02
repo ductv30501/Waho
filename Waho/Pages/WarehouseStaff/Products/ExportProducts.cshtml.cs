@@ -46,6 +46,7 @@ namespace Waho.Pages.WarehouseStaff.Products
             worksheet.Cells[1, 16].Value = "Nhóm hàng";
             worksheet.Cells[1, 17].Value = "Nhà cung cấp";
             worksheet.Cells[1, 18].Value = "active";
+            worksheet.Cells[1, 19].Value = "Số lượng";
 
             // set data rows
             int rowIndex = 2;
@@ -69,6 +70,7 @@ namespace Waho.Pages.WarehouseStaff.Products
                 worksheet.Cells[rowIndex, 16].Value = product.SubCategory.SubCategoryName;
                 worksheet.Cells[rowIndex, 17].Value = product.Supplier.CompanyName;
                 worksheet.Cells[rowIndex, 18].Value = (product.Active == true ? "Đang có" : "Không có");
+                worksheet.Cells[rowIndex, 19].Value = product.Quantity;
                 rowIndex++;
             }
 
