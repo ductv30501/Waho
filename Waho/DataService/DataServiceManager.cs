@@ -58,6 +58,10 @@ namespace Waho.DataService
                                             .ToList() ;
             return inventorySheetDetails;
         }
+        public List<Supplier> getSupplierList()
+        {
+            return _context.Suppliers.Where(s => s.Active == true).ToList();
+        }
         // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
 
@@ -122,6 +126,20 @@ namespace Waho.DataService
             return inventorySheetDetails;
         }
         //paging suppliers
-        
+        public List<Supplier> GetSupplierPagingAndFilter(int pageIndex, int pageSize, string textSearch)
+        {
+            List<Supplier> suppliers= new List<Supplier>();
+            var query = _context.Suppliers.Where(s => s.Active == true);
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                 query.Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
+                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch));
+            }
+            suppliers = query.OrderBy(i => i.SupplierId)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return suppliers;
+        }
     }
 }

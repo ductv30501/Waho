@@ -672,7 +672,6 @@
         //delete Product
         function DeleteProduct() {
             var productID = $("#productIDUpdate").val().toString();
-            console.log(productID);
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
                 $.ajax({
                     url: '/WarehouseStaff/Products/Delete',

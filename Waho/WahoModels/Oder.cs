@@ -11,7 +11,7 @@ namespace Waho.WahoModels
         }
 
         public int OderId { get; set; }
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
         public int CustomerId { get; set; }
         public int ShipperId { get; set; }
         public string? OderState { get; set; }

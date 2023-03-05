@@ -30,7 +30,7 @@ namespace Waho.Pages.Admin.Suppliers
         public int TotalCount { get; set; } = 0;
 
         [BindProperty(SupportsGet = true)]
-        public string textSearch { get; set; } = "";
+        public string textSearch { get; set; }
         private string raw_pageSize, raw_textSearch;
         public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
         {
@@ -57,11 +57,16 @@ namespace Waho.Pages.Admin.Suppliers
             {
                 textSearch = "";
             }
-            TotalCount = _context.Suppliers.Count();
-
+            TotalCount = _context.Suppliers
+                            .Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
+                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch))
+                            .Where(s => s.Active == true)
+                            .Count();
+            message = TempData["message"] as string;
+            successMessage = TempData["successMessage"] as string;
             if (_context.Suppliers != null)
             {
-                Supplier = await _context.Suppliers.ToListAsync();
+                Supplier = _dataService.GetSupplierPagingAndFilter(pageIndex,pageSize, textSearch);
             }
         }
     }

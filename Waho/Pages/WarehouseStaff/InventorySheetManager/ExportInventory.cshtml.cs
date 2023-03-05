@@ -25,6 +25,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             Int32 inventorySheetID = Int32.Parse(HttpContext.Request.Query["inventorySheetID"]);
             var inventoryDetailList = _dataService.GetInventorySheetDetails(inventorySheetID);
             inventorySheet = _dataService.getInventorySheetByID(inventorySheetID);
+
             // create Excel package
             var package = new ExcelPackage();
 

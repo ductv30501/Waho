@@ -397,6 +397,11 @@ namespace Waho.WahoModels
             {
                 entity.Property(e => e.ReturnOrderId).HasColumnName("returnOrderID");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
                 entity.Property(e => e.Date)
@@ -490,6 +495,10 @@ namespace Waho.WahoModels
             modelBuilder.Entity<Supplier>(entity =>
             {
                 entity.Property(e => e.SupplierId).HasColumnName("supplierID");
+
+                entity.Property(e => e.Active)
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("('1')");
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(150)

@@ -14,7 +14,7 @@ namespace Waho.WahoModels
         }
 
         public int ProductId { get; set; }
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; }
         public int? ImportPrice { get; set; }
         public int? UnitPrice { get; set; }
         public int UnitInStock { get; set; }

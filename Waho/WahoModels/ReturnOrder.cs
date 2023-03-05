@@ -16,6 +16,7 @@ namespace Waho.WahoModels
         public bool? State { get; set; }
         public DateTime? Date { get; set; }
         public string? Description { get; set; }
+        public bool? Active { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Employee UserNameNavigation { get; set; }

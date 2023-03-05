@@ -13,7 +13,8 @@ namespace Waho.Pages.Admin.Suppliers
     public class EditModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
+        public string message { get; set; }
+        public string successMessage { get; set; }
         public EditModel(Waho.WahoModels.WahoContext context)
         {
             _context = context;
@@ -22,30 +23,83 @@ namespace Waho.Pages.Admin.Suppliers
         [BindProperty]
         public Supplier Supplier { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.Suppliers == null)
-            {
-                return NotFound();
-            }
-
-            var supplier =  await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == id);
-            if (supplier == null)
-            {
-                return NotFound();
-            }
-            Supplier = supplier;
-            return Page();
-        }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var req = HttpContext.Request;
+            //get data form form submit 
+            string raw_supplierID = req.Form["supplierID"];
+            string raw_conpanyName = req.Form["companyName"];
+            string raw_addres = req.Form["address"];
+            string raw_city = req.Form["city"];
+            string raw_region = req.Form["region"];
+            string raw_phone = req.Form["phone"];
+            string raw_taxCode = req.Form["taxCode"];
+            string raw_branch = req.Form["branch"];
+            string raw_description = req.Form["description"];
+
+            Supplier.SupplierId = Int32.Parse(raw_supplierID);
+            //validate
+            if (string.IsNullOrEmpty(raw_conpanyName))
             {
-                return Page();
+                //message
+                message = "tên nhà cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
             }
+            Supplier.CompanyName = raw_conpanyName;
+            if (string.IsNullOrEmpty(raw_addres))
+            {
+                //message
+                message = "địa chỉ cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            Supplier.Address = raw_addres;
+            if (string.IsNullOrEmpty(raw_city))
+            {
+                //message
+                message = "Thành phố cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            Supplier.City = raw_city;
+            if (string.IsNullOrEmpty(raw_region))
+            {
+                //message
+                message = "Khu vực của cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            Supplier.Region = raw_region;
+            if (string.IsNullOrEmpty(raw_phone))
+            {
+                //message
+                message = "Số điện thoại của cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            Supplier.Phone = raw_phone;
+            if (string.IsNullOrEmpty(raw_taxCode))
+            {
+                //message
+                message = "Mã số thuế của cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            Supplier.TaxCode = raw_taxCode;
+            if (string.IsNullOrEmpty(raw_branch))
+            {
+                //message
+                message = "Khi nhánh của cung cấp không được để trống";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            Supplier.Branch = raw_branch;
+            Supplier.Description = raw_description;
+            Supplier.Active = true;
 
             _context.Attach(Supplier).State = EntityState.Modified;
 
@@ -57,14 +111,19 @@ namespace Waho.Pages.Admin.Suppliers
             {
                 if (!SupplierExists(Supplier.SupplierId))
                 {
-                    return NotFound();
+                    //message
+                    message = "Không tìm thấy nhà cung cấp tương ứng";
+                    TempData["message"] = message;
+                    return RedirectToPage("./Index");
                 }
                 else
                 {
                     throw;
                 }
             }
-
+            // success message
+            successMessage = "Chỉnh sửa thông tin nhà cung cấp thành công";
+            TempData["successMessage"] = successMessage;
             return RedirectToPage("./Index");
         }
 
