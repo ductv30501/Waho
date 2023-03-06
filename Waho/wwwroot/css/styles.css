@@ -25,6 +25,7 @@
     outline: none;
 }
 
+
 .btn-outline-primary {
     color: var(--primary);
     border: solid 2px var(--primary);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Waho.WahoModels
 {
@@ -14,11 +13,8 @@ namespace Waho.WahoModels
             ReturnOrders = new HashSet<ReturnOrder>();
         }
 
-        [Display(Name = "Tên đăng nhập")]
-        public string? UserName { get; set; }
-
-        [Display(Name = "Tên người dùng")]
-        public string EmployeeName { get; set; }
+        public string UserName { get; set; } = null!;
+        public string? EmployeeName { get; set; }
         public string? Title { get; set; }
         public DateTime? Dob { get; set; }
         public DateTime? HireDate { get; set; }
@@ -26,10 +22,8 @@ namespace Waho.WahoModels
         public string? Region { get; set; }
         public string? Phone { get; set; }
         public string? Note { get; set; }
-
-        [Display(Name = "Mật khẩu")]
         public string? Password { get; set; }
-        public int WahoId { get; set; }
+        public int? WahoId { get; set; }
         public int? Role { get; set; }
 
         public virtual WahoInformation? Waho { get; set; }
