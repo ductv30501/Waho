@@ -74,6 +74,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
                 return RedirectToPage("./Index");
             }
             InventorySheet.Date = DateTime.Parse(raw_date);
+            InventorySheet.Active = true;
             if (!string.IsNullOrEmpty(raw_description))
             {
                 InventorySheet.Description = raw_description;
@@ -96,6 +97,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
                 IFileInfo fileInfo = _fileProvider.GetFileInfo(req.Form["ExcelFile"]);
                 ExcelFile = fileInfo.PhysicalPath;
             }
+            //add list product
             if (ExcelFile == null || ExcelFile.Length == 0)
             {
                 // messagse

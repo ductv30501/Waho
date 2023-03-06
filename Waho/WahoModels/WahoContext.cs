@@ -53,11 +53,24 @@ namespace Waho.WahoModels
 
                 entity.Property(e => e.BillId).HasColumnName("billID");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.BillStatus)
+                    .HasMaxLength(50)
+                    .HasColumnName("billStatus");
+
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
                 entity.Property(e => e.Date)
                     .HasColumnType("date")
                     .HasColumnName("date");
+
+                entity.Property(e => e.Descriptions)
+                    .HasMaxLength(100)
+                    .HasColumnName("descriptions");
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
@@ -205,6 +218,11 @@ namespace Waho.WahoModels
             modelBuilder.Entity<InventorySheet>(entity =>
             {
                 entity.Property(e => e.InventorySheetId).HasColumnName("inventorySheetID");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Date)
                     .HasColumnType("date")

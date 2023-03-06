@@ -14,6 +14,7 @@ namespace Waho.WahoModels
         public string? Description { get; set; }
         public string UserName { get; set; }
         public DateTime? Date { get; set; }
+        public bool? Active { get; set; }
 
         public virtual Employee UserNameNavigation { get; set; }
         public virtual ICollection<InventorySheetDetail> InventorySheetDetails { get; set; }

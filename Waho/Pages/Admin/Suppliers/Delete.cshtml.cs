@@ -35,8 +35,9 @@ namespace Waho.Pages.Admin.Suppliers
                 // message
                 successMessage = "Xóa thành công nhà cung cấp ra khỏi danh sách";
                 TempData["successMessage"] = successMessage;
+                return RedirectToPage("./Index");
             }
-            message = "không tìm thấy sản phẩm";
+            message = "không tìm thấy nhà cung cấp";
             TempData["message"] = message;
             return RedirectToPage("./Index");
         }

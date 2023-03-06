@@ -59,14 +59,14 @@ namespace Waho.Pages.Admin.Suppliers
             }
             TotalCount = _context.Suppliers
                             .Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
-                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch))
+                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch) || s.TaxCode.Contains(textSearch))
                             .Where(s => s.Active == true)
                             .Count();
             message = TempData["message"] as string;
             successMessage = TempData["successMessage"] as string;
             if (_context.Suppliers != null)
             {
-                Supplier = _dataService.GetSupplierPagingAndFilter(pageIndex,pageSize, textSearch);
+                Supplier = _dataService.GetSupplierPagingAndFilter(pageIndex, pageSize, textSearch);
             }
         }
     }

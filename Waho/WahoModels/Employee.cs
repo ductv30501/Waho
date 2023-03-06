@@ -22,7 +22,7 @@ namespace Waho.WahoModels
         public string? Region { get; set; }
         public string? Phone { get; set; }
         public string? Note { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
         public int? WahoId { get; set; }
         public int? Role { get; set; }
 

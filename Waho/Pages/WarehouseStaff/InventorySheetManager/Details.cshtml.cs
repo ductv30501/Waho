@@ -99,6 +99,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
             _inventorySheetUpdate.Date = DateTime.Parse(raw_date);
             _inventorySheetUpdate.Description = raw_description;
+            _inventorySheetUpdate.Active = true;
             _context.Attach(_inventorySheetUpdate).State = EntityState.Modified;
             try
             {

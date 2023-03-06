@@ -44,7 +44,7 @@ namespace Waho.DataService
         }
         public InventorySheet getInventorySheetByID(int id)
         {
-            return _context.InventorySheets
+            return _context.InventorySheets.Where(i=> i.Active == true)
                                 .Include(p => p.UserNameNavigation)
                                 .Where(i => i.InventorySheetId == id).FirstOrDefault();
         }
@@ -95,16 +95,12 @@ namespace Waho.DataService
         public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize,string textSearch, string userName)
         {
             List<InventorySheet> inventories= new List<InventorySheet>();
-            var query = _context.InventorySheets;
-            if (!string.IsNullOrWhiteSpace(userName))
-            {
-                query.Where(i => i.UserName.Contains(userName));
-            }
-            if (!string.IsNullOrEmpty(textSearch))
-            {
-                query.Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch) || i.Description.Contains(textSearch) || i.UserNameNavigation.EmployeeName.Contains(textSearch));
-            }
-            inventories = query.Include(i => i.UserNameNavigation)
+            var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
+                                                .Where(i => i.Active == true)
+                                                .Where(i => i.UserName.Contains(userName))
+                                                .Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch)
+                                    || i.Description.Contains(textSearch));
+            inventories = query
                          .OrderBy(i => i.InventorySheetId)    
                          .Skip((pageIndex - 1) * pageSize)
                          .Take(pageSize)
@@ -132,10 +128,10 @@ namespace Waho.DataService
             var query = _context.Suppliers.Where(s => s.Active == true);
             if (!string.IsNullOrEmpty(textSearch))
             {
-                 query.Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
-                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch));
+                query = query.Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
+                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch) || s.TaxCode.Contains(textSearch));
             }
-            suppliers = query.OrderBy(i => i.SupplierId)
+            suppliers = query.OrderBy(s => s.SupplierId)
                          .Skip((pageIndex - 1) * pageSize)
                          .Take(pageSize)
                          .ToList();

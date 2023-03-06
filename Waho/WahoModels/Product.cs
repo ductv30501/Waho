@@ -21,7 +21,7 @@ namespace Waho.WahoModels
         public bool? HaveDate { get; set; }
         public DateTime? DateOfManufacture { get; set; }
         public DateTime? Expiry { get; set; }
-        public string? Trademark { get; set; }
+        public string Trademark { get; set; }
         public int? Weight { get; set; }
         public string? Location { get; set; }
         public string? Unit { get; set; }
