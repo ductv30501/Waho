@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Waho.WahoModels;
 
-namespace Waho.Pages.Admin.Suppliers
+namespace Waho.Pages.WarehouseStaff.Products
 {
     public class DetailsModel : PageModel
     {
@@ -19,26 +18,26 @@ namespace Waho.Pages.Admin.Suppliers
             _context = context;
         }
 
-      public Supplier Supplier { get; set; }
+      public Product Product { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? supplierID)
+        public async Task<IActionResult> OnGetAsync(int? productID)
         {
-            supplierID = Int32.Parse(HttpContext.Request.Query["supplierID"]);
-            if (supplierID == null || _context.Suppliers == null)
+            productID = Int32.Parse(HttpContext.Request.Query["productID"]);
+            if (productID == null || _context.Products == null)
             {
                 return NotFound();
             }
-
-            var supplier = await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == supplierID);
-            if (supplier == null)
+            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productID);
+            if (product == null)
             {
                 return NotFound();
             }
             else 
             {
-                Supplier = supplier;
+                Product = product;
             }
-            return new JsonResult(supplier);
+
+            return new JsonResult(product);
         }
     }
 }

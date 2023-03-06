@@ -12,51 +12,36 @@ namespace Waho.Pages.Admin.Suppliers
     public class DeleteModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
+        public string message { get; set; }
+        public string successMessage { get; set; }
         public DeleteModel(Waho.WahoModels.WahoContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-      public Supplier Supplier { get; set; }
+        public Supplier Supplier { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string? supplierID)
         {
-            if (id == null || _context.Suppliers == null)
-            {
-                return NotFound();
-            }
-
-            var supplier = await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == id);
-
-            if (supplier == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                Supplier = supplier;
-            }
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.Suppliers == null)
-            {
-                return NotFound();
-            }
-            var supplier = await _context.Suppliers.FindAsync(id);
-
+            int supplierId = Int32.Parse(supplierID);
+            var supplier = await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == supplierId);
             if (supplier != null)
             {
                 Supplier = supplier;
-                _context.Suppliers.Remove(Supplier);
+                Supplier.Active = false;
+                _context.Attach(Supplier).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                // message
+                successMessage = "Xóa thành công nhà cung cấp ra khỏi danh sách";
+                TempData["successMessage"] = successMessage;
+                return RedirectToPage("./Index");
             }
-
+            message = "không tìm thấy nhà cung cấp";
+            TempData["message"] = message;
             return RedirectToPage("./Index");
         }
+
+
     }
 }

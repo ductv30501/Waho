@@ -19,6 +19,7 @@ namespace Waho.WahoModels
         public string? TaxCode { get; set; }
         public string? Branch { get; set; }
         public string? Description { get; set; }
+        public bool? Active { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
     }
