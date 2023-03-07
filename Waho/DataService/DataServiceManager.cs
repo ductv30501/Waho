@@ -62,6 +62,21 @@ namespace Waho.DataService
         {
             return _context.Suppliers.Where(s => s.Active == true).ToList();
         }
+        public List<ReturnOrderProduct> GetReturnOrderDetails(int returnOrderID)
+        {
+            return _context.ReturnOrderProducts
+                                        .Include(r => r.Product)
+                                        .Include(r => r.ReturnOrder)
+                                        .Where(r => r.ReturnOrderId == returnOrderID)
+                                        .ToList();
+        }
+        public ReturnOrder getReturnOrderByID(int id)
+        {
+            return _context.ReturnOrders.Where(i => i.Active == true)
+                                .Include(p => p.UserNameNavigation)
+                                .Include(r => r.Customer)
+                                .Where(i => i.ReturnOrderId == id).FirstOrDefault();
+        }
         // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize,string textSearch, int subCategoryID,int categoryID) {
 
@@ -99,7 +114,7 @@ namespace Waho.DataService
                                                 .Where(i => i.Active == true)
                                                 .Where(i => i.UserName.Contains(userName))
                                                 .Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch)
-                                    || i.Description.Contains(textSearch));
+                                                            || i.Description.Contains(textSearch));
             inventories = query
                          .OrderBy(i => i.InventorySheetId)    
                          .Skip((pageIndex - 1) * pageSize)
@@ -136,6 +151,40 @@ namespace Waho.DataService
                          .Take(pageSize)
                          .ToList();
             return suppliers;
+        }
+
+        // paging return orders
+        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
+        {
+            List<ReturnOrder> returnOrders = new List<ReturnOrder>();
+            var query = _context.ReturnOrders.Include(i => i.UserNameNavigation)
+                                                .Include(i => i.Customer)
+                                                .Where(i => i.Active == true)
+                                                .Where(i => i.UserName.Contains(userName))
+                                                .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
+                                                            || i.Description.ToLower().Contains(textSearch.ToLower()) 
+                                                            || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+            returnOrders = query
+                         .OrderBy(i => i.ReturnOrderId)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return returnOrders;
+        }
+
+        //paging return order
+        public List<ReturnOrderProduct> getReturnOrderProductPaging(int pageIndex, int pageSize, int id)
+        {
+            List<ReturnOrderProduct> returnOrders = new List<ReturnOrderProduct>();
+            returnOrders = _context.ReturnOrderProducts
+                          .Include(r => r.ReturnOrder)
+                          .Include(i => i.Product)
+                          .Where(r => r.ReturnOrderId == id)
+                          .OrderBy(i => i.ReturnOrderId)
+                          .Skip((pageIndex - 1) * pageSize)
+                          .Take(pageSize)
+                          .ToList();
+            return returnOrders;
         }
     }
 }

@@ -13,14 +13,15 @@ namespace Waho.WahoModels
         }
 
         public int CustomerId { get; set; }
-        public string? CustomerName { get; set; }
+        public string CustomerName { get; set; }
         public string? Phone { get; set; }
         public DateTime? Dob { get; set; }
-        public string Adress { get; set; }
+        public string? Adress { get; set; }
         public bool? TypeOfCustomer { get; set; }
         public string? TaxCode { get; set; }
         public string? Email { get; set; }
         public string? Description { get; set; }
+        public bool? Active { get; set; }
 
         public virtual ICollection<Bill> Bills { get; set; }
         public virtual ICollection<Oder> Oders { get; set; }

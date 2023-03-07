@@ -22,10 +22,9 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         [BindProperty]
         public InventorySheet InventorySheet { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string? inventorySheetID)
+        public async Task<IActionResult> OnGetAsync(int? inventorySheetID)
         {
-            int inventorySheetId = Int32.Parse(inventorySheetID);
-            var _InventorySheet = await _context.InventorySheets.FirstOrDefaultAsync(m => m.InventorySheetId == inventorySheetId);
+            var _InventorySheet = await _context.InventorySheets.FirstOrDefaultAsync(m => m.InventorySheetId == inventorySheetID);
             if (_InventorySheet != null)
             {
                 InventorySheet = _InventorySheet;

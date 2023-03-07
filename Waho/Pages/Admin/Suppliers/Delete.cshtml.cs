@@ -22,10 +22,9 @@ namespace Waho.Pages.Admin.Suppliers
         [BindProperty]
         public Supplier Supplier { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string? supplierID)
+        public async Task<IActionResult> OnGetAsync(int? supplierID)
         {
-            int supplierId = Int32.Parse(supplierID);
-            var supplier = await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == supplierId);
+            var supplier = await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == supplierID);
             if (supplier != null)
             {
                 Supplier = supplier;
