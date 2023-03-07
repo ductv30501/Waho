@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Waho.WahoModels;
 
-namespace Waho.Pages.WarehouseStaff.Products
+namespace Waho.Pages.Cashier.ReturnOrders
 {
     public class DeleteModel : PageModel
     {
@@ -20,26 +20,26 @@ namespace Waho.Pages.WarehouseStaff.Products
         }
 
         [BindProperty]
-      public Product Product { get; set; }
+      public ReturnOrder ReturnOrder { get; set; }
 
-        
-        public async Task<IActionResult> OnGetAsync(int? productID)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productID);
-            if (product != null)
+            var _returnOrder = await _context.ReturnOrders.FirstOrDefaultAsync(m => m.ReturnOrderId == id);
+            if (_returnOrder != null)
             {
-                
-                Product = product;
-                Product.Active = false;
-                _context.Attach(Product).State = EntityState.Modified;
+                ReturnOrder = _returnOrder;
+                ReturnOrder.Active = false;
+                _context.Attach(ReturnOrder).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 // message
-                successMessage = "Xóa thành công sản phẩm ra khỏi danh sách";
+                successMessage = "Xóa thành công phiếu hoàn đơn ra khỏi danh sách";
                 TempData["successMessage"] = successMessage;
+                return RedirectToPage("./Index");
             }
-            message = "không tìm thấy sản phẩm";
+            message = "không tìm thấy phiếu hoàn đơn";
             TempData["message"] = message;
             return RedirectToPage("./Index");
         }
+
     }
 }

@@ -136,6 +136,11 @@ namespace Waho.WahoModels
             {
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Adress)
                     .HasMaxLength(50)
                     .HasColumnName("adress");
@@ -429,6 +434,10 @@ namespace Waho.WahoModels
                 entity.Property(e => e.Description)
                     .HasMaxLength(50)
                     .HasColumnName("description");
+
+                entity.Property(e => e.PaidCustomer).HasColumnName("paidCustomer");
+
+                entity.Property(e => e.PayCustomer).HasColumnName("payCustomer");
 
                 entity.Property(e => e.State).HasColumnName("state");
 

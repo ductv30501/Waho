@@ -68,7 +68,7 @@
                 <div class="form-group col-md-9">
                     <div class="d-flex">
                         <div class="col-md-10">
-                            <input type="text" asp-for="textSearch" class="w-100" placeholder="Nhập tên người tạo phiếu, mô tả" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
+                            <input type="text" asp-for="textSearch" class="w-100" placeholder="Nhập tên nhân viên, tên khách hàng" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
                         </div>
                         <div class="col-md-2">
                             <button class="input-box button" type="submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;padding: 5px 10px 5px 10px; margin-top: 20px">
@@ -106,12 +106,12 @@
             <div class="col-lg-2" style="background-color: #fff; border-radius: 10px; padding:10px;margin-right: 10px">
                 <div class="row">
                     <form method="get" asp-page="./Index" id="employeeForm">
-                        <div class="text-center" style="font-size: 20px">Nhân viên kiểm kho</div>
+                        <div class="text-center" style="font-size: 16px">Nhân viên kiểm kho</div>
                         <ul class="w-75 rounded-2 list-inline" style="padding-left:30px; padding-top:20px; font-size: small">
                             @foreach (var item in Model.employees)
                             {
                                 <li class="m-1 pointer-event" onclick="this.form.submit()">
-                                    <button style="padding: 5px 15px 5px 15px;border-radius: 50px;text-align: center;font-size: 16px" class="link-filter">
+                                    <button style="padding: 5px 15px 5px 15px;border-radius: 50px;text-align: center;font-size: 14px" class="link-filter">
                                     <a class="text-decoration-none" style="color: black" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@(item.UserName)">
                                         @(item.EmployeeName)
                                     </a>

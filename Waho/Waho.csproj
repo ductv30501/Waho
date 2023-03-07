@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Cashier\ReturnOrder\" />
     <Folder Include="Pages\Cashier\Orders\" />
   </ItemGroup>
 

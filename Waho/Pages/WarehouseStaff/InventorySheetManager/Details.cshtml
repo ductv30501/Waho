@@ -17,7 +17,7 @@
 <body style="background: #f2f2f2">
     @*start filter*@
     <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="w-100 col-lg-12">
-        <form method="get" asp-page="./Details" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-inventorySheetID="@Model._inventorySheet" style="margin-bottom: 20px; ">
+        <form asp-page="./Details" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-inventorySheetID="@Model._inventorySheetID" style="margin-bottom: 20px; ">
             <div class="row d-flex justify-content-between" style="width:95%">
                 <div class="form-group col-md-2">
                     <label for="inputState">Hiển thị</label>
@@ -41,6 +41,7 @@
                 </div>
             </div>
         </form>
+        </div>
         @*end filter*@
         @if (!string.IsNullOrWhiteSpace(Model.message))
         {
