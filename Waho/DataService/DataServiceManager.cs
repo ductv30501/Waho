@@ -4,17 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.FlowAnalysis;
+using System.Globalization;
+using System.Text;
 
 namespace Waho.DataService
 {
     public class DataServiceManager 
     {
         private readonly WahoContext _context;
+        private readonly DataServiceManager _dataService;
         public DataServiceManager(WahoContext context)
         {
             _context = context;
         }
-
+        
         public List<Category> GetCategories()
         {
             return _context.Categories.ToList();
@@ -90,10 +93,10 @@ namespace Waho.DataService
             }
             if(!string.IsNullOrEmpty(textSearch))
             {
-                query = query.Where(p => p.ProductName.Contains(textSearch) 
-                                || p.Trademark.Contains(textSearch) 
-                                || p.Supplier.Branch.Contains(textSearch) 
-                                || p.SubCategory.SubCategoryName.Contains(textSearch));
+                query = query.Where(p => p.ProductName.ToLower().Contains(textSearch.ToLower()) 
+                                || p.Trademark.ToLower().Contains(textSearch.ToLower()) 
+                                || p.Supplier.Branch.ToLower().Contains(textSearch.ToLower()) 
+                                || p.SubCategory.SubCategoryName.ToLower().Contains(textSearch.ToLower()));
             }
             
             products = query.Where(p => p.SubCategory.CategoryId == categoryID)
@@ -113,8 +116,8 @@ namespace Waho.DataService
             var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
                                                 .Where(i => i.Active == true)
                                                 .Where(i => i.UserName.Contains(userName))
-                                                .Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch)
-                                                            || i.Description.Contains(textSearch));
+                                                .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
+                                                            || i.Description.ToLower().Contains(textSearch.ToLower()));
             inventories = query
                          .OrderBy(i => i.InventorySheetId)    
                          .Skip((pageIndex - 1) * pageSize)
@@ -143,8 +146,8 @@ namespace Waho.DataService
             var query = _context.Suppliers.Where(s => s.Active == true);
             if (!string.IsNullOrEmpty(textSearch))
             {
-                query = query.Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
-                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch) || s.TaxCode.Contains(textSearch));
+                query = query.Where(s => s.Branch.ToLower().Contains(textSearch.ToLower()) || s.Address.ToLower().Contains(textSearch.ToLower()) || s.CompanyName.ToLower().Contains(textSearch.ToLower()) || s.Phone.ToLower().Contains(textSearch.ToLower())
+                            || s.City.ToLower().Contains(textSearch.ToLower()) || s.Region.ToLower().Contains(textSearch.ToLower()) || s.TaxCode.ToLower().Contains(textSearch.ToLower()));
             }
             suppliers = query.OrderBy(s => s.SupplierId)
                          .Skip((pageIndex - 1) * pageSize)
@@ -162,8 +165,9 @@ namespace Waho.DataService
                                                 .Where(i => i.Active == true)
                                                 .Where(i => i.UserName.Contains(userName))
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
-                                                            || i.Description.ToLower().Contains(textSearch.ToLower()) 
+                                                            || i.Description.ToLower().Contains(textSearch.ToLower())
                                                             || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+                                
             returnOrders = query
                          .OrderBy(i => i.ReturnOrderId)
                          .Skip((pageIndex - 1) * pageSize)

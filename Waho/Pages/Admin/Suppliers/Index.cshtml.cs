@@ -51,15 +51,15 @@ namespace Waho.Pages.Admin.Suppliers
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
             {
-                textSearch = raw_textSearch;
+                textSearch = raw_textSearch.Trim().ToLower();
             }
             else
             {
                 textSearch = "";
             }
             TotalCount = _context.Suppliers
-                            .Where(s => s.Branch.Contains(textSearch) || s.Address.Contains(textSearch) || s.CompanyName.Contains(textSearch) || s.Phone.Contains(textSearch)
-                            || s.City.Contains(textSearch) || s.Region.Contains(textSearch) || s.TaxCode.Contains(textSearch))
+                            .Where(s => s.Branch.ToLower().Contains(textSearch) || s.Address.ToLower().Contains(textSearch) || s.CompanyName.ToLower().Contains(textSearch) || s.Phone.ToLower().Contains(textSearch)
+                            || s.City.ToLower().Contains(textSearch) || s.Region.ToLower().Contains(textSearch) || s.TaxCode.ToLower().Contains(textSearch))
                             .Where(s => s.Active == true)
                             .Count();
             message = TempData["message"] as string;

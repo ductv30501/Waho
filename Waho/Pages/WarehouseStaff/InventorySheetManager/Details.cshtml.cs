@@ -44,8 +44,18 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         {
             //get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
-            _inventorySheetID = inventorySheetID;
-            _inventorySheetID = Int32.Parse(HttpContext.Request.Query["inventorySheetID"]);
+            if (inventorySheetID != 0)
+            {
+                _inventorySheetID = inventorySheetID;
+            }
+            if (HttpContext.Request.HasFormContentType == true)
+            {
+
+                if (!string.IsNullOrEmpty(HttpContext.Request.Form["inventorySheetID"]))
+                {
+                    _inventorySheetID = Int32.Parse(HttpContext.Request.Form["inventorySheetID"]);
+                }
+            }
             if (!string.IsNullOrEmpty(raw_pageSize))
             {
                 pageSize = int.Parse(raw_pageSize);

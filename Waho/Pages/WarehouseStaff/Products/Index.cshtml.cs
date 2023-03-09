@@ -68,7 +68,7 @@ namespace Waho.Pages.WarehouseStaff.Products
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
             {
-                textSearch = raw_textSearch;
+                textSearch = raw_textSearch.Trim();
             }
             else
             {
@@ -79,10 +79,10 @@ namespace Waho.Pages.WarehouseStaff.Products
 
             //get product list 
             TotalCount = _context.Products
-                            .Where(p => (p.ProductName.Contains(textSearch)
-                                || p.Trademark.Contains(textSearch)
-                                || p.Supplier.Branch.Contains(textSearch)
-                                || p.SubCategory.SubCategoryName.Contains(textSearch))
+                            .Where(p => (p.ProductName.ToLower().Contains(textSearch.ToLower())
+                                || p.Trademark.ToLower().Contains(textSearch.ToLower())
+                                || p.Supplier.Branch.ToLower().Contains(textSearch.ToLower())
+                                || p.SubCategory.SubCategoryName.ToLower().Contains(textSearch.ToLower()))
                                 && (p.SubCategoryId == subCategoryID || subCategoryID == -1))
                             .Where(p => p.Active == true)
                             .Count();

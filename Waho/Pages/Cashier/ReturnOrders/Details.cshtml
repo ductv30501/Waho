@@ -18,7 +18,7 @@
 <body style="background: #f2f2f2">
     @*start filter*@
     <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
-        <form method="get" asp-page="./Details" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-returnOrderID="@Model._returnOrderID" style="margin-bottom: 20px; ">
+        <form method="get" asp-page="./Details" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" style="margin-bottom: 20px; ">
             <div class="row d-flex justify-content-between" style="width:95%">
                 <div class="col-5 row">
                     <div class="form-group col-md-3">
@@ -29,6 +29,7 @@
                             <option value="15">15 hàng</option>
                             <option value="20">20 hàng</option>
                         </select>
+                        <input name="returnOrderID" type="hidden" value="@Model._returnOrderID" />
                     </div>
                 </div>
                 <div class="form-group col-md-2">
@@ -74,6 +75,10 @@
                             <input name="payCustomer" type="text" readonly value="@Model.ReturnOrder.PayCustomer" />
                             <label>Số tiền đã trả khách</label>
                             <input name="paidCustomer" type="number" min="0" value="@Model.ReturnOrder.PaidCustomer" required/>
+                            <label>Trạng thái</label>
+                            <label class="row">
+                                <input name="state" type="checkbox" class="col-1" style="width:20%" value="true" @(Model.ReturnOrder.State == true ? "checked":"") /> <div class="w-75 col-5">Đã hoàn thành</div>
+                            </label>
                             <label>Ngày tạo</label>
                             <input name="date" type="datetime" value="@Model.ReturnOrder.Date" />
                             <label>Nội dung</label>
@@ -81,7 +86,7 @@
                         </div>
                     </div>
                     <button id="btnSubmit" class="input-box button" type="submit" style="padding: 5px;border-radius: 5px;margin-top:30px">Lưu</button>
-                    <a class="input-box button" style="padding: 5px;border-radius: 5px;margin-top:30px" asp-page="./Index"> Quay lại</a>
+                    <a class="input-box button" style="padding: 5px;border-radius: 5px;margin-top:30px; text-decoration:none" asp-page="./Index"> Quay lại</a>
                 </form>
             </div>
         </div>
