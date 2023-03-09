@@ -63,7 +63,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
             {
-                textSearch = raw_textSearch;
+                textSearch = raw_textSearch.Trim();
             }
             else
             {
@@ -76,7 +76,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
                             .Include(i => i.Customer)
                             .Where(i => i.Active == true)
                             .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
-                                    || i.Description.ToLower().Contains(textSearch.ToLower()) 
+                                    || i.Description.ToLower().Contains(textSearch.ToLower())
                                     || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()))
                             .Where(i => i.UserName == employeeID || i.UserName.Contains(""))
                             .Count();

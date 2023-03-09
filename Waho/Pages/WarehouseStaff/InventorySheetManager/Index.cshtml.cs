@@ -56,7 +56,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             raw_EmployeeSearch = HttpContext.Request.Query["employeeID"];
             if (!string.IsNullOrEmpty(raw_EmployeeSearch))
             {
-                employeeID = raw_EmployeeSearch;
+                employeeID = raw_EmployeeSearch.Trim().ToLower();
             }
             else
             {
@@ -77,8 +77,8 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             //get inventory sheet list 
             TotalCount = _context.InventorySheets.Include(p => p.UserNameNavigation)
                             .Where(i => i.Active == true)
-                            .Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch)
-                                    || i.Description.Contains(textSearch))
+                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch)
+                                    || i.Description.ToLower().Contains(textSearch))
                             .Where(i => i.UserName == employeeID || i.UserName.Contains(""))
                             .Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter

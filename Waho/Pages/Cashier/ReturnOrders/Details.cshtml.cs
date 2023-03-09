@@ -28,6 +28,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
         public int TotalCount { get; set; } = 0;
 
         private string raw_pageSize;
+        [BindProperty(SupportsGet = true)]
         public int _returnOrderID { get; set; }
         public DetailsModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
         {
@@ -41,15 +42,19 @@ namespace Waho.Pages.Cashier.ReturnOrders
         {
             // get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
-            Console.WriteLine(_returnOrderID);
             if (returnOrderID != 0)
             {
                 _returnOrderID = returnOrderID;
             }
-            if (!string.IsNullOrEmpty(HttpContext.Request.Query["returnOrderID"]))
+            if (HttpContext.Request.HasFormContentType == true)
             {
-                _returnOrderID = Int32.Parse(HttpContext.Request.Query["returnOrderID"]);
+
+                if (!string.IsNullOrEmpty(HttpContext.Request.Form["returnOrderID"]))
+                {
+                    _returnOrderID = Int32.Parse(HttpContext.Request.Form["returnOrderID"]);
+                }
             }
+
             if (!string.IsNullOrEmpty(raw_pageSize))
             {
                 pageSize = int.Parse(raw_pageSize);
@@ -99,6 +104,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
             string raw_returnOrderID = req.Form["returnOrderID"];
             string raw_customerID = req.Form["customerID"];
             string raw_date = req.Form["date"];
+            string raw_state = req.Form["state"];
             string raw_description = req.Form["description"];
             string raw_payCustomer = req.Form["payCustomer"];
             string raw_paidCustomer = req.Form["paidCustomer"];
@@ -129,6 +135,14 @@ namespace Waho.Pages.Cashier.ReturnOrders
                 message = "Số tiền cần trả khách không được để trống";
                 TempData["message"] = message;
                 return RedirectToPage("./Index");
+            }
+            if (string.IsNullOrWhiteSpace(raw_state))
+            {
+                _returnOrderUpdate.State = false;
+            }
+            else
+            {
+                _returnOrderUpdate.State = true;
             }
             _returnOrderUpdate.PayCustomer = Int32.Parse(raw_payCustomer);
             _context.Attach(_returnOrderUpdate).State = EntityState.Modified;
