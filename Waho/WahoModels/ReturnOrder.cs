@@ -11,7 +11,7 @@ namespace Waho.WahoModels
         }
 
         public int ReturnOrderId { get; set; }
-        public string UserName { get; set; }
+        public string UserName { get; set; } = null!;
         public int CustomerId { get; set; }
         public bool? State { get; set; }
         public DateTime? Date { get; set; }
@@ -20,8 +20,8 @@ namespace Waho.WahoModels
         public int? PayCustomer { get; set; }
         public int? PaidCustomer { get; set; }
 
-        public virtual Customer Customer { get; set; }
-        public virtual Employee UserNameNavigation { get; set; }
+        public virtual Customer Customer { get; set; } = null!;
+        public virtual Employee UserNameNavigation { get; set; } = null!;
         public virtual ICollection<ReturnOrderProduct> ReturnOrderProducts { get; set; }
     }
 }

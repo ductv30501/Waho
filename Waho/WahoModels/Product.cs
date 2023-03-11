@@ -33,8 +33,8 @@ namespace Waho.WahoModels
         public bool? Active { get; set; }
         public int Quantity { get; set; }
 
-        public virtual SubCategory SubCategory { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        public virtual SubCategory SubCategory { get; set; } = null!;
+        public virtual Supplier Supplier { get; set; } = null!;
         public virtual ICollection<BillDetail> BillDetails { get; set; }
         public virtual ICollection<InventorySheetDetail> InventorySheetDetails { get; set; }
         public virtual ICollection<OderDetail> OderDetails { get; set; }

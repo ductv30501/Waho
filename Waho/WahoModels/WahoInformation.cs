@@ -17,6 +17,7 @@ namespace Waho.WahoModels
         public string? Phone { get; set; }
         public string? Email { get; set; }
 
+
         public virtual Category Category { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
     }

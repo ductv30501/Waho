@@ -10,7 +10,7 @@ namespace Waho.WahoModels
         public int? Quantity { get; set; }
         public double? Discount { get; set; }
 
-        public virtual Oder Oder { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Oder Oder { get; set; } = null!;
+        public virtual Product Product { get; set; } = null!;
     }
 }
