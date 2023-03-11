@@ -16,7 +16,7 @@
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group mb-3">
-                    <label asp-for="Employee.EmployeeName" class="control-label"></label>
+                    <label  class="control-label">Tên khách hàng</label>
                     <div class="input-group">
                         <span class="input-group-text span-input-primary"><i class="bi bi-person-video2"></i></span>
                         <input type="text" asp-for="Employee.EmployeeName" class="form-control" placeholder="Nhập tên người dùng">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="d-flex mb-3 justify-content-between">
                     <div class="form-group flex-md-grow-1 me-3">
-                        <label asp-for="WahoInformation.Phone" class="control-label"></label>
+                        <label class="control-label">Số điện thoại</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text span-input-primary"><i class="bi bi-telephone-fill"></i></span>
                             <input type="text" asp-for="WahoInformation.Phone" class="form-control" placeholder="Nhập số điện thoại">
@@ -40,14 +40,14 @@
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label asp-for="WahoInformation.WahoName" class="control-label"></label>
+                    <label class="control-label">Tên cửa hàng</label>
                     <div class="input-group">
                         <span class="input-group-text span-input-primary"><i class="bi bi-tags-fill"></i></span>
                         <input type="text" asp-for="WahoInformation.WahoName" class="form-control" placeholder="Nhập tên cửa hàng">
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label asp-for="WahoInformation.Address" class="control-label"></label>
+                    <label  class="control-label">Địa chỉ</label>
                     <div class="input-group">
                         <span class="input-group-text span-input-primary"><i class="bi bi-building-fill"></i></span>
                         <input type="text" asp-for="WahoInformation.Address" class="form-control" placeholder="Nhập địa chỉ cửa hàng">
@@ -55,7 +55,7 @@
                 </div>
                 <div class="d-flex mb-3 justify-content-between">
                     <div class="form-group flex-md-grow-1 me-3">
-                        <label asp-for="Employee.UserName" class="control-label"></label>
+                        <label class="control-label">Tài khoản</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text span-input-primary"><i class="bi bi-people-fill"></i></span>
                             <input type="text" asp-for="Employee.UserName" class="form-control" placeholder="Nhập tên đăng nhập">
@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="form-group flex-md-grow-1">
-                        <label asp-for="Employee.Password" class="control-label"></label>
+                        <label class="control-label">Mật khẩu</label>
                         <div class="input-group">
                             <span class="input-group-text span-input-primary"><i class="bi bi-key-fill"></i></span>
                             <input type="password" asp-for="Employee.Password" class="form-control" placeholder="Nhập mật khẩu">

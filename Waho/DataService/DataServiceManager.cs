@@ -51,21 +51,30 @@ namespace Waho.DataService
         }
 
         // paging bill
-        public List<Bill> GetBillsPagingAndFilter(int pageIndex, int pageSize, string textSearch)
+        public List<Bill> GetBillsPagingAndFilter(int pageIndex, int pageSize, string textSearch, string status, string raw_dateFrom, DateTime dateFrom, DateTime dateTo)
         {
 
             List<Bill> bills = new List<Bill>();
             //default 
-            var query = _context.Bills;
+            var query = from b in _context.Bills select b;
 
             if (!string.IsNullOrEmpty(textSearch))
             {
-                query.Include(b => b.Customer).Where(b => b.BillId.ToString().Contains(textSearch)
+                query = query.Include(b => b.Customer).Where(b => b.BillId.ToString().Contains(textSearch)
                                 || b.Customer.CustomerName.Contains(textSearch));
             }
 
-            bills = query.Include(b => b.BillDetails)
-                    .ThenInclude(bd => bd.Product)
+            if (status != "all")
+            {
+                query = query.Where(b => (b.BillStatus.Contains(status)));
+            }
+
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                query = query.Where(b => (b.Date >= dateFrom && b.Date <= dateTo));
+            }
+
+            bills = query.Where(b => b.Active == true)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();

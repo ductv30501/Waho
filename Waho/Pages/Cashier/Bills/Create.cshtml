@@ -4,44 +4,139 @@
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>Bill</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Bill.BillId" class="control-label"></label>
-                <input asp-for="Bill.BillId" class="form-control" />
-                <span asp-validation-for="Bill.BillId" class="text-danger"></span>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Waho - Hoá đơn</title>
+</head>
+<body class="bg-waho-white">
+    <div class="mt-4">
+        <h3>Tạo hoá đơn</h3>
+        <div class="d-flex">
+            <div class="form-container flex-grow-1 me-4">
+                <div class="p-4">
+                    <div class="form-group">
+                        <div class="input-group mb-3">
+                            <input id="search-input-product" type="text" class="form-control" placeholder="Tìm sản phẩm" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                    <hr />
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th class="tbProductName">
+                                    Mã sản phẩm
+                                </th>
+                                <th class="tbImportPrice">
+                                    Tên sản phẩm
+                                </th>
+                                <th class="tbImportPrice">
+                                    Số lượng
+                                </th>
+                                <th class="tbImportPrice">
+                                    Giảm giá(%)
+                                </th>
+                                <th class="tbImportPrice">
+                                    Đơn giá(đ)
+                                </th>
+                                <th class="tbImportPrice">
+                                    Tồn kho
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="">
+                                    1
+                                </td>
+                                <td class="">
+                                    2
+                                </td>
+                                <td class="col-2">
+                                    <input class=" form-control" type="number" />
+                                </td>
+                                <td class="col-2">
+                                    <input class=" form-control" type="number" />
+                                </td>
+                                <td class="">
+                                    4
+                                </td>
+                                <td>
+                                    666
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Bill.UserName" class="control-label"></label>
-                <select asp-for="Bill.UserName" class ="form-control" asp-items="ViewBag.UserName"></select>
+            <div class="form-container col-4">
+                <div class="p-4">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Tìm khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <label class="control-label">Tên khách hàng</label>
+                            <input class="form-control" readonly />
+                            <input class="form-control" hidden />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Ghi chú</label>
+                            <input class="form-control" />
+                        </div>
+                        <div class="form-group d-flex justify-content-between mt-5">
+                            <h5>Tổng tiền hàng:</h5>
+                            <h5>300000</h5>
+                        </div>
+                        <div class="form-group text-center">
+                            <input type="submit" value="Tạo" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Bill.CustomerId" class="control-label"></label>
-                <select asp-for="Bill.CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bill.Date" class="control-label"></label>
-                <input asp-for="Bill.Date" class="form-control" />
-                <span asp-validation-for="Bill.Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-page="Index">Back to List</a>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        var delayTimer;
+        $('#search-input-product').on('input', function () {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function () {
+                var searchQuery = $('#search-input-product').val();
+                var decodedSearchQuery = decodeURIComponent(searchQuery); // giải mã chuỗi
+                if (decodedSearchQuery) {
+                    alert(decodedSearchQuery)
+                    $.ajax({
+                        url: '/Cashier/Bills/Create/?handler=Products',
+                        method: 'GET',
+                        data: { q: decodedSearchQuery },
+                        success: function (data) {
+                            alert(data);
+                            // Xử lý dữ liệu trả về từ server
+                        },
+                        error: function () {
+                            // Xử lý lỗi nếu có
+                        }
+                    });
+                }
+            }, 500); // Thời gian chờ tính bằng mili giây
+        });
+
+    </script>
+</body>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

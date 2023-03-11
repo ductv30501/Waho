@@ -19,7 +19,6 @@ namespace Waho.Pages.Cashier.Bills
         {
             _context = context;
             _dataService = dataService;
-
         }
         [BindProperty(SupportsGet = true)]
         public string message { get; set; }
@@ -38,7 +37,16 @@ namespace Waho.Pages.Cashier.Bills
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
 
-        private string raw_number, raw_subCategorySearch, raw_textSearch;
+        [BindProperty(SupportsGet = true)]
+        public DateTime dateFrom { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public DateTime dateTo { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string status { get; set; } = "all";
+
+        private string raw_number, raw_textSearch, raw_dateFrom, raw_dateTo;
 
         public IList<Bill> Bills { get; set; } = default!;
 
@@ -50,8 +58,7 @@ namespace Waho.Pages.Cashier.Bills
             {
                 pageSize = int.Parse(raw_number);
             }
-            raw_subCategorySearch = HttpContext.Request.Query["subCategory"];
-            
+
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
             {
@@ -62,11 +69,34 @@ namespace Waho.Pages.Cashier.Bills
                 textSearch = "";
             }
 
+            raw_dateFrom = HttpContext.Request.Query["from"];
+            raw_dateTo = HttpContext.Request.Query["to"];
+
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                dateFrom = DateTime.Parse(raw_dateFrom);
+                dateTo = DateTime.Parse(raw_dateTo);
+            }
+
             //get bill list 
-            TotalCount = _context.Bills
-                            .Include(b => b.Customer)
-                            .Where(b => (b.BillId.ToString().Contains(textSearch)
-                                || b.Customer.CustomerName.Contains(textSearch))).Count();
+            var raw_filterForTotalCount = _context.Bills
+                             .Include(b => b.Customer)
+                             .Where(b => (b.BillId.ToString().Contains(textSearch)
+                                 || b.Customer.CustomerName.Contains(textSearch)))
+                             .Where(b => b.Active == true);
+
+            if (status != "all")
+            {
+                raw_filterForTotalCount = raw_filterForTotalCount.Where(b => (b.BillStatus.Contains(status)));
+            }
+
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                raw_filterForTotalCount = raw_filterForTotalCount.Where(b => (b.Date >= dateFrom && b.Date <= dateTo));
+            }
+
+            TotalCount = raw_filterForTotalCount.Count();
+
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter
             if ((pageIndex - 1) > (TotalCount / pageSize))
             {
@@ -76,7 +106,7 @@ namespace Waho.Pages.Cashier.Bills
             successMessage = TempData["successMessage"] as string;
             if (_context.Bills != null)
             {
-                Bills = _dataService.GetBillsPagingAndFilter(pageIndex, pageSize, textSearch);
+                Bills = _dataService.GetBillsPagingAndFilter(pageIndex, pageSize, textSearch, status, raw_dateFrom, dateFrom, dateTo);
             }
         }
     }

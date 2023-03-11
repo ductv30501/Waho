@@ -17,8 +17,8 @@ namespace Waho.WahoModels
         public string ProductName { get; set; } = null!;
         public int? ImportPrice { get; set; }
         public int? UnitPrice { get; set; }
-        public int? UnitInStock { get; set; }
-        public bool HaveDate { get; set; }
+        public int UnitInStock { get; set; }
+        public bool? HaveDate { get; set; }
         public DateTime? DateOfManufacture { get; set; }
         public DateTime? Expiry { get; set; }
         public string? Trademark { get; set; }
@@ -31,7 +31,7 @@ namespace Waho.WahoModels
         public int SubCategoryId { get; set; }
         public int SupplierId { get; set; }
         public bool? Active { get; set; }
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
 
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual Supplier Supplier { get; set; } = null!;

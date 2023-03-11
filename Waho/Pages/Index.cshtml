@@ -18,15 +18,14 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
-                    <label asp-for="Employee.UserName" class="control-label"></label>
+                    <label class="control-label">Tài khoản</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-people-fill"></i></span>
                         <input type="text" asp-for="Employee.UserName" class="form-control"  placeholder="Nhập tên đăng nhập">
                     </div>
                 </div>
-                
                 <div class="form-group mb-3">
-                    <label asp-for="Employee.Password" class="control-label"></label>
+                    <label  class="control-label">Mật khẩu</label>
                      <div class="input-group mb-3">
                         <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-key-fill"></i></span>
                         <input type="password" asp-for="Employee.Password" class="form-control" placeholder="Nhập mật khẩu">

@@ -14,7 +14,7 @@ namespace Waho.WahoModels
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
         public bool? HaveDate { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         public virtual ICollection<SubCategory> SubCategories { get; set; }
         public virtual ICollection<WahoInformation> WahoInformations { get; set; }
