@@ -24,7 +24,7 @@
                 </div>
                 <div class="form-group me-4">
                     <a class="btn btn-primary" asp-page="./create">
-                        <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm sản phẩm
+                        <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm hoá đơn
                     </a>
                 </div>
                 <div class="form-group me-4">
@@ -63,7 +63,7 @@
                     <div class="row form-container py-4 mb-3">
                         <div class="m-auto">
                             <div>
-                                <h6>Thời gian</h6>
+                                <h6>Ngày tạo</h6>
                                 <hr />
                             </div>
                             <div class="form-group">
@@ -184,7 +184,7 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">Trước</a></li>
+                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" >Trước</a></li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
@@ -202,7 +202,7 @@
                 else
                 {
                     <div class="flex-grow-1 d-flex align-items-center form-container">
-                        <h5 class="m-auto">Không có sản phẩm nào phù hợp</h5>
+                        <h5 class="m-auto">Không có hoá đơn nào phù hợp</h5>
                     </div>
                 }
             </div>
