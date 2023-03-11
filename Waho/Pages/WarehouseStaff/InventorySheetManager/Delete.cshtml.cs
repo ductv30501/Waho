@@ -12,51 +12,35 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
     public class DeleteModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
+        public string message { get; set; }
+        public string successMessage { get; set; }
         public DeleteModel(Waho.WahoModels.WahoContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-      public InventorySheetDetail InventorySheetDetail { get; set; }
+        public InventorySheet InventorySheet { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? inventorySheetID)
         {
-            if (id == null || _context.InventorySheetDetails == null)
+            var _InventorySheet = await _context.InventorySheets.FirstOrDefaultAsync(m => m.InventorySheetId == inventorySheetID);
+            if (_InventorySheet != null)
             {
-                return NotFound();
-            }
-
-            var inventorysheetdetail = await _context.InventorySheetDetails.FirstOrDefaultAsync(m => m.InventorySheetId == id);
-
-            if (inventorysheetdetail == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                InventorySheetDetail = inventorysheetdetail;
-            }
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.InventorySheetDetails == null)
-            {
-                return NotFound();
-            }
-            var inventorysheetdetail = await _context.InventorySheetDetails.FindAsync(id);
-
-            if (inventorysheetdetail != null)
-            {
-                InventorySheetDetail = inventorysheetdetail;
-                _context.InventorySheetDetails.Remove(InventorySheetDetail);
+                InventorySheet = _InventorySheet;
+                InventorySheet.Active = false;
+                _context.Attach(InventorySheet).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                // message
+                successMessage = "Xóa thành công phiếu kiểm kho ra khỏi danh sách";
+                TempData["successMessage"] = successMessage;
+                return RedirectToPage("./Index");
             }
-
+            message = "không tìm thấy phiếu kiểm kho";
+            TempData["message"] = message;
             return RedirectToPage("./Index");
         }
+
+
     }
 }

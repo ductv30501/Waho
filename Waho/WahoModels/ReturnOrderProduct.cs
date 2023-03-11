@@ -7,7 +7,7 @@ namespace Waho.WahoModels
     {
         public int ProductId { get; set; }
         public int ReturnOrderId { get; set; }
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
 
         public virtual Product Product { get; set; } = null!;
         public virtual ReturnOrder ReturnOrder { get; set; } = null!;

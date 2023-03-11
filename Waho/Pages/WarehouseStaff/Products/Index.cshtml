@@ -351,7 +351,7 @@
     @*start filter*@
     <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
         <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID" style="margin-bottom: 20px; ">
-            <div class="row">
+            <div class="row d-flex justify-content-around">
                 <div class="form-group col-md-1">
                     <label for="inputState">Hiển thị</label>
                     <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
@@ -361,10 +361,10 @@
                         <option value="20">20 hàng</option>
                     </select>
                 </div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-4">
                     <div class="d-flex">
                         <div class="col-md-10">
-                            <input type="text" asp-for="textSearch" placeholder="Nhập tên sản phẩm, loại sản phẩm, tên nhà cung cấp" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
+                            <input type="text" asp-for="textSearch" class="w-100" placeholder="Nhập tên sản phẩm, loại sản phẩm, tên nhà cung cấp" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
                         </div>
                         <div class="col-md-2">
                             <button class="input-box button" type="submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;padding: 5px 10px 5px 10px; margin-top: 20px">
@@ -377,22 +377,23 @@
                 </div>
                 <div class="form-group col-md-2">
                     <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
-                        <i class="bi bi-person-plus-fill" asp-page="Create"> Thêm sản phẩm</i>
+                        <i class="bi " asp-page="Create"> Thêm sản phẩm</i>
                     </button>
                 </div>
                 <div class="form-group col-md-2">
                     <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="button" onclick="modal('upload-products-modal', 3, 'scale(1)');">
-                        <i class="bi bi-person-plus-fill">
+                        <i class="bi ">
+                            Upload Excel file
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
                                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
                                 <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
-                            </svg> Upload Excel file
+                            </svg> 
                         </i>
                     </button>
                 </div>
                 <div class="form-group col-md-2">
                     <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="submit">
-                        <a class="bi bi-person-plus-fill" style="text-decoration: none; color: white" asp-page="./ExportProducts">
+                        <a class="bi " style="text-decoration: none; color: white" asp-page="./ExportProducts">
                             Export Excel
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
@@ -401,24 +402,23 @@
                         </a>
                     </button>
                 </div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-1">
                     <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="button" onclick="modal('more-modal', 1, 'scale(1)');">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
                         </svg>
                     </button>
-
                 </div>
             </div>
         </form>
         @*end filter*@
         @if (Model.message != null)
         {
-            <div id="notification" class="alert alert-danger">@Model.message</div>
+            <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
         }
         @if (Model.successMessage != null)
         {
-            <div id="notificationSuccess" class="alert alert-success">@Model.successMessage</div>
+            <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
         }
         <div class="row">
             <div class="col-lg-2" style="background-color: #fff; border-radius: 10px; padding:10px;margin-right: 10px">
@@ -572,15 +572,15 @@
                             <ul class="pagination">
                                 @if (Model.pageIndex > 1)
                                 {
-                                    <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID">Trước</a></li>
+                                    <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID">Trước</a></li>
                                 }
                                 @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                 {
-                                    <li class="page-item @(Model.pageIndex == i ? "active" : "")"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID">@i</a></li>
+                                    <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID">@i</a></li>
                                 }
                                 @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                 {
-                                    <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID">Sau</a></li>
+                                    <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID">Sau</a></li>
                                 }
                             </ul>
                         </div>
@@ -671,7 +671,6 @@
         //delete Product
         function DeleteProduct() {
             var productID = $("#productIDUpdate").val().toString();
-            console.log(productID);
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
                 $.ajax({
                     url: '/WarehouseStaff/Products/Delete',

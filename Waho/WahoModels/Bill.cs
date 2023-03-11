@@ -11,11 +11,11 @@ namespace Waho.WahoModels
         }
 
         public int BillId { get; set; }
-        public string UserName { get; set; } = null!;
+        public string? UserName { get; set; }
         public int CustomerId { get; set; }
         public DateTime? Date { get; set; }
-        public string? Descriptions { get; set; }
         public bool? Active { get; set; }
+        public string? Descriptions { get; set; }
         public string? BillStatus { get; set; }
 
         public virtual Customer Customer { get; set; } = null!;

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Waho.DataService;
 using Waho.WahoModels;
 
-namespace Waho.Pages.WarehouseStaff.InventorySheetManager
+namespace Waho.Pages.Cashier.ReturnOrders
 {
     public class IndexModel : PageModel
     {
@@ -30,20 +30,18 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         public int TotalCount { get; set; } = 0;
 
         [BindProperty(SupportsGet = true)]
-        public string textSearch { get; set; } = "";
-        [BindProperty(SupportsGet = true)]
+        public string textSearch { get; set; }
         public string employeeID { get; set; } = "";
-        private string raw_pageSize, raw_EmployeeSearch, raw_textSearch;
+        private string raw_pageSize, raw_textSearch, raw_EmployeeSearch;
+        //list employee
+        public List<Employee> employees { get; set; }
         public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
         {
             _context = context;
             _dataService = dataService;
         }
-        //list employee
-        [BindProperty(SupportsGet = true)]
-        public List<Employee> employees { get; set; }
-        [BindProperty(SupportsGet = true)]
-        public List<InventorySheet> InventorySheetList { get;set; }
+
+        public IList<ReturnOrder> ReturnOrder { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -56,7 +54,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             raw_EmployeeSearch = HttpContext.Request.Query["employeeID"];
             if (!string.IsNullOrEmpty(raw_EmployeeSearch))
             {
-                employeeID = raw_EmployeeSearch.Trim().ToLower();
+                employeeID = raw_EmployeeSearch;
             }
             else
             {
@@ -65,7 +63,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
             {
-                textSearch = raw_textSearch;
+                textSearch = raw_textSearch.Trim();
             }
             else
             {
@@ -73,12 +71,13 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
 
             // get list WareHouse Employee
-            employees = await _context.Employees.ToListAsync();
-            //get inventory sheet list 
-            TotalCount = _context.InventorySheets.Include(p => p.UserNameNavigation)
+            employees = await _context.Employees.Where(e => e.Role == 2).ToListAsync();
+            TotalCount = _context.ReturnOrders.Include(p => p.UserNameNavigation)
+                            .Include(i => i.Customer)
                             .Where(i => i.Active == true)
-                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch)
-                                    || i.Description.ToLower().Contains(textSearch))
+                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
+                                    || i.Description.ToLower().Contains(textSearch.ToLower())
+                                    || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()))
                             .Where(i => i.UserName == employeeID || i.UserName.Contains(""))
                             .Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter
@@ -88,9 +87,9 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
             message = TempData["message"] as string;
             successMessage = TempData["successMessage"] as string;
-            if (_context.InventorySheets != null)
+            if (_context.ReturnOrders != null)
             {
-                InventorySheetList = _dataService.getInventoryPagingAndFilter(pageIndex, pageSize, textSearch, employeeID);
+                ReturnOrder = _dataService.getreturnOrderPagingAndFilter(pageIndex, pageSize, textSearch, employeeID);
             }
         }
     }

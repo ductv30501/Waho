@@ -16,9 +16,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
         //message
-        [BindProperty(SupportsGet = true)]
         public string message { get; set; }
-        [BindProperty(SupportsGet = true)]
         public string successMessage { get; set; }
         // paging
         [BindProperty(SupportsGet = true)]
@@ -46,8 +44,18 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         {
             //get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
-            _inventorySheetID = inventorySheetID;
-            _inventorySheetID = Int32.Parse(HttpContext.Request.Query["inventorySheetID"]);
+            if (inventorySheetID != 0)
+            {
+                _inventorySheetID = inventorySheetID;
+            }
+            if (HttpContext.Request.HasFormContentType == true)
+            {
+
+                if (!string.IsNullOrEmpty(HttpContext.Request.Form["inventorySheetID"]))
+                {
+                    _inventorySheetID = Int32.Parse(HttpContext.Request.Form["inventorySheetID"]);
+                }
+            }
             if (!string.IsNullOrEmpty(raw_pageSize))
             {
                 pageSize = int.Parse(raw_pageSize);
@@ -92,7 +100,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             string raw_description = req.Form["description"];
             _inventorySheetUpdate.InventorySheetId = Int32.Parse(raw_inventorySheetID);
             _inventorySheetUpdate.UserName = raw_EmployeeID;
-            if (string.IsNullOrEmpty(raw_date))
+            if (string.IsNullOrWhiteSpace(raw_date))
             {
                 //message
                 message = "Ngày kiểm kho không được để trống";
@@ -101,6 +109,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
             _inventorySheetUpdate.Date = DateTime.Parse(raw_date);
             _inventorySheetUpdate.Description = raw_description;
+            _inventorySheetUpdate.Active = true;
             _context.Attach(_inventorySheetUpdate).State = EntityState.Modified;
             try
             {

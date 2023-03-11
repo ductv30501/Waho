@@ -12,7 +12,7 @@ namespace Waho.WahoModels
         }
 
         public int CategoryId { get; set; }
-        public string CategoryName { get; set; } = null!;
+        public string CategoryName { get; set; }
         public bool? HaveDate { get; set; }
         public string Description { get; set; }
 

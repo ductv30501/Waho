@@ -27,8 +27,6 @@ namespace Waho.Pages.WarehouseStaff.Products
             {
                 return NotFound();
             }
-
-
             var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == productID);
             if (product == null)
             {

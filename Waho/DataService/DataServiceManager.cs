@@ -4,17 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.FlowAnalysis;
+using System.Globalization;
+using System.Text;
 
 namespace Waho.DataService
 {
     public class DataServiceManager
     {
         private readonly WahoContext _context;
+        private readonly DataServiceManager _dataService;
         public DataServiceManager(WahoContext context)
         {
             _context = context;
         }
-
+        
         public List<Category> GetCategories()
         {
             return _context.Categories.ToList();
@@ -81,6 +84,43 @@ namespace Waho.DataService
             return bills;
         }
 
+
+        public InventorySheet getInventorySheetByID(int id)
+        {
+            return _context.InventorySheets.Where(i=> i.Active == true)
+                                .Include(p => p.UserNameNavigation)
+                                .Where(i => i.InventorySheetId == id).FirstOrDefault();
+        }
+        public List<InventorySheetDetail> GetInventorySheetDetails(int inventorySheetID)
+        {
+            List<InventorySheetDetail> inventorySheetDetails= new List<InventorySheetDetail>();
+            inventorySheetDetails = _context.InventorySheetDetails
+                                            .Include(p => p.Product)
+                                            .Include(p => p.InventorySheet)
+                                            .Where(i => i.InventorySheetId == inventorySheetID)
+                                            .ToList() ;
+            return inventorySheetDetails;
+        }
+        public List<Supplier> getSupplierList()
+        {
+            return _context.Suppliers.Where(s => s.Active == true).ToList();
+        }
+        public List<ReturnOrderProduct> GetReturnOrderDetails(int returnOrderID)
+        {
+            return _context.ReturnOrderProducts
+                                        .Include(r => r.Product)
+                                        .Include(r => r.ReturnOrder)
+                                        .Where(r => r.ReturnOrderId == returnOrderID)
+                                        .ToList();
+        }
+        public ReturnOrder getReturnOrderByID(int id)
+        {
+            return _context.ReturnOrders.Where(i => i.Active == true)
+                                .Include(p => p.UserNameNavigation)
+                                .Include(r => r.Customer)
+                                .Where(i => i.ReturnOrderId == id).FirstOrDefault();
+        }
+        
         // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize, string textSearch, int subCategoryID, int categoryID)
         {
@@ -95,10 +135,10 @@ namespace Waho.DataService
             }
             if (!string.IsNullOrEmpty(textSearch))
             {
-                query = query.Where(p => p.ProductName.Contains(textSearch)
-                                || p.Trademark.Contains(textSearch)
-                                || p.Supplier.Branch.Contains(textSearch)
-                                || p.SubCategory.SubCategoryName.Contains(textSearch));
+                query = query.Where(p => p.ProductName.ToLower().Contains(textSearch.ToLower()) 
+                                || p.Trademark.ToLower().Contains(textSearch.ToLower()) 
+                                || p.Supplier.Branch.ToLower().Contains(textSearch.ToLower()) 
+                                || p.SubCategory.SubCategoryName.ToLower().Contains(textSearch.ToLower()));
             }
 
             products = query.Where(p => p.SubCategory.CategoryId == categoryID)
@@ -114,18 +154,14 @@ namespace Waho.DataService
         // paging inventory sheet
         public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
         {
-            List<InventorySheet> inventories = new List<InventorySheet>();
-            var query = _context.InventorySheets;
-            if (!string.IsNullOrWhiteSpace(userName))
-            {
-                query.Where(i => i.UserName.Contains(userName));
-            }
-            if (!string.IsNullOrEmpty(textSearch))
-            {
-                query.Where(i => i.UserNameNavigation.EmployeeName.Contains(textSearch) || i.Description.Contains(textSearch) || i.UserNameNavigation.EmployeeName.Contains(textSearch));
-            }
-            inventories = query.Include(i => i.UserNameNavigation)
-                         .OrderBy(i => i.InventorySheetId)
+            List<InventorySheet> inventories= new List<InventorySheet>();
+            var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
+                                                .Where(i => i.Active == true)
+                                                .Where(i => i.UserName.Contains(userName))
+                                                .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
+                                                            || i.Description.ToLower().Contains(textSearch.ToLower()));
+            inventories = query
+                         .OrderBy(i => i.InventorySheetId)    
                          .Skip((pageIndex - 1) * pageSize)
                          .Take(pageSize)
                          .ToList();
@@ -144,6 +180,57 @@ namespace Waho.DataService
                          .Take(pageSize)
                          .ToList();
             return inventorySheetDetails;
+        }
+        //paging suppliers
+        public List<Supplier> GetSupplierPagingAndFilter(int pageIndex, int pageSize, string textSearch)
+        {
+            List<Supplier> suppliers= new List<Supplier>();
+            var query = _context.Suppliers.Where(s => s.Active == true);
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                query = query.Where(s => s.Branch.ToLower().Contains(textSearch.ToLower()) || s.Address.ToLower().Contains(textSearch.ToLower()) || s.CompanyName.ToLower().Contains(textSearch.ToLower()) || s.Phone.ToLower().Contains(textSearch.ToLower())
+                            || s.City.ToLower().Contains(textSearch.ToLower()) || s.Region.ToLower().Contains(textSearch.ToLower()) || s.TaxCode.ToLower().Contains(textSearch.ToLower()));
+            }
+            suppliers = query.OrderBy(s => s.SupplierId)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return suppliers;
+        }
+
+        // paging return orders
+        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
+        {
+            List<ReturnOrder> returnOrders = new List<ReturnOrder>();
+            var query = _context.ReturnOrders.Include(i => i.UserNameNavigation)
+                                                .Include(i => i.Customer)
+                                                .Where(i => i.Active == true)
+                                                .Where(i => i.UserName.Contains(userName))
+                                                .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
+                                                            || i.Description.ToLower().Contains(textSearch.ToLower())
+                                                            || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+                                
+            returnOrders = query
+                         .OrderBy(i => i.ReturnOrderId)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return returnOrders;
+        }
+
+        //paging return order
+        public List<ReturnOrderProduct> getReturnOrderProductPaging(int pageIndex, int pageSize, int id)
+        {
+            List<ReturnOrderProduct> returnOrders = new List<ReturnOrderProduct>();
+            returnOrders = _context.ReturnOrderProducts
+                          .Include(r => r.ReturnOrder)
+                          .Include(i => i.Product)
+                          .Where(r => r.ReturnOrderId == id)
+                          .OrderBy(i => i.ReturnOrderId)
+                          .Skip((pageIndex - 1) * pageSize)
+                          .Take(pageSize)
+                          .ToList();
+            return returnOrders;
         }
     }
 }

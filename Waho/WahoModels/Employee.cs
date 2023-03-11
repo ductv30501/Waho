@@ -13,9 +13,10 @@ namespace Waho.WahoModels
             ReturnOrders = new HashSet<ReturnOrder>();
         }
 
-        public string UserName { get; set; } = null!;
-        public string? EmployeeName { get; set; }
-        public string? Title { get; set; }
+
+        public string UserName { get; set; }
+        public string EmployeeName { get; set; }
+        public string Title { get; set; }
         public DateTime? Dob { get; set; }
         public DateTime? HireDate { get; set; }
         public string? Address { get; set; }
@@ -26,7 +27,7 @@ namespace Waho.WahoModels
         public int? WahoId { get; set; }
         public int? Role { get; set; }
 
-        public virtual WahoInformation? Waho { get; set; }
+        public virtual WahoInformation Waho { get; set; }
         public virtual ICollection<Bill> Bills { get; set; }
         public virtual ICollection<InventorySheet> InventorySheets { get; set; }
         public virtual ICollection<Oder> Oders { get; set; }

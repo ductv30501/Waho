@@ -54,12 +54,12 @@ namespace Waho.Pages.WarehouseStaff.Products
             {
                 worksheet.Cells[rowIndex, 1].Value = product.ProductId;
                 worksheet.Cells[rowIndex, 2].Value = product.ProductName;
-                worksheet.Cells[rowIndex, 3].Value = product.ImportPrice;
-                worksheet.Cells[rowIndex, 4].Value = product.UnitPrice;
-                worksheet.Cells[rowIndex, 5].Value = product.UnitInStock;
+                worksheet.Cells[rowIndex, 3].Value = product.ImportPrice +" đồng";
+                worksheet.Cells[rowIndex, 4].Value = product.UnitPrice + " đồng";
+                worksheet.Cells[rowIndex, 5].Value = product.UnitInStock + " đồng";
                 worksheet.Cells[rowIndex, 6].Value = (product.HaveDate == true ? "Có HSD" : "Không có HSD");
-                worksheet.Cells[rowIndex, 7].Value = product.DateOfManufacture;
-                worksheet.Cells[rowIndex, 8].Value = product.Expiry;
+                worksheet.Cells[rowIndex, 7].Value = product.DateOfManufacture.ToString();
+                worksheet.Cells[rowIndex, 8].Value = product.Expiry.ToString();
                 worksheet.Cells[rowIndex, 9].Value = product.Trademark;
                 worksheet.Cells[rowIndex, 10].Value = product.Weight;
                 worksheet.Cells[rowIndex, 11].Value = product.Location;
