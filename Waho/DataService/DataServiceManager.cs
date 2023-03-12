@@ -12,7 +12,6 @@ namespace Waho.DataService
     public class DataServiceManager 
     {
         private readonly WahoContext _context;
-        private readonly DataServiceManager _dataService;
         public DataServiceManager(WahoContext context)
         {
             _context = context;
@@ -189,6 +188,21 @@ namespace Waho.DataService
                           .Take(pageSize)
                           .ToList();
             return returnOrders;
+        }
+
+        //get billDetails by day
+        public List<BillDetail> GetBillDetails(DateTime date)
+        {
+            return _context.BillDetails
+                                .Include(b => b.Bill)
+                                .Include(b => b.Product)
+                                .Where(b => b.Bill.Date == date).ToList();
+        }
+        //get GetReturOrder by day
+        public List<ReturnOrder> GetReturOrderByDay(DateTime date)
+        {
+            return _context.ReturnOrders
+                                .Where(b => b.Date == date).ToList();
         }
     }
 }
