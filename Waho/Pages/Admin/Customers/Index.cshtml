@@ -5,7 +5,6 @@
     ViewData["Title"] = "Index";
 }
 
-@*start filter*@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,14 +27,14 @@
                                 <label class="control-label">Tên khách hàng</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-tags-fill"></i></span>
-                                    <input class="form-control" id="customer-name" name="name"/>
+                                    <input class="form-control" id="customer-name" name="name" />
                                 </div>
                             </div>
                             <div class="form-group col-6">
                                 <label class="control-label">Số điện thoại</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-telephone-fill"></i></span>
-                                    <input type="number" class="form-control" id="customer-phone" name="phone"/>
+                                    <input type="number" class="form-control" id="customer-phone" name="phone" />
                                 </div>
                             </div>
                         </div>
@@ -44,14 +43,14 @@
                                 <label class="control-label">Ngày sinh</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-fill"></i></span>
-                                    <input type="date" class="form-control" id="customer-dob" name="dob"/>
+                                    <input type="date" class="form-control" id="customer-dob" name="dob" />
                                 </div>
                             </div>
                             <div class="form-group col-6">
                                 <label class="control-label">Email</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-envelope-at-fill"></i></span>
-                                    <input type="email" class="form-control" id="customer-email" name="email"/>
+                                    <input type="email" class="form-control" id="customer-email" name="email" />
                                 </div>
                             </div>
                         </div>
@@ -99,44 +98,137 @@
         </div>
     </div>
     @*end insert model*@
+
+    @*edit model*@
+    <div class="modal">
+        <div id="update-modal">
+            <form id="editCustomerForm" asp-page="./Edit" method="post">
+                <div class="row form-container py-4 mb-3">
+                    <div class="m-auto">
+                        <div>
+                            <h4>Thông tin khách hàng</h4>
+                            <hr />
+                        </div>
+                        <div class="row">
+                            <input class="form-control" id="edit-id" name="id" hidden />
+                            <div class="form-group col-6">
+                                <label class="control-label">Tên khách hàng</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-tags-fill"></i></span>
+                                    <input class="form-control" id="edit-name" name="name" />
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="control-label">Số điện thoại</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-telephone-fill"></i></span>
+                                    <input type="number" class="form-control" id="edit-phone" name="phone" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="control-label">Ngày sinh</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-fill"></i></span>
+                                    <input type="date" class="form-control" id="edit-dob" name="dob" />
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="control-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-envelope-at-fill"></i></span>
+                                    <input type="email" class="form-control" id="edit-email" name="email" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="control-label">Phân loại</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-person-badge-fill"></i></span>
+                                    <select id="edit-type" class="form-select" name="type">
+                                        <option value="false">Cá nhân</option>
+                                        <option value="true"> Công ty</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="control-label">Mã thuế</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control" id="edit-tax" name="tax">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Địa chỉ</label>
+                            <div class="input-group">
+                                <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-building-fill"></i></span>
+                                <input type="text" class="form-control" id="edit-address" name="address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Ghi chú</label>
+                            <div class="input-group">
+                                <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-card-text"></i></span>
+                                <textarea type="text" class="form-control" id="edit-note" name="note"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="control-label">Trạng thái</label>
+                            <div class="input-group">
+                                <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-check2-square"></i></span>
+                                <select id="edit-active" class="form-select" name="active">
+                                    <option value="true"> Kích hoạt</option>
+                                    <option value="false">Vô hiệu hoá</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button id="btnSubmit" class="btn btn-primary me-2" type="submit">Chỉnh sửa</button>
+                            <button class="btn btn-outline-primary" type="button" onclick="modal('update-modal', 1, 'scale(0)')">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    @*end edit model*@
+
     <div class="mt-4">
         <form id="customerListForm" method="get" asp-page="./Index" style="margin-bottom: 20px; ">
             <div class="d-flex">
                 <h3 class="col-2 me-4">Khách hàng</h3>
-                <div class="form-group flex-grow-1 me-4">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" asp-for="@Model.textSearch" placeholder="Nhập tên khách hàng, số điện thoại, email, mã thuế" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                        <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                <div class="d-flex justify-content-between flex-grow-1">
+                    <div class="form-group me-4 col-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="input-search-customer" asp-for="@Model.textSearch" placeholder="Nhập tên khách hàng, số điện thoại, email, mã thuế" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group me-4">
-                    <a class="btn btn-primary" onclick="modal('insert-modal', 0, 'scale(1)');">
-                        <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm khách hàng
-                    </a>
-                </div>
-                <div class="form-group me-4">
-                    <button class="btn btn-primary" type="button" onclick="modal('upload-products-modal', 3, 'scale(1)');">
-                        <i class="bi bi-upload"></i> Tải lên Excel
-                    </button>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary" type="submit">
-                        <a style="text-decoration: none; color: white" asp-page="./ExportProducts">
-                            <i class="bi bi-download"></i> Tải xuống Excel
+                    <div class="form-group me-4">
+                        <a class="btn btn-primary" onclick="modal('insert-modal', 0, 'scale(1)');">
+                            <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm khách hàng
                         </a>
-                    </button>
+                    </div>
                 </div>
             </div>
 
             @*end filter*@
-            @*@if (Model.message != null)
+            @if (TempData["ErrorMessage"] != null)
             {
-            <div id="notification" class="alert alert-danger">@Model.message</div>
+                <div id="error-alert" class="d-flex justify-content-end">
+                    <div class="alert alert-danger text-center"><h5>@TempData["SuccessMessage"]</h5></div>
+                </div>
             }
-            @if (Model.successMessage != null)
+            @if (TempData["SuccessMessage"] != null)
             {
-            <div id="notificationSuccess" class="alert alert-success">@Model.successMessage</div>
-            }*@
+                <div id="success-alert" class="d-flex justify-content-end">
+                    <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
+                </div>
+            }
+
             <div class="d-flex">
                 <div class="d-flex flex-column col-2 me-4">
                     <div class="form-group col-6 mx-auto mb-3">
@@ -169,6 +261,7 @@
                             </div>
                             <div class="text-center mt-4">
                                 <button class="btn btn-primary" type="button" onclick="validateForSubmit();">Lọc</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="clearForSubmit();">Xoá</button>
                             </div>
                         </div>
                     </div>
@@ -262,8 +355,12 @@
                                         <td class="tbProductName">
                                             @Html.DisplayFor(modelItem => item.CustomerName)
                                         </td>
-                                        <td class="tbImportPrice">
-                                            @Html.DisplayFor(modelItem => item.Dob.ToString("dd/MM/yyyy"))
+                                        <td class="dob-format">
+                                            @{
+                                                DateTime date = (DateTime)item.Dob;
+                                                @date.ToString("MM/dd/yyyy")
+                                                ;
+                                            }
                                         </td>
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.Phone)
@@ -286,7 +383,7 @@
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.TaxCode)
                                         </td>
-                                       @if (item.Active == true)
+                                        @if (item.Active == true)
                                         {
                                             <td class="tbImportPrice">
                                                 Kích hoạt
@@ -298,13 +395,14 @@
                                                 Vô hiệu hoá
                                             </td>
                                         }
-                                        <td>
-                                            <a onclick="getProductDetail(@(item.CustomerId))">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                                                </svg>
+                                        <td class="d-flex align-items-center justify-content-between">
+                                            <a onclick="getCustomerDetail(@(item.CustomerId))">
+                                                <i class="bi bi-pencil-square icon-table icon-edit"></i>
                                             </a>
-                                            ||<a asp-page="./Delete" asp-route-productID="@item.CustomerId">Chi tiết</a>
+                                            <h6 class="m-0 vertical">|</h6>
+                                            <a onclick="deleteCustomer(@(item.CustomerId))">
+                                                <i class="bi bi-trash3-fill icon-table icon-delete"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -338,6 +436,8 @@
                 }
             </div>
         </form>
+        <div class="toast-container">
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
@@ -345,6 +445,35 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
+
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+                $("#error-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 5000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+
+            $('#input-search-customer').keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    event.preventDefault();
+                    // Thực hiện các hành động cần thiết khi người dùng nhấn phím Enter
+                }
+            });
+
+            var delayTimer;
+            $('#input-search-customer').on('input', function () {
+                clearTimeout(delayTimer);
+                delayTimer = setTimeout(function () {
+                    $('#customerListForm').submit()
+                }, 500); // Thời gian chờ tính bằng mili giây
+            });
+
+        });
+
         function validateForSubmit() {
             const dateFrom = $('#dateFrom').val();
             const dateTo = $('#dateTo').val();
@@ -355,7 +484,6 @@
                 alert("Chưa nhập đủ ngày bắt đầu!")
             } else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
                 alert("Chưa nhập đủ ngày kết thúc!")
-                //toastMessage.showToastError('Lỗi', 'Người dùng chưa nhập đủ 4 số cho phần năm!', 1000)
             }
             else if (Date.parse(dateFrom) > Date.parse(dateTo)) {
                 alert("Ngày bắt đầu lớn hơn ngày kết thúc!")
@@ -364,5 +492,63 @@
                 $('#customerListForm').submit()
             }
         }
+
+        function clearForSubmit() {
+            $('#dateFrom').val("");
+            $('#dateTo').val("");
+            $('#customerListForm').submit()
+        }
+
+        function getCustomerDetail(id) {
+            $.ajax({
+                url: "Customers/Details",
+                type: "GET",
+                data: { id: id },
+                success: function (data) {
+                    // Gán dữ liệu vào các trường của form
+                    $("#edit-id").val(id)
+                    $("#edit-name").val(data.customerName);
+                    $("#edit-phone").val(data.phone);
+                    $("#edit-dob").val(formatDate(data.dob));
+                    $("#edit-address").val(data.adress);
+                    $(`#edit-type option[value='${data.typeOfCustomer}']`).attr('selected', 'selected');
+                    $("#edit-tax").val(data.taxCode);
+                    $("#edit-email").val(data.email);
+                    $("#edit-note").val(data.description);
+                    $(`#edit-active option[value='${data.active}']`).attr('selected', 'selected');
+
+                    modal('update-modal', 1, 'scale(1)')
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                }
+            });
+        }
+
+        //format date
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+
+        function deleteCustomer(id) {
+            if (confirm("Bạn có chắc chắn muốn vô hiệu hoá khách hàng này không?")) {
+                window.location.href = "Customers/Delete?id=" + id;
+            }
+        }
+
     </script>
+
 </body>

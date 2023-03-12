@@ -33,12 +33,6 @@ namespace Waho.Pages.Admin.Customers
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
 
-        //[BindProperty(SupportsGet = true)]
-        //public DateTime dateFrom { get; set; }
-
-        //[BindProperty(SupportsGet = true)]
-        //public DateTime dateTo { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string status { get; set; } = "all";
 

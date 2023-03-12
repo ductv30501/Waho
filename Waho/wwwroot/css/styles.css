@@ -168,3 +168,20 @@ a {
         padding: 5px 10px 5px 10px;
     }
 
+.icon-table {
+    font-size: 20px;
+}
+
+    .icon-table:hover {
+        cursor: pointer;
+        opacity: 0.5;
+    }
+
+.icon-edit {
+    color: orange;
+}
+
+.icon-delete {
+    color: red;
+}
+

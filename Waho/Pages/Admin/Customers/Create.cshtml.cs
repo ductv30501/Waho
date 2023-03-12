@@ -53,6 +53,7 @@ namespace Waho.Pages.Admin.Customers
             _context.Customers.Add(Customer);
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Tạo thông tin khách hàng thành công!";
             return RedirectToPage("./Index");
         }
     }

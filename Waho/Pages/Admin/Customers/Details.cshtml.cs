@@ -18,7 +18,8 @@ namespace Waho.Pages.Admin.Customers
             _context = context;
         }
 
-      public Customer Customer { get; set; }
+        [BindProperty]
+        public Customer Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,11 +33,63 @@ namespace Waho.Pages.Admin.Customers
             {
                 return NotFound();
             }
-            else 
+            Customer = customer;
+
+            return new JsonResult(Customer);
+        }
+
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see https://aka.ms/RazorPagesCRUD.
+        public async Task<IActionResult> OnPostAsync()
+        {
+
+            string id = HttpContext.Request.Form["id"];
+            string name = HttpContext.Request.Form["name"];
+            string raw_dob = HttpContext.Request.Form["dob"];
+            string phone = HttpContext.Request.Form["phone"];
+            string email = HttpContext.Request.Form["email"];
+            string raw_type = HttpContext.Request.Form["type"];
+            string tax = HttpContext.Request.Form["tax"];
+            string address = HttpContext.Request.Form["address"];
+            string note = HttpContext.Request.Form["note"];
+            string active = HttpContext.Request.Form["active"];
+
+            Customer.CustomerId = int.Parse(id);
+            Customer.CustomerName = name;
+            Customer.Adress = address;
+            Customer.Phone = phone;
+            Customer.Email = email;
+            Customer.Active = true;
+            Customer.Description = note;
+            Customer.TaxCode = tax;
+            Customer.Dob = DateTime.Parse(raw_dob);
+            Customer.TypeOfCustomer = Boolean.Parse(raw_type);
+            Customer.Active = bool.Parse(active);
+
+            _context.Attach(Customer).State = EntityState.Modified;
+
+            try
             {
-                Customer = customer;
+                await _context.SaveChangesAsync();
             }
-            return Page();
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CustomerExists(Customer.CustomerId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToPage("./Index");
+        }
+
+        private bool CustomerExists(int id)
+        {
+            return _context.Customers.Any(e => e.CustomerId == id);
         }
     }
 }
