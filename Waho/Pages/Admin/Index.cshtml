@@ -3,8 +3,182 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Waho - Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
+    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body style="background: #f2f2f2">
+    <div style=" padding:10px;margin-top: 20px; border-radius: 10px;background: #fff" class="col-lg-12">
+        <b class="text-black">Kết quả bán hàng hôm nay</b>
+        <div class="row" style="padding: 10px 5px 10px 5px">
+            <div class="col-md-3 d-flex align-items-center" style="border-right: 1px solid gray">
+                <div class="d-flex " style="background: #46c2f2; padding:5px; border-radius:50%;margin-right: 10px;width:30px;height:30px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z" />
+                    </svg>
+                </div>
+                <div>
+                    @{
+                        string totalDay = @Model.totalMoney.ToString("#,##0");
+                    }
+                    <div>@Model.numberBill hóa đơn</div>
+                    <div style="font-size:20px ; color:#46c2f2">@totalDay đồng</div>
+                    <div style="color:darkgray">doanh thu</div>
+                </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center" style="border-right: 1px solid gray">
+                <div class="d-flex " style="background: #ff6533; padding:6px; border-radius:50%;margin-right: 10px;width:30px;height:30px">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-reply-all-fill" viewBox="0 0 16 16">
+                        <path d="M8.021 11.9 3.453 8.62a.719.719 0 0 1 0-1.238L8.021 4.1a.716.716 0 0 1 1.079.619V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z" />
+                        <path d="M5.232 4.293a.5.5 0 0 1-.106.7L1.114 7.945a.5.5 0 0 1-.042.028.147.147 0 0 0 0 .252.503.503 0 0 1 .042.028l4.012 2.954a.5.5 0 1 1-.593.805L.539 9.073a1.147 1.147 0 0 1 0-1.946l3.994-2.94a.5.5 0 0 1 .699.106z" />
+                    </svg>
+                </div>
+                <div>
+                    @{
+                        string totalReturn = @Model.totalMoneyReturn.ToString("#,##0");
+                    }
+                    <div>@Model.numberReturn hoàn đơn</div>
+                    <div style="font-size:20px ; color:#ff6533">@totalReturn đồng</div>
+                    <div style="color:darkgray">hoàn đơn</div>
+                </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center" style="border-right: 1px solid gray">
+                @{
+                    string percentYes = @Model.percentYes.ToString("N2");
+                }
+                @if (Model.percentYes < 100)
+                {
+                    <div class="d-flex " style="background: #ff0505; padding:6px;  border-radius:50%;margin-right: 10px;width:30px;height:30px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-size:20px ; color:#46c2f2">@percentYes %</div>
+                        <div style="color:darkgray">so với hôm qua</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex " style="background: #11f721; padding:6px;  border-radius:50%;margin-right: 10px;width:30px;height:30px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-size:20px ; color:#46c2f2">@percentYes %</div>
+                        <div style="color:darkgray">so với hôm qua</div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-3 d-flex align-items-center">
+                @{
+                    string percentMonthYes = @Model.percentMonthYes.ToString("N2");
+                }
+                @if (Model.percentMonthYes < 100)
+                {
+                    <div class="d-flex " style="background: #ff0505; padding:6px;  border-radius:50%;margin-right: 10px;width:30px;height:30px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-size:20px ; color:#46c2f2">@percentMonthYes %</div>
+                        <div style="color:darkgray">so với cùng kỳ tháng trước</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex " style="background: #11f721; padding:6px;  border-radius:50%;margin-right: 10px;width:30px;height:30px">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="font-size:20px ; color:#46c2f2">@percentMonthYes %</div>
+                        <div style="color:darkgray">so với cùng kỳ tháng trước</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="my-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Doanh số trong tháng</h5>
+                <!-- Bar Chart -->
+                <div id="barChart" style="min-height: 400px;" class="echart"></div>
+                <!-- End Bar Chart -->
+            </div>
+        </div>
+    </div>
+    <div class="my-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Sản phẩm bán chạy theo tháng</h5>
+                <!-- Bar Chart -->
+                <div id="barChartProduct"></div>
+                <!-- End Bar Chart update-->
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            echarts.init(document.querySelector("#barChart")).setOption({
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    type: 'bar'
+                }]
+            });
+        });
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to product Admin</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        // sản phẩm bán chạy theo tháng
+        document.addEventListener("DOMContentLoaded", () => {
+            new ApexCharts(document.querySelector("#barChartProduct"), {
+                series: [{
+                    data: @Json.Serialize(Model.Quantities),
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 4,
+                        horizontal: true,
+                    }
+                },
+                dataLabels: {
+                    enabled: true
+                },
+                xaxis: {
+                    categories: @Json.Serialize(Model.ProductNames),
+                },
+                Option: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }).render();
+        });
+    </script>
+    <script src="~/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/vendor/echarts/echarts.min.js"></script>
+
+</body>
+

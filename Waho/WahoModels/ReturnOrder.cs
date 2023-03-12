@@ -18,7 +18,7 @@ namespace Waho.WahoModels
         public string Description { get; set; }
         public bool? Active { get; set; }
         public int? PayCustomer { get; set; }
-        public int? PaidCustomer { get; set; }
+        public int PaidCustomer { get; set; }
 
         public virtual Customer Customer { get; set; } = null!;
         public virtual Employee UserNameNavigation { get; set; } = null!;
