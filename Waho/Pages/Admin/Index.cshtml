@@ -111,7 +111,20 @@
     <div class="my-5">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Doanh số trong tháng</h5>
+                <form method="get" class="row d-flex justify-content-between" asp-page="./Index">
+                    <div class="col-md-6 align-content-center">
+                        <h5 class="card-title" style="width:50%;margin-top:8px">Doanh số trong ngày theo tháng</h5>
+                    </div>
+                    <div class="col-md-3 d-flex align-content-center">
+                        <div class="position-relative" style="width: 100%">
+                            <div class="d-flex">
+                                @*   name="selectedDate" value="@Model.dateQuery"*@
+                                <input type="date" asp-for="@Model.dateQueryDay" class="rounded-3 border-0" style="border-bottom:2px solid gray" />
+                                <button class="btn btn-primary" type="submit">Chọn ngày</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <!-- Bar Chart -->
                 <div id="barChart" style="min-height: 400px;" class="echart"></div>
                 <!-- End Bar Chart -->
@@ -121,7 +134,32 @@
     <div class="my-5">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Sản phẩm bán chạy theo tháng</h5>
+                <form method="get" class="row d-flex justify-content-between" asp-page="./Index">
+                    <div class="col-md-6 d-flex align-content-center">
+                        <h5 class="card-title" style="width:50%;margin-top:8px">Sản phẩm bán chạy theo tháng</h5>
+                        <div class="position-relative" style="width: 30%">
+                            <select asp-for="@Model.selectFilter" class="form-control w-100" style="border:none;color:#46c2f2; font-size:18px;font-weight:700" onchange="this.form.submit()">
+                                <option value="1" style="color:#46c2f2; font-size:18px;font-weight:700"> Theo doanh thu </option>
+                                <option value="2" style="border:none;color:#46c2f2; font-size:18px;font-weight:700"> Theo số lượng </option>
+                            </select>
+                            <div class="position-absolute align-right" style="width: 1%;right: 0;top:0;margin-right:30px;margin-top:5px;color:#46c2f2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-content-center">
+                        <div class="position-relative" style="width: 100%">
+                            <div class="d-flex">
+                                @*   name="selectedDate" value="@Model.dateQuery"*@
+                                <input type="date" asp-for="@Model.dateQuery" class="rounded-3 border-0" style="border-bottom:2px solid gray" />
+                                <button class="btn btn-primary" type="submit">Chọn ngày</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <!-- Bar Chart -->
                 <div id="barChartProduct"></div>
                 <!-- End Bar Chart update-->
@@ -129,24 +167,30 @@
         </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener('load', () => {
             echarts.init(document.querySelector("#barChart")).setOption({
                 xAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    data: @Json.Serialize(Model.Days)
                 },
                 yAxis: {
                     type: 'value'
                 },
                 series: [{
-                    data: [120, 200, 150, 80, 70, 110, 130],
+                    data: @Json.Serialize(Model.QuantitiesDay),
                     type: 'bar'
-                }]
+                }],
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return (val / 1000000).toFixed(2) + " tr";
+                    }
+                }
             });
         });
 
         // sản phẩm bán chạy theo tháng
-        document.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener('load', () => {
             new ApexCharts(document.querySelector("#barChartProduct"), {
                 series: [{
                     data: @Json.Serialize(Model.Quantities),
@@ -163,14 +207,17 @@
                 },
                 dataLabels: {
                     enabled: true
+                        //formatter: function (val) {
+                        //    return (val / 1000000).toFixed(2) + " tr";
+                        //}
                 },
-                xaxis: {
+                    xaxis: {
                     categories: @Json.Serialize(Model.ProductNames),
                 },
-                Option: {
+                    Option: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginatzero: true
                         }
                     }
                 }
@@ -179,6 +226,10 @@
     </script>
     <script src="~/vendor/apexcharts/apexcharts.min.js"></script>
     <script src="~/vendor/echarts/echarts.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
 </body>
 
