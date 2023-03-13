@@ -31,7 +31,11 @@ namespace Waho.Pages.Admin
         public double percentMonthYes { get; set; }
         private double totalMoneyMonthYes { get; set; }
         public List<string> ProductNames { get; set; } = new List<string>();
-        public List<Int64> Quantities { get; set; } = new List<Int64>();
+        public List<double> Quantities { get; set; } = new List<double>();
+        [BindProperty(SupportsGet = true)]
+        public int selectFilter { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public DateTime dateQuery { get; set; } = DateTime.Now;
         private double total(List<BillDetail> list)
         {
             double totalM = 0;
@@ -41,7 +45,7 @@ namespace Waho.Pages.Admin
             }
             return totalM;
         }
-        public async void OnGetAsync()
+        public async Task OnGetAsync()
         {
             //hóa đơn trong ngày
             numberBill = _context.Bills.Where(b => b.Date == now).Count();
@@ -80,25 +84,51 @@ namespace Waho.Pages.Admin
             }
 
             //dash board 
-            var sqlconnectstring = @"server =ADMIN\\DUC;uid=sa;pwd=12345;database=Waho;Trusted_Connection=True;MultipleActiveResultSets=true;";
-            var connection = new SqlConnection(sqlconnectstring);
-            await connection.OpenAsync();
-
-            using var command = new SqlCommand(@"
-            SELECT TOP 10 p.productName, SUM(bd.quantity*p.unitInStock*(1-bd.discount)) as TotalQuantity
-                FROM BillDetails as bd 
-				join Bill as b on bd.billID = b.billID
-				join Products as p on bd.productID = p.productID
-				GROUP BY p.productName
-				ORDER BY TotalQuantity DESC", connection);
-            using (var reader = await command.ExecuteReaderAsync())
+            if (selectFilter == 1)
             {
-                while (await reader.ReadAsync())
+                //theo doanh số bill
+                var query = from bd in _context.BillDetails
+                            join b in _context.Bills on bd.BillId equals b.BillId
+                            join p in _context.Products on bd.ProductId equals p.ProductId
+                            where b.Date.Month == dateQuery.Month && b.Date.Year == dateQuery.Year
+                            group new { p.ProductName, bd.Quantity, p.UnitInStock, bd.Discount } by p.ProductName into g
+                            orderby g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) descending
+                            select new { ProductName = g.Key, TotalQuantity = g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) };
+                var results = await query.Take(10).ToListAsync();
+                // order
+                var queryOrder = from bd in _context.OderDetails
+                            join b in _context.Oders on bd.OderId equals b.OderId
+                            join p in _context.Products on bd.ProductId equals p.ProductId
+                            //where b. .Month == dateQuery.Month && b.Date.Year == dateQuery.Year
+                            group new { p.ProductName, bd.Quantity, p.UnitInStock, bd.Discount } by p.ProductName into g
+                            orderby g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) descending
+                            select new { ProductName = g.Key, TotalQuantity = g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) };
+                var resultsOrder = await queryOrder.Take(10).ToListAsync();
+                foreach (var result in results)
                 {
-                    ProductNames.Add(reader.GetString(0));
-                    Quantities.Add(reader.GetInt64(1));
+                    ProductNames.Add(result.ProductName);
+                    Quantities.Add(result.TotalQuantity);
                 }
             }
+            else
+            {
+                //theo số lượng
+                var query = from bd in _context.BillDetails
+                            join b in _context.Bills on bd.BillId equals b.BillId
+                            join p in _context.Products on bd.ProductId equals p.ProductId
+                            where b.Date.Month == dateQuery.Month && b.Date.Year == dateQuery.Year
+                            group new { p.ProductName, bd.Quantity} by p.ProductName into g
+                            orderby g.Sum(x => x.Quantity) descending
+                            select new { ProductName = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
+                var results = await query.Take(10).ToListAsync();
+                foreach (var result in results)
+                {
+                    ProductNames.Add(result.ProductName);
+                    Quantities.Add(result.TotalQuantity);
+                }
+            }
+            
+            
         }
 
     }
