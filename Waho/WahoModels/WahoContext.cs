@@ -286,9 +286,17 @@ namespace Waho.WahoModels
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
+                entity.Property(e => e.EstimatedDate)
+                    .HasColumnType("date")
+                    .HasColumnName("estimatedDate");
+
                 entity.Property(e => e.OderState)
                     .HasMaxLength(50)
                     .HasColumnName("oderState");
+
+                entity.Property(e => e.OrderDate)
+                    .HasColumnType("date")
+                    .HasColumnName("orderDate");
 
                 entity.Property(e => e.Region)
                     .HasMaxLength(50)

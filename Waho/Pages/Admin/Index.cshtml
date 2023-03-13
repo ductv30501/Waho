@@ -111,7 +111,20 @@
     <div class="my-5">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Doanh số trong tháng</h5>
+                <form method="get" class="row d-flex justify-content-between" asp-page="./Index">
+                    <div class="col-md-6 align-content-center">
+                        <h5 class="card-title" style="width:50%;margin-top:8px">Doanh số trong ngày theo tháng</h5>
+                    </div>
+                    <div class="col-md-3 d-flex align-content-center">
+                        <div class="position-relative" style="width: 100%">
+                            <div class="d-flex">
+                                @*   name="selectedDate" value="@Model.dateQuery"*@
+                                <input type="date" asp-for="@Model.dateQueryDay" class="rounded-3 border-0" style="border-bottom:2px solid gray" />
+                                <button class="btn btn-primary" type="submit">Chọn ngày</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <!-- Bar Chart -->
                 <div id="barChart" style="min-height: 400px;" class="echart"></div>
                 <!-- End Bar Chart -->
@@ -143,10 +156,6 @@
                                 <input type="date" asp-for="@Model.dateQuery" class="rounded-3 border-0" style="border-bottom:2px solid gray" />
                                 <button class="btn btn-primary" type="submit">Chọn ngày</button>
                             </div>
-                            @*<select id="selectMonth" asp-for="@Model.selectMonth" class="form-control w-100" style="border:none;color:#46c2f2; font-size:18px;font-weight:700" onchange="this.form.submit()">
-                                <option value="1"> Tháng này </option>
-                                <option value="2"> Tháng trước </option>
-                            </select>*@
                         </div>
                     </div>
                 </form>
@@ -158,21 +167,25 @@
         </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener('load', () => {
             echarts.init(document.querySelector("#barChart")).setOption({
                 xAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                    //data: @Json.Serialize(Model.ProductNames)
+                    data: @Json.Serialize(Model.Days)
                 },
                 yAxis: {
                     type: 'value'
                 },
                 series: [{
-                    //data: @Json.Serialize(Model.Quantities),
-                    data: [120, 200, 150, 80, 70, 110, 130],
+                    data: @Json.Serialize(Model.QuantitiesDay),
                     type: 'bar'
-                }]
+                }],
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return (val / 1000000).toFixed(2) + " tr";
+                    }
+                }
             });
         });
 

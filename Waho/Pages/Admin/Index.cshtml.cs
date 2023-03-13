@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +33,17 @@ namespace Waho.Pages.Admin
         private double totalMoneyMonthYes { get; set; }
         public List<string> ProductNames { get; set; } = new List<string>();
         public List<double> Quantities { get; set; } = new List<double>();
+        public List<double> QuantitiesDay { get; set; } = new List<double>();
+        public List<int> Days { get; set; } = new List<int>();
+
+        private List<KeyValuePair<string, double>> temp = new List<KeyValuePair<string, double>>();
+        private List<KeyValuePair<int, double>> tempDay = new List<KeyValuePair<int, double>>();
         [BindProperty(SupportsGet = true)]
         public int selectFilter { get; set; } = 1;
         [BindProperty(SupportsGet = true)]
         public DateTime dateQuery { get; set; } = DateTime.Now;
+        [BindProperty(SupportsGet = true)]
+        public DateTime dateQueryDay { get; set; } = DateTime.Now;
         private double total(List<BillDetail> list)
         {
             double totalM = 0;
@@ -83,7 +91,7 @@ namespace Waho.Pages.Admin
                 percentMonthYes = numberBill * 100;
             }
 
-            //dash board 
+            //dash board danh số sản phẩm theo tháng
             if (selectFilter == 1)
             {
                 //theo doanh số bill
@@ -99,16 +107,38 @@ namespace Waho.Pages.Admin
                 var queryOrder = from bd in _context.OderDetails
                             join b in _context.Oders on bd.OderId equals b.OderId
                             join p in _context.Products on bd.ProductId equals p.ProductId
-                            //where b. .Month == dateQuery.Month && b.Date.Year == dateQuery.Year
+                            where b.OrderDate.Month == dateQuery.Month && b.OrderDate.Year == dateQuery.Year
                             group new { p.ProductName, bd.Quantity, p.UnitInStock, bd.Discount } by p.ProductName into g
                             orderby g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) descending
                             select new { ProductName = g.Key, TotalQuantity = g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) };
                 var resultsOrder = await queryOrder.Take(10).ToListAsync();
-                foreach (var result in results)
+                // map to list
+                if (results.Count == 0)
                 {
-                    ProductNames.Add(result.ProductName);
-                    Quantities.Add(result.TotalQuantity);
+                    foreach (var ro in resultsOrder)
+                    {
+                       temp.Add(new KeyValuePair<string, double>(ro.ProductName, ro.TotalQuantity));
+                    }
                 }
+                foreach(var rs in results)
+                {
+                    foreach (var ro in resultsOrder)
+                    {
+                        if(rs.ProductName == ro.ProductName)
+                        {
+                            temp.Add(new KeyValuePair<string, double>(rs.ProductName, rs.TotalQuantity + ro.TotalQuantity));
+                        }
+                    }
+                    temp.Add(new KeyValuePair<string, double>(rs.ProductName, rs.TotalQuantity));
+                }
+                //sort
+                temp = temp.OrderByDescending(x => x.Value).ToList();
+                for (int i = 0; i <temp.Count && i < 10; i++)
+                {
+                    ProductNames.Add(temp[i].Key);
+                    Quantities.Add(temp[i].Value);
+                }
+
             }
             else
             {
@@ -121,14 +151,85 @@ namespace Waho.Pages.Admin
                             orderby g.Sum(x => x.Quantity) descending
                             select new { ProductName = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
                 var results = await query.Take(10).ToListAsync();
-                foreach (var result in results)
+                // order
+                var queryOrder = from bd in _context.OderDetails
+                                 join b in _context.Oders on bd.OderId equals b.OderId
+                                 join p in _context.Products on bd.ProductId equals p.ProductId
+                                 where b.OrderDate.Month == dateQuery.Month && b.OrderDate.Year == dateQuery.Year
+                                 group new { p.ProductName, bd.Quantity } by p.ProductName into g
+                                 orderby g.Sum(x => x.Quantity ) descending
+                                 select new { ProductName = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
+                var resultsOrder = await queryOrder.Take(10).ToListAsync();
+                // map to list
+                if (results.Count == 0)
                 {
-                    ProductNames.Add(result.ProductName);
-                    Quantities.Add(result.TotalQuantity);
+                    foreach (var ro in resultsOrder)
+                    {
+                        temp.Add(new KeyValuePair<string, double>(ro.ProductName, ro.TotalQuantity));
+                    }
+                }
+                foreach (var rs in results)
+                {
+                    foreach (var ro in resultsOrder)
+                    {
+                        if (rs.ProductName == ro.ProductName)
+                        {
+                            temp.Add(new KeyValuePair<string, double>(rs.ProductName, rs.TotalQuantity + ro.TotalQuantity));
+                        }
+                    }
+                    temp.Add(new KeyValuePair<string, double>(rs.ProductName, rs.TotalQuantity));
+                }
+                //sort
+                temp = temp.OrderByDescending(x => x.Value).ToList();
+                for (int i = 0; i < temp.Count && i < 10; i++)
+                {
+                    ProductNames.Add(temp[i].Key);
+                    Quantities.Add(temp[i].Value);
                 }
             }
-            
-            
+            // doanh số theo ngày trong tháng trong tháng
+            //theo doanh số bill
+            var queryDay = from bd in _context.BillDetails
+                        join b in _context.Bills on bd.BillId equals b.BillId
+                        join p in _context.Products on bd.ProductId equals p.ProductId
+                        where b.Date.Month == dateQueryDay.Month && b.Date.Year == dateQueryDay.Year
+                        group new { bd.Quantity, p.UnitInStock, bd.Discount } by b.Date.Day into g
+                        orderby g.Key ascending
+                        select new { Day = g.Key, TotalQuantity = g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) };
+            var resultsDay = await queryDay.Take(10).ToListAsync();
+            // order
+            var queryOrderDay = from bd in _context.OderDetails
+                             join b in _context.Oders on bd.OderId equals b.OderId
+                             join p in _context.Products on bd.ProductId equals p.ProductId
+                             where b.OrderDate.Month == dateQueryDay.Month && b.OrderDate.Year == dateQueryDay.Year
+                             group new { bd.Quantity, p.UnitInStock, bd.Discount } by b.OrderDate.Day into g
+                             orderby g.Key ascending
+                             select new { Day = g.Key, TotalQuantity = g.Sum(x => x.Quantity * x.UnitInStock * (1 - x.Discount)) };
+            var resultsOrderDay = await queryOrderDay.Take(10).ToListAsync();
+            // map to list
+            if (resultsDay.Count == 0)
+            {
+                foreach (var ro in resultsOrderDay)
+                {
+                    tempDay.Add(new KeyValuePair<int, double>(ro.Day, ro.TotalQuantity));
+                }
+            }
+            foreach (var rs in resultsDay)
+            {
+                foreach (var ro in resultsOrderDay)
+                {
+                    if (rs.Day == ro.Day)
+                    {
+                        tempDay.Add(new KeyValuePair<int, double>(rs.Day, rs.TotalQuantity + ro.TotalQuantity));
+                    }
+                }
+                tempDay.Add(new KeyValuePair<int, double>(rs.Day, rs.TotalQuantity));
+            }
+            for (int i = 0; i < tempDay.Count; i++)
+            {
+                Days.Add(tempDay[i].Key);
+                QuantitiesDay.Add(temp[i].Value);
+            }
         }
 
     }
