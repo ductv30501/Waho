@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.WarehouseStaff.Products
@@ -13,11 +14,13 @@ namespace Waho.Pages.WarehouseStaff.Products
     public class EditModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public EditModel(Waho.WahoModels.WahoContext context)
+        public EditModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
         [BindProperty]
@@ -25,7 +28,11 @@ namespace Waho.Pages.WarehouseStaff.Products
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             return Page();
         }
 

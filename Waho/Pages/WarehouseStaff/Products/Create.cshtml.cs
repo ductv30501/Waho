@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.WarehouseStaff.Products
@@ -12,10 +13,11 @@ namespace Waho.Pages.WarehouseStaff.Products
     public class CreateModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
-        public CreateModel(Waho.WahoModels.WahoContext context)
+        private readonly Author _author;
+        public CreateModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
         
         public string message { get; set; }
@@ -23,6 +25,10 @@ namespace Waho.Pages.WarehouseStaff.Products
 
         public IActionResult OnGet()
         {
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             return Page();
         }
 

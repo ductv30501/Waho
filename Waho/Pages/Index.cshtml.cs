@@ -27,11 +27,20 @@ namespace Waho.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (_dataService.GetEmployeeByUserAndPass(Employee.UserName, Employee.Password) != null)
+            Employee _employee = _dataService.GetEmployeeByUserAndPass(Employee.UserName, Employee.Password);
+            if (_employee != null)
             {
-                HttpContext.Session.SetString("Employee", JsonSerializer.Serialize(Employee));
-
-                return RedirectToPage("./Admin/Index");
+                HttpContext.Session.SetString("Employee", JsonSerializer.Serialize(_employee));
+                switch (_employee.Role)
+                {
+                    case 1:
+                        return RedirectToPage("./Admin/Index");
+                    case 2: 
+                        return RedirectToPage("./Cashier/Bills/Index");
+                    case 3:
+                        return RedirectToPage("./WarehouseStaff/Products/Index");
+                }
+                
             }
             ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu");
             return Page();

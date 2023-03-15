@@ -14,6 +14,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
         //message
         [BindProperty(SupportsGet = true)]
         public string message { get; set; }
@@ -34,10 +35,11 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         [BindProperty(SupportsGet = true)]
         public string employeeID { get; set; } = "";
         private string raw_pageSize, raw_EmployeeSearch, raw_textSearch;
-        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
         //list employee
         [BindProperty(SupportsGet = true)]
@@ -45,8 +47,13 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         [BindProperty(SupportsGet = true)]
         public List<InventorySheet> InventorySheetList { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             //get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
             if (!string.IsNullOrEmpty(raw_pageSize))
@@ -92,6 +99,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             {
                 InventorySheetList = _dataService.getInventoryPagingAndFilter(pageIndex, pageSize, textSearch, employeeID);
             }
+            return Page();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Cashier.ReturnOrders
@@ -12,11 +13,13 @@ namespace Waho.Pages.Cashier.ReturnOrders
     public class DeleteModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public DeleteModel(Waho.WahoModels.WahoContext context)
+        public DeleteModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
         [BindProperty]
@@ -24,6 +27,11 @@ namespace Waho.Pages.Cashier.ReturnOrders
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
             var _returnOrder = await _context.ReturnOrders.FirstOrDefaultAsync(m => m.ReturnOrderId == id);
             if (_returnOrder != null)
             {

@@ -11,16 +11,23 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
     {
         private readonly DataServiceManager _dataService;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Author _author;
         private InventorySheet inventorySheet;
         [BindProperty]
         public string successMessage { get; set; }
-        public ExportInventoryModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment)
+        public ExportInventoryModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment, Author author)
         {
             _dataService = dataService;
             _hostingEnvironment = hostingEnvironment;
+            _author = author;
         }
         public IActionResult OnGetAsync(string _inventorySheetID)
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             // get inventoryDetail list
             Int32 inventorySheetID = Int32.Parse(HttpContext.Request.Query["inventorySheetID"]);
             var inventoryDetailList = _dataService.GetInventorySheetDetails(inventorySheetID);

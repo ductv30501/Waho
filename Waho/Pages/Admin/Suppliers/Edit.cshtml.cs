@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Admin.Suppliers
@@ -13,21 +14,32 @@ namespace Waho.Pages.Admin.Suppliers
     public class EditModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public EditModel(Waho.WahoModels.WahoContext context)
+        public EditModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
         [BindProperty]
         public Supplier Supplier { get; set; } = default!;
 
-
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
+            return Page();
+        }
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+
             var req = HttpContext.Request;
             //get data form form submit 
             string raw_supplierID = req.Form["supplierID"];

@@ -14,6 +14,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
         //message
         [BindProperty(SupportsGet = true)]
         public string message { get; set; }
@@ -35,16 +36,22 @@ namespace Waho.Pages.Cashier.ReturnOrders
         private string raw_pageSize, raw_textSearch, raw_EmployeeSearch;
         //list employee
         public List<Employee> employees { get; set; }
-        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
 
         public IList<ReturnOrder> ReturnOrder { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
             //get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
             if (!string.IsNullOrEmpty(raw_pageSize))
@@ -91,6 +98,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
             {
                 ReturnOrder = _dataService.getreturnOrderPagingAndFilter(pageIndex, pageSize, textSearch, employeeID);
             }
+            return Page();
         }
     }
 }

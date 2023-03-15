@@ -11,8 +11,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<WahoContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("Waho")
     ));
-builder.Services.AddScoped<DataServiceManager>();
 
+builder.Services.AddScoped<DataServiceManager>();
+builder.Services.AddScoped<Author>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

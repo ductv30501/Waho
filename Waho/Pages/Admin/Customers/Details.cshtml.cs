@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Admin.Customers
@@ -12,16 +13,22 @@ namespace Waho.Pages.Admin.Customers
     public class DetailsModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
-        public DetailsModel(Waho.WahoModels.WahoContext context)
+        private readonly Author _author;
+        public DetailsModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
-      public Customer Customer { get; set; }
+        public Customer Customer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
             if (id == null || _context.Customers == null)
             {
                 return NotFound();

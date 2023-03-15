@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.WarehouseStaff.Products
@@ -17,12 +18,14 @@ namespace Waho.Pages.WarehouseStaff.Products
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly IFileProvider _fileProvider;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public UploadFileExcelModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider)
+        public UploadFileExcelModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider, Author author)
         {
             _context = context;
             _fileProvider = fileProvider;
+            _author = author;
         }
 
         [BindProperty]
@@ -33,6 +36,11 @@ namespace Waho.Pages.WarehouseStaff.Products
 
         public IActionResult OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             // Lấy thông tin file từ IFileProvider
             IFileInfo fileInfo = _fileProvider.GetFileInfo("Products.xlsx");
             if (fileInfo.Exists)
@@ -44,7 +52,7 @@ namespace Waho.Pages.WarehouseStaff.Products
                     fileStream.CopyTo(stream);
                 }
                 stream.Position = 0;
-                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "template.xlsx");
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Products.xlsx");
             }
             else
             {

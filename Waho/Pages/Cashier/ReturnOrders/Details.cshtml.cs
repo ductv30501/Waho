@@ -14,6 +14,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
         //message
         public string message { get; set; }
         public string successMessage { get; set; }
@@ -30,16 +31,22 @@ namespace Waho.Pages.Cashier.ReturnOrders
         private string raw_pageSize;
         [BindProperty(SupportsGet = true)]
         public int _returnOrderID { get; set; }
-        public DetailsModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public DetailsModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
 
         public ReturnOrder ReturnOrder { get; set; }
         public List<ReturnOrderProduct> returnOrderProducts { get; set; }
         public async Task<IActionResult> OnGetAsync(int returnOrderID)
-        {
+        {   
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
             // get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
             if (returnOrderID != 0)

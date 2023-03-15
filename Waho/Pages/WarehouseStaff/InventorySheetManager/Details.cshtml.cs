@@ -15,6 +15,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
         //message
         public string message { get; set; }
         public string successMessage { get; set; }
@@ -29,10 +30,11 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         public int TotalCount { get; set; } = 0;
 
         private string raw_pageSize;
-        public DetailsModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public DetailsModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
 
         public InventorySheet _inventorySheet { get; set; }
@@ -42,6 +44,11 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         public int _inventorySheetID { get; set; }
         public async Task<IActionResult> OnGetAsync(int inventorySheetID)
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             //get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
             if (inventorySheetID != 0)

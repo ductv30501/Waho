@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Admin.Suppliers
@@ -12,11 +13,13 @@ namespace Waho.Pages.Admin.Suppliers
     public class DeleteModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public DeleteModel(Waho.WahoModels.WahoContext context)
+        public DeleteModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
         [BindProperty]
@@ -24,6 +27,11 @@ namespace Waho.Pages.Admin.Suppliers
 
         public async Task<IActionResult> OnGetAsync(int? supplierID)
         {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
             var supplier = await _context.Suppliers.FirstOrDefaultAsync(m => m.SupplierId == supplierID);
             if (supplier != null)
             {

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 
 namespace Waho.DataService
 {
@@ -16,25 +17,13 @@ namespace Waho.DataService
         {
             _context = context;
         }
-        
-        public List<Category> GetCategories()
-        {
-            return _context.Categories.ToList();
-        }
-        //public List<Category> GetCategories()
-        //{
-        //    return _context.Categories.ToList();
-        //}
 
         public Employee GetEmployeeByUserAndPass(string userName, string password)
         {
             return _context.Employees.FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
         }
 
-        public Customer GetCustomerById(int id)
-        {
-            return _context.Customers.SingleOrDefault(c => c.CustomerId == id);
-        }
+        
         public List<SubCategory> GetSubCategories(int id)
         {
             return _context.SubCategories
