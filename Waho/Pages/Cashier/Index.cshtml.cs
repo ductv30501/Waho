@@ -1,20 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Waho.DataService;
 
 namespace Waho.Pages.Cashier
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        private readonly Author _author;
+        public IndexModel(Author author)
         {
-            _logger = logger;
+            _author = author;
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
 
+            return Page();
         }
     }
 }

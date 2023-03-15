@@ -11,15 +11,22 @@ namespace Waho.Pages.Admin.Suppliers
     {
         private readonly DataServiceManager _dataService;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Author _author;
         [BindProperty]
         public string successMessage { get; set; }
-        public ExportSuppliersModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment)
+        public ExportSuppliersModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment, Author author)
         {
             _dataService = dataService;
             _hostingEnvironment = hostingEnvironment;
+            _author = author;
         }
         public IActionResult OnGetAsync(string _inventorySheetID)
         {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
             // get inventoryDetail list
             var suppliers = _dataService.getSupplierList();
             // create Excel package

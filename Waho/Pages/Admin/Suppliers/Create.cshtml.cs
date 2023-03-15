@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Admin.Suppliers
@@ -12,18 +13,28 @@ namespace Waho.Pages.Admin.Suppliers
     public class CreateModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public CreateModel(Waho.WahoModels.WahoContext context)
+        public CreateModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
 
         [BindProperty]
         public Supplier Supplier { get; set; }
-        
 
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
+            return Page();
+        }
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {

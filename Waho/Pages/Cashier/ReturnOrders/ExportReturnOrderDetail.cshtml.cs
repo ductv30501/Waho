@@ -11,16 +11,23 @@ namespace Waho.Pages.Cashier.ReturnOrders
     {
         private readonly DataServiceManager _dataService;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Author _author;
         private ReturnOrder returnOrder;
         [BindProperty]
         public string successMessage { get; set; }
-        public ExportReturnOrderDetailModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment)
+        public ExportReturnOrderDetailModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment, Author author)
         {
             _dataService = dataService;
             _hostingEnvironment = hostingEnvironment;
+            _author = author;
         }
         public IActionResult OnGetAsync(int returnOrderID)
         {
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
             // get inventoryDetail list
             var inventoryDetailList = _dataService.GetReturnOrderDetails(returnOrderID);
             returnOrder = _dataService.getReturnOrderByID(returnOrderID);

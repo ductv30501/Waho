@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Cashier.Bills
@@ -13,10 +14,11 @@ namespace Waho.Pages.Cashier.Bills
     public class CreateModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
-        public CreateModel(Waho.WahoModels.WahoContext context)
+        private readonly Author _author;
+        public CreateModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
         [BindProperty]
@@ -29,9 +31,14 @@ namespace Waho.Pages.Cashier.Bills
         public List<Product> products { get; set; }
 
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
+            return Page();
         }
         
         public async Task<IActionResult> OnGetProducts(string? q)

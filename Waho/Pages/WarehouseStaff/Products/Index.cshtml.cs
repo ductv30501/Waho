@@ -15,11 +15,13 @@ namespace Waho.Pages.WarehouseStaff.Products
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
 
-        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
         [BindProperty(SupportsGet = true)]
         public string message { get; set; }
@@ -47,13 +49,18 @@ namespace Waho.Pages.WarehouseStaff.Products
         [BindProperty(SupportsGet = true)]
         public int subCategoryID { get; set; } = -1;
 
-        private string raw_number, raw_subCategorySearch,raw_textSearch;
+        private string raw_number, raw_subCategorySearch, raw_textSearch;
 
         [BindProperty(SupportsGet = true)]
         public List<Supplier> suppliers { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             //get data from form
             raw_number = HttpContext.Request.Query["pageSize"];
             if (!string.IsNullOrEmpty(raw_number))
@@ -75,7 +82,7 @@ namespace Waho.Pages.WarehouseStaff.Products
                 textSearch = "";
             }
             //get subCategoris list by category
-            subCategories =  _dataService.GetSubCategories(1);
+            subCategories = _dataService.GetSubCategories(1);
 
             //get product list 
             TotalCount = _context.Products
@@ -87,7 +94,8 @@ namespace Waho.Pages.WarehouseStaff.Products
                             .Where(p => p.Active == true)
                             .Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter
-            if((pageIndex - 1)  > (TotalCount / pageSize)){
+            if ((pageIndex - 1) > (TotalCount / pageSize))
+            {
                 pageIndex = 1;
             }
             message = TempData["message"] as string;
@@ -95,11 +103,12 @@ namespace Waho.Pages.WarehouseStaff.Products
             if (_context.Products != null)
             {
                 // categoryid = 1 
-                Products = _dataService.GetProductsPagingAndFilter(pageIndex,pageSize,textSearch,subCategoryID,1) ;
+                Products = _dataService.GetProductsPagingAndFilter(pageIndex, pageSize, textSearch, subCategoryID, 1);
             }
             //get message
             suppliers = await _context.Suppliers.ToListAsync();
+            return Page();
         }
-        
+
     }
 }

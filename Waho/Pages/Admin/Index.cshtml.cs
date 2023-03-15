@@ -13,10 +13,12 @@ namespace Waho.Pages.Admin
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
-        public IndexModel(ILogger<IndexModel> logger, WahoModels.WahoContext context, DataServiceManager dataService)
+        private readonly Author _author;
+        public IndexModel(ILogger<IndexModel> logger, WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
         public int numberBill { get; set; } = 0;
         public double totalMoney { get; set; } = 0;
@@ -53,8 +55,13 @@ namespace Waho.Pages.Admin
             }
             return totalM;
         }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
             //hóa đơn trong ngày
             numberBill = _context.Bills.Where(b => b.Date == now).Count();
             //get billdetail in day
@@ -230,6 +237,8 @@ namespace Waho.Pages.Admin
                 Days.Add(tempDay[i].Key);
                 QuantitiesDay.Add(temp[i].Value);
             }
+
+            return Page();
         }
 
     }

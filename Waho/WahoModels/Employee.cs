@@ -25,7 +25,7 @@ namespace Waho.WahoModels
         public string? Note { get; set; }
         public string? Password { get; set; }
         public int? WahoId { get; set; }
-        public int? Role { get; set; }
+        public int Role { get; set; }
 
         public virtual WahoInformation Waho { get; set; }
         public virtual ICollection<Bill> Bills { get; set; }
