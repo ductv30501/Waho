@@ -9,7 +9,7 @@ namespace Waho.WahoModels
         public int ProductId { get; set; }
         public int CurNwareHouse { get; set; }
 
-        public virtual InventorySheet InventorySheet { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual InventorySheet InventorySheet { get; set; } = null!;
+        public virtual Product Product { get; set; } = null!;
     }
 }

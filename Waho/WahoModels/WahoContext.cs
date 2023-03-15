@@ -16,32 +16,29 @@ namespace Waho.WahoModels
         {
         }
 
-        public virtual DbSet<Bill> Bills { get; set; }
-        public virtual DbSet<BillDetail> BillDetails { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<InventorySheet> InventorySheets { get; set; }
-        public virtual DbSet<InventorySheetDetail> InventorySheetDetails { get; set; }
-        public virtual DbSet<Oder> Oders { get; set; }
-        public virtual DbSet<OderDetail> OderDetails { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<ReturnOrder> ReturnOrders { get; set; }
-        public virtual DbSet<ReturnOrderProduct> ReturnOrderProducts { get; set; }
-        public virtual DbSet<Shipper> Shippers { get; set; }
-        public virtual DbSet<SubCategory> SubCategories { get; set; }
-        public virtual DbSet<Supplier> Suppliers { get; set; }
-        public virtual DbSet<WahoInformation> WahoInformations { get; set; }
+        public virtual DbSet<Bill> Bills { get; set; } = null!;
+        public virtual DbSet<BillDetail> BillDetails { get; set; } = null!;
+        public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Customer> Customers { get; set; } = null!;
+        public virtual DbSet<Employee> Employees { get; set; } = null!;
+        public virtual DbSet<InventorySheet> InventorySheets { get; set; } = null!;
+        public virtual DbSet<InventorySheetDetail> InventorySheetDetails { get; set; } = null!;
+        public virtual DbSet<Oder> Oders { get; set; } = null!;
+        public virtual DbSet<OderDetail> OderDetails { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<ReturnOrder> ReturnOrders { get; set; } = null!;
+        public virtual DbSet<ReturnOrderProduct> ReturnOrderProducts { get; set; } = null!;
+        public virtual DbSet<Shipper> Shippers { get; set; } = null!;
+        public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
+        public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
+        public virtual DbSet<WahoInformation> WahoInformations { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var builder = new ConfigurationBuilder()
-                                 .SetBasePath(Directory.GetCurrentDirectory())
-                                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                IConfigurationRoot configuration = builder.Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("Waho"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =DESKTOP-JU0QLJA; database = Waho; uid=sa; pwd=123456;");
             }
         }
 
@@ -73,7 +70,6 @@ namespace Waho.WahoModels
                     .HasColumnName("descriptions");
 
                 entity.Property(e => e.UserName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
@@ -120,7 +116,6 @@ namespace Waho.WahoModels
                 entity.Property(e => e.CategoryId).HasColumnName("categoryID");
 
                 entity.Property(e => e.CategoryName)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnName("categoryName");
 
@@ -238,7 +233,6 @@ namespace Waho.WahoModels
                     .HasColumnName("description");
 
                 entity.Property(e => e.UserName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
@@ -252,7 +246,7 @@ namespace Waho.WahoModels
             modelBuilder.Entity<InventorySheetDetail>(entity =>
             {
                 entity.HasKey(e => new { e.InventorySheetId, e.ProductId })
-                    .HasName("PK__Inventor__30B6C99160DCE9FB");
+                    .HasName("PK__Inventor__30B6C991D1B2B7BE");
 
                 entity.ToTable("InventorySheetDetail");
 
@@ -266,13 +260,13 @@ namespace Waho.WahoModels
                     .WithMany(p => p.InventorySheetDetails)
                     .HasForeignKey(d => d.InventorySheetId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__inven__5441852A");
+                    .HasConstraintName("FK__Inventory__inven__45F365D3");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.InventorySheetDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__produ__5535A963");
+                    .HasConstraintName("FK__Inventory__produ__46E78A0C");
             });
 
             modelBuilder.Entity<Oder>(entity =>
@@ -305,7 +299,6 @@ namespace Waho.WahoModels
                 entity.Property(e => e.ShipperId).HasColumnName("shipperID");
 
                 entity.Property(e => e.UserName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
@@ -387,7 +380,6 @@ namespace Waho.WahoModels
                     .HasColumnName("location");
 
                 entity.Property(e => e.ProductName)
-                    .IsRequired()
                     .HasMaxLength(150)
                     .HasColumnName("productName");
 
@@ -450,7 +442,6 @@ namespace Waho.WahoModels
                 entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.UserName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
@@ -470,7 +461,7 @@ namespace Waho.WahoModels
             modelBuilder.Entity<ReturnOrderProduct>(entity =>
             {
                 entity.HasKey(e => new { e.ProductId, e.ReturnOrderId })
-                    .HasName("PK__ReturnOr__5C6645AC82D41644");
+                    .HasName("PK__ReturnOr__5C6645AC5D35ECE5");
 
                 entity.ToTable("ReturnOrderProduct");
 
@@ -484,13 +475,13 @@ namespace Waho.WahoModels
                     .WithMany(p => p.ReturnOrderProducts)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReturnOrd__produ__5BE2A6F2");
+                    .HasConstraintName("FK__ReturnOrd__produ__4F7CD00D");
 
                 entity.HasOne(d => d.ReturnOrder)
                     .WithMany(p => p.ReturnOrderProducts)
                     .HasForeignKey(d => d.ReturnOrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReturnOrd__retur__5CD6CB2B");
+                    .HasConstraintName("FK__ReturnOrd__retur__5070F446");
             });
 
             modelBuilder.Entity<Shipper>(entity =>

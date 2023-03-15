@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Cashier.Bills
@@ -18,11 +19,29 @@ namespace Waho.Pages.Cashier.Bills
             _context = context;
         }
 
-        public IActionResult OnGet()
+        [BindProperty]
+        public Bill bill { get; set; }
+
+        [BindProperty]
+        public List<BillDetail> billDetails { get; set; }
+
+        [BindProperty]
+        public List<Product> products { get; set; }
+
+
+        public void OnGet()
         {
-        ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId");
-        ViewData["UserName"] = new SelectList(_context.Employees, "UserName", "UserName");
-            return Page();
+
+        }
+        
+        public async Task<IActionResult> OnGetProducts(string? q)
+        {
+            if (!string.IsNullOrEmpty(q.Trim()))
+            {
+                products = _context.Products.Where(p => p.ProductName.ToLower().Contains(q.ToLower())).Take(10).ToList();
+            }
+
+            return new JsonResult(products);
         }
 
         [BindProperty]

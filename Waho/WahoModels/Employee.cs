@@ -13,6 +13,7 @@ namespace Waho.WahoModels
             ReturnOrders = new HashSet<ReturnOrder>();
         }
 
+
         public string UserName { get; set; }
         public string EmployeeName { get; set; }
         public string Title { get; set; }
