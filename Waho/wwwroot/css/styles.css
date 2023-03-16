@@ -24,6 +24,7 @@
     color: var(--primary);
 }
 
+
 .btn-primary {
     background-color: var(--primary);
     border: solid 2px var(--primary);
@@ -56,6 +57,7 @@
 
 .span-input-primary {
     background-color: var(--primary);
+    border: solid 2px var(--primary);
     color: white;
 }
 
@@ -99,6 +101,10 @@ a {
     opacity: 0.3;
 }
 
+.form-control:focus {
+    box-shadow: 0 0 8px var(--primary-active); 
+    border-color: var(--primary-active);
+}
 
 .wt-widgettitle {
     margin-bottom: 10px;
@@ -168,3 +174,73 @@ a {
         padding: 5px 10px 5px 10px;
     }
 
+.icon-table {
+    font-size: 20px;
+}
+
+    .icon-table:hover {
+        cursor: pointer;
+        opacity: 0.5;
+    }
+
+.input-table {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 2px solid #ced4da;
+    border-radius:unset;
+    background-color: transparent;
+    text-align: center;
+}
+
+    .input-table:focus {
+        background-color: transparent;
+        box-shadow:none;
+        border-color: var(--primary-active)
+    }
+
+.icon-edit {
+    color: orange;
+}
+
+.icon-delete {
+    color: red;
+}
+
+.result-search-input {
+    position: absolute;
+    background-color: #fff;
+    border: 2px;
+    border-radius: 5px;
+    right: 0;
+    width: 100%;
+    top: 100%;
+    list-style: none;
+    cursor: pointer;
+    box-shadow: 0px 5px 10px rgb(169, 169, 169);
+    z-index: 1;
+    overflow: hidden;
+    padding-left: 0;
+}
+
+.result-search-items {
+    padding-left: 10px;
+    border-radius: 3px;
+    border-bottom: 1px solid #ced4da;
+    padding-bottom:10px;
+}
+
+.result-search-items:hover {
+    background-color: var(--primary);
+    opacity:0.7;
+    color:white;
+}
+    .result-search-items:active {
+        background-color: var(--primary-active);
+        opacity: 0.7;
+        color: white;
+    }
+
+.bill-form{
+    max-height:400px;
+}

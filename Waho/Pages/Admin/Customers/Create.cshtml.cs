@@ -27,6 +27,7 @@ namespace Waho.Pages.Admin.Customers
 
         [BindProperty]
         public Customer Customer { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             //author
@@ -40,14 +41,30 @@ namespace Waho.Pages.Admin.Customers
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+
+            string name = HttpContext.Request.Form["name"];
+            string raw_dob = HttpContext.Request.Form["dob"];
+            string phone = HttpContext.Request.Form["phone"];
+            string email = HttpContext.Request.Form["email"];
+            string raw_type = HttpContext.Request.Form["type"];
+            string tax = HttpContext.Request.Form["tax"];
+            string address = HttpContext.Request.Form["address"];
+            string note = HttpContext.Request.Form["note"];
+
+            Customer.CustomerName = name;
+            Customer.Adress = address;
+            Customer.Phone = phone;
+            Customer.Email = email;
+            Customer.Active = true;
+            Customer.Description = note;
+            Customer.TaxCode = tax;
+            Customer.Dob = DateTime.Parse(raw_dob);
+            Customer.TypeOfCustomer = Boolean.Parse(raw_type);
 
             _context.Customers.Add(Customer);
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "Tạo thông tin khách hàng thành công!";
             return RedirectToPage("./Index");
         }
     }

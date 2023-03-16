@@ -1,6 +1,4 @@
 ﻿
-
-
 function modal(id, position, transform) {
     var box = document.getElementById(id);
     var modal = document.getElementsByClassName('modal');
