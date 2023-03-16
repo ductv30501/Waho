@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
+using System.Configuration;
 using Waho.DataService;
+using Waho.MailManager;
 using Waho.WahoModels;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,14 +13,18 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<WahoContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("Waho")
     ));
-builder.Services.AddScoped<DataServiceManager>();
 
+builder.Services.AddScoped<DataServiceManager>();
+builder.Services.AddScoped<Author>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<EmailService>();
 
 ExcelPackage.LicenseContext = LicenseContext.Commercial;
 builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "ImportData")));

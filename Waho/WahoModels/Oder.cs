@@ -17,6 +17,8 @@ namespace Waho.WahoModels
         public string? OderState { get; set; }
         public string? Region { get; set; }
         public string? Cod { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime? EstimatedDate { get; set; }
 
         public virtual Customer Customer { get; set; } = null!;
         public virtual Shipper Shipper { get; set; } = null!;

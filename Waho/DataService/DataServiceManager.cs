@@ -6,35 +6,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 
 namespace Waho.DataService
 {
     public class DataServiceManager
     {
         private readonly WahoContext _context;
-        private readonly DataServiceManager _dataService;
         public DataServiceManager(WahoContext context)
         {
             _context = context;
         }
 
-        public List<Category> GetCategories()
-        {
-            return _context.Categories.ToList();
-        }
-        //public List<Category> GetCategories()
-        //{
-        //    return _context.Categories.ToList();
-        //}
-
         public Employee GetEmployeeByUserAndPass(string userName, string password)
         {
             return _context.Employees.FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
         }
-
-        public Customer GetCustomerById(int id)
+        //get employee by email
+        public Employee GetEmployeeByEmail(string email)
         {
-            return _context.Customers.SingleOrDefault(c => c.CustomerId == id);
+            return _context.Employees.FirstOrDefault(emp => emp.Email == email);
+        }
+        public Employee GetEmployeeByUserName(string userName)
+        {
+            return _context.Employees.FirstOrDefault(emp => emp.UserName == userName);
         }
         public List<SubCategory> GetSubCategories(int id)
         {
@@ -272,6 +267,21 @@ namespace Waho.DataService
                           .Take(pageSize)
                           .ToList();
             return returnOrders;
+        }
+
+        //get billDetails by day
+        public List<BillDetail> GetBillDetails(DateTime date)
+        {
+            return _context.BillDetails
+                                .Include(b => b.Bill)
+                                .Include(b => b.Product)
+                                .Where(b => b.Bill.Date == date).ToList();
+        }
+        //get GetReturOrder by day
+        public List<ReturnOrder> GetReturOrderByDay(DateTime date)
+        {
+            return _context.ReturnOrders
+                                .Where(b => b.Date == date).ToList();
         }
     }
 }

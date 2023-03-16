@@ -14,6 +14,7 @@ namespace Waho.Pages.Admin.Suppliers
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
         //message
         [BindProperty(SupportsGet = true)]
         public string message { get; set; }
@@ -32,16 +33,23 @@ namespace Waho.Pages.Admin.Suppliers
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
         private string raw_pageSize, raw_textSearch;
-        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
         [BindProperty(SupportsGet = true)]
         public IList<Supplier> Supplier { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
+
             //get data from form
             raw_pageSize = HttpContext.Request.Query["pageSize"];
             if (!string.IsNullOrEmpty(raw_pageSize))
@@ -68,6 +76,8 @@ namespace Waho.Pages.Admin.Suppliers
             {
                 Supplier = _dataService.GetSupplierPagingAndFilter(pageIndex, pageSize, textSearch);
             }
+
+            return Page();
         }
     }
 }

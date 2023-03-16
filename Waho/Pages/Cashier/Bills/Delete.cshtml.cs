@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Cashier.Bills
@@ -12,10 +13,11 @@ namespace Waho.Pages.Cashier.Bills
     public class DeleteModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
-        public DeleteModel(Waho.WahoModels.WahoContext context)
+        private readonly Author _author;
+        public DeleteModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
 
         [BindProperty]
@@ -23,6 +25,12 @@ namespace Waho.Pages.Cashier.Bills
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
+
             if (id == null || _context.Bills == null)
             {
                 return NotFound();

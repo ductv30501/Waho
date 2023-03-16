@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Waho.DataService;
 using Waho.WahoModels;
 
@@ -7,20 +8,22 @@ namespace Waho.Pages.WarehouseStaff
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-        private readonly DataServiceManager _dataService; 
         
-        public IndexModel(ILogger<IndexModel> logger, DataServiceManager dataService) 
+        private readonly Author _author;
+        public IndexModel(Author author)
         {
-            _logger = logger;
-            _dataService = dataService;
+            _author = author;
         }
-        [BindProperty]
-        public List<Category> Categories { get; set; }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            //Categories = _dataService.GetCategories();
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản sản phẩm" });
+            }
+            
+            return Page();
         }
     }
 }

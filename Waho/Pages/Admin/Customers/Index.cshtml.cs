@@ -20,6 +20,13 @@ namespace Waho.Pages.Admin.Customers
             _context = context;
             _dataService = dataService;
         }
+        
+        private readonly Author _author;
+        public IndexModel(Waho.WahoModels.WahoContext context, Author author)
+        {
+            _context = context;
+            _author = author;
+        }
 
         [BindProperty(SupportsGet = true)]
         public int pageSize { get; set; } = 10;
@@ -49,7 +56,7 @@ namespace Waho.Pages.Admin.Customers
 
         public IList<Customer> Customers { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             //get data from form
             raw_number = HttpContext.Request.Query["pageSize"];
@@ -100,11 +107,18 @@ namespace Waho.Pages.Admin.Customers
             {
                 pageIndex = 1;
             }
+            //author
+            if (!_author.IsAuthor(1))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
+            }
+
 
             if (_context.Customers != null)
             {
                 Customers =  _dataService.GetCustomersPagingAndFilter(pageIndex, pageSize, textSearch, status, dateFrom, dateTo, typeCustomer);
             }
+            return Page();
         }
     }
 }

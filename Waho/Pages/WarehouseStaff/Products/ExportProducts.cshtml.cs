@@ -11,13 +11,19 @@ namespace Waho.Pages.WarehouseStaff.Products
     {
         private readonly DataServiceManager _dataService;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Author _author;
         public string successMessage { get; set; }
-        public ExportProductsModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment)
+        public ExportProductsModel(DataServiceManager dataService, IWebHostEnvironment hostingEnvironment, Author author)
         {
             _dataService = dataService;
             _hostingEnvironment = hostingEnvironment;
+            _author = author;
         }
         public  IActionResult OnGetAsync() {
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             // get product list
             var productList = _dataService.GetProductsByCateID(1);
 

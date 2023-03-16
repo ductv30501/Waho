@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 using OfficeOpenXml;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.WarehouseStaff.InventorySheetManager
@@ -16,12 +17,14 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly IFileProvider _fileProvider;
+        private readonly Author _author;
         public string message { get; set; }
         public string successMessage { get; set; }
-        public CreateModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider)
+        public CreateModel(Waho.WahoModels.WahoContext context, IFileProvider fileProvider, Author author)
         {
             _context = context;
             _fileProvider = fileProvider;
+            _author = author;
         }
 
 
@@ -33,6 +36,11 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         private int inventoryID;
         public IActionResult OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(3))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            }
             // Lấy thông tin file từ IFileProvider
             IFileInfo fileInfo = _fileProvider.GetFileInfo("Inventory.xlsx");
             if (fileInfo.Exists)

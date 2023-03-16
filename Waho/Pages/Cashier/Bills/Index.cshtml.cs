@@ -14,11 +14,13 @@ namespace Waho.Pages.Cashier.Bills
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
+        private readonly Author _author;
 
-        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
             _dataService = dataService;
+            _author = author;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -49,8 +51,13 @@ namespace Waho.Pages.Cashier.Bills
 
         public IList<Bill> Bills { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //author
+            if (!_author.IsAuthor(2))
+            {
+                return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
+            }
             //get data from form
             raw_number = HttpContext.Request.Query["pageSize"];
             if (!string.IsNullOrEmpty(raw_number))
@@ -106,6 +113,8 @@ namespace Waho.Pages.Cashier.Bills
             {
                 Bills = _dataService.GetBillsPagingAndFilter(pageIndex, pageSize, textSearch, status, dateFrom, dateTo, active);
             }
+
+            return Page();
         }
     }
 }
