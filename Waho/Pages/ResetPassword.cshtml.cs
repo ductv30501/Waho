@@ -6,11 +6,11 @@ using Waho.WahoModels;
 
 namespace Waho.Pages
 {
-    public class ChangePasswordModel : PageModel
+    public class ResetPasswordModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
-        public ChangePasswordModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
+        public ResetPasswordModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
         {
             _context = context;
             _dataService = dataService;
@@ -22,17 +22,16 @@ namespace Waho.Pages
         public string newPassword { get; set; }
         [BindProperty]
         public string newPasswordConfirm { get; set; }
-        
         public async Task OnGetAsync()
         {
             //employee = await
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            Employee _employee = _dataService.GetEmployeeByUserAndPass(employee.UserName, employee.Password);
+            Employee _employee = _dataService.GetEmployeeByUserName(employee.UserName);
             if (_employee == null)
             {
-                ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu ");
+                ModelState.AddModelError("", "Sai tên đăng nhập");
             }
             else
             {
@@ -43,7 +42,7 @@ namespace Waho.Pages
                 return Page();
             }
 
-            ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu");
+            ModelState.AddModelError("", "Sai tên đăng nhập");
             return Page();
         }
     }

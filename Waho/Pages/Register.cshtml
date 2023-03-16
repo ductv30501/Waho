@@ -2,7 +2,18 @@
 @model Waho.Pages.RegisterModel
 @{
 }
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Waho</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 
+</head>
 <div class="row d-flex">
     <div class="mx-auto form-container col-md-5 reg-container">
         <div class="pb-4 px-3">
@@ -12,14 +23,29 @@
                 </h1>
             </div>
             <h4 class="">Đăng ký </h4>
+            @if (!string.IsNullOrWhiteSpace(Model.Message))
+            {
+                <div class="text-danger">
+                    @Model.Message</div>
+            }
             <hr />
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group mb-3">
-                    <label  class="control-label">Tên khách hàng</label>
-                    <div class="input-group">
-                        <span class="input-group-text span-input-primary"><i class="bi bi-person-video2"></i></span>
-                        <input type="text" asp-for="Employee.EmployeeName" class="form-control" placeholder="Nhập tên người dùng">
+                <div class="d-flex mb-3 justify-content-between">
+                    <div class="form-group flex-md-grow-1 me-3">
+                        <label class="control-label">Tên nhân viên</label>
+                        <div class="input-group">
+                            <span class="input-group-text span-input-primary"><i class="bi bi-people-fill"></i></span>
+                            <input type="text" asp-for="Employee.EmployeeName" id="eNameInput" class="form-control" placeholder="Nhập tên người dùng">
+                        </div>
+                        <span asp-validation-for="Employee.EmployeeName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group flex-md-grow-1">
+                        <label class="control-label">Chức vụ</label>
+                        <div class="input-group">
+                            <span class="input-group-text span-input-primary"><i class="bi bi-briefcase"></i></span>
+                            <input type="text" asp-for="Employee.Title" id="eEmailInput" class="form-control" placeholder="Nhập chức vụ">
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex mb-3 justify-content-between">
@@ -27,30 +53,44 @@
                         <label class="control-label">Số điện thoại</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text span-input-primary"><i class="bi bi-telephone-fill"></i></span>
-                            <input type="text" asp-for="WahoInformation.Phone" class="form-control" placeholder="Nhập số điện thoại">
+                            <input type="text" asp-for="Employee.Phone" id="ePhoneInput" class="form-control" placeholder="Nhập số điện thoại">
                         </div>
                     </div>
 
                     <div class="form-group flex-md-grow-1">
-                        <label asp-for="WahoInformation.Email" class="control-label"></label>
+                        <label asp-for="Employee.Email" class="control-label"></label>
                         <div class="input-group">
                             <span class="input-group-text span-input-primary"><i class="bi bi-envelope-fill"></i></span>
-                            <input type="password" asp-for="WahoInformation.Email" class="form-control" placeholder="Nhập email">
+                            <input type="email" asp-for="Employee.Email" id="eEmailInput" class="form-control" placeholder="Nhập email">
+                        </div>
+                        <span asp-validation-for="Employee.Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="d-flex mb-3 justify-content-between">
+                    <div class="form-group flex-md-grow-1 me-3">
+                        <label class="control-label">Ngày sinh</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text span-input-primary"><i class="bi bi-calendar-date"></i></span>
+                            <input type="date" asp-for="Employee.Dob" id="ePhoneInput" class="form-control" placeholder="Nhập số điện thoại">
                         </div>
                     </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="control-label">Tên cửa hàng</label>
-                    <div class="input-group">
-                        <span class="input-group-text span-input-primary"><i class="bi bi-tags-fill"></i></span>
-                        <input type="text" asp-for="WahoInformation.WahoName" class="form-control" placeholder="Nhập tên cửa hàng">
+                    <div class="form-group flex-md-grow-1" style="margin-right:20px;">
+                        <label class="control-label">Địa chỉ</label>
+                        <div class="input-group">
+                            <span class="input-group-text span-input-primary"><i class="bi bi-building-fill"></i></span>
+                            <input type="text" asp-for="Employee.Address" id="eAddressInput" class="form-control" placeholder="Nhập địa chỉ nhân viên">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label  class="control-label">Địa chỉ</label>
-                    <div class="input-group">
-                        <span class="input-group-text span-input-primary"><i class="bi bi-building-fill"></i></span>
-                        <input type="text" asp-for="WahoInformation.Address" class="form-control" placeholder="Nhập địa chỉ cửa hàng">
+                    <div class="form-group flex-md-grow-1 me-3">
+                        <label class="control-label">Phân quyền</label>
+                        <div class="input-group">
+                            <span class="input-group-text span-input-primary"><i class="bi bi-briefcase"></i></span>
+                            <select asp-for="Employee.Address" id="eAddressInput" class="form-control"> 
+                                <option value="1">Admin</option>
+                                <option value="2">Thu Ngân</option>
+                                <option value="3">Quản lý kho</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex mb-3 justify-content-between">
@@ -58,16 +98,21 @@
                         <label class="control-label">Tài khoản</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text span-input-primary"><i class="bi bi-people-fill"></i></span>
-                            <input type="text" asp-for="Employee.UserName" class="form-control" placeholder="Nhập tên đăng nhập">
+                            <input type="text" asp-for="Employee.UserName" id="eUserNameInput" class="form-control" placeholder="Nhập tên đăng nhập">
                         </div>
+                        <span asp-validation-for="Employee.UserName" class="text-danger"></span>
                     </div>
 
                     <div class="form-group flex-md-grow-1">
                         <label class="control-label">Mật khẩu</label>
-                        <div class="input-group">
+                        <div class="input-group" style="position:relative">
                             <span class="input-group-text span-input-primary"><i class="bi bi-key-fill"></i></span>
-                            <input type="password" asp-for="Employee.Password" class="form-control" placeholder="Nhập mật khẩu">
+                            <input type="password" asp-for="Employee.Password" id="ePassInput" class="form-control" placeholder="Nhập mật khẩu">
+                            <div class="eyebutton" onclick="showPassword()">
+                                <i class="bi bi-eye"></i>
+                            </div>
                         </div>
+                        <span asp-validation-for="Employee.Password" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -79,7 +124,20 @@
         </div>
     </div>
 </div>
-
+<script>
+    function showPassword(){
+        var passwordType = $('#ePassInput').attr('type');
+        if (passwordType === 'password') {
+            $('#ePassInput').html("");
+            $('#ePassInput').html("<i class=\"bi bi-eye-slash\"></i>");
+            $('#ePassInput').attr('type', 'text');
+        } else { 
+            $('#ePassInput').html("");
+            $('#ePassInput').html("<i class=\"bi bi-eye\"></i>");
+            $('#ePassInput').attr('type', 'password');
+        }
+    }
+</script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

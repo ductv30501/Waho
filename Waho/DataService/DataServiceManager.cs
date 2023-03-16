@@ -22,8 +22,15 @@ namespace Waho.DataService
         {
             return _context.Employees.FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
         }
-
-        
+        //get employee by email
+        public Employee GetEmployeeByEmail(string email)
+        {
+            return _context.Employees.FirstOrDefault(emp => emp.Email == email);
+        }
+        public Employee GetEmployeeByUserName(string userName)
+        {
+            return _context.Employees.FirstOrDefault(emp => emp.UserName == userName);
+        }
         public List<SubCategory> GetSubCategories(int id)
         {
             return _context.SubCategories
