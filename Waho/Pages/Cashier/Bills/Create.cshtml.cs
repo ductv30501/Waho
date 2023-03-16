@@ -36,6 +36,9 @@ namespace Waho.Pages.Cashier.Bills
         [BindProperty(SupportsGet = true)]
         public List<Product> products { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public List<Customer> customers { get; set; }
+
         [BindProperty]
         public Bill Bill { get; set; }
 
@@ -61,6 +64,21 @@ namespace Waho.Pages.Cashier.Bills
         }
 
 
+        public async Task<IActionResult> OnGetCustomers(string? q)
+        {
+            if (string.IsNullOrWhiteSpace(q) || string.IsNullOrEmpty(q))
+            {
+                return new JsonResult("");
+            }
+            else
+            {
+                customers = await _context.Customers.Where(c => (c.CustomerName.ToLower().Contains(q.ToLower()) || c.Phone.Contains(q)))
+                    .Where(c => c.Active == true)
+                    .Take(5).ToListAsync();
+                return new JsonResult(customers);
+            }
+        }
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
@@ -68,6 +86,20 @@ namespace Waho.Pages.Cashier.Bills
             {
                 return Page();
             }
+
+            string customerId = HttpContext.Request.Form["customerId"];
+
+            // Lấy giá trị từ session
+            //string employeeJson = HttpContext.Session.GetString("Employee");
+
+            //// Chuyển đổi chuỗi JSON thành đối tượng Employee
+            //    Employee employee = JsonSerializer.Deserialize<Employee>(employeeJson);
+
+            //// Sử dụng giá trị đối tượng Employee
+            //if (employee != null)
+            //{
+            //    // ...
+            //}
 
             _context.Bills.Add(Bill);
             await _context.SaveChangesAsync();

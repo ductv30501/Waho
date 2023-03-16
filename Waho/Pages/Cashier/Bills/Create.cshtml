@@ -64,11 +64,11 @@
                     <h5 class="mx-auto mt-4">Vui lòng thêm sản phẩm</h5>
                 </div>
             </div>
-            <div class="form-container col-4 bill-form">
+            <div class="form-container col-4">
                 <div class="p-4">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
+                        <div class="form-group position-relative">
                             <div class="input-group mb-3">
                                 <input id ="search-input-customer" type="text" class="form-control" placeholder="Tìm khách hàng(nhập tên, sđt)" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                 <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label> 
@@ -77,20 +77,24 @@
                             </ul>
                         </div>
                         <hr />
-                        <div class="form-group">
-                            <label class="control-label">Tên khách hàng</label>
-                            <input class="form-control" readonly />
-                            <input class="form-control" hidden />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Ghi chú</label>
-                            <input class="form-control" />
-                        </div>
-                        <div class="form-group d-flex justify-content-between mt-5 ">
-                            <h5>Tổng tiền hàng:</h5>
-                            <div class="d-flex">
-                                <h5 id="total" class="me-1">0</h5>
-                                <h5>đ</h5>
+                        <div id="bill-info">
+                            <div class="form-group">
+                                <label class="control-label">Tên khách hàng</label>
+                                <input class="form-control" name="customerName" readonly />
+                                <input class="form-control" name="customerId" hidden />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Số điện thoại</label>
+                                <input class="form-control" name="phone" readonly />
+                            </div>
+                            <input class="form-control" name="listBillDetail" hidden />
+                            <input class="form-control" name="total" hidden />
+                            <div class="form-group d-flex justify-content-between mt-5 ">
+                                <h5>Tổng tiền hàng:</h5>
+                                <div class="d-flex">
+                                    <h5 id="total" class="me-1">0</h5>
+                                    <h5>đ</h5>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group text-center mt-4">
@@ -101,7 +105,7 @@
             </div>
         </div>
     </div>
-
+    
     <div>
         <a asp-page="Index">Back to List</a>
     </div>
@@ -123,45 +127,43 @@
                         let product = "";
                         if (data) {
                             data.map((dataItem) => {
-                                product += `<li class="result-search-items" id="pd-${dataItem.productId}" onclick="addBillDetail('${dataItem.productId}');" >
-                                                                                                                                                <form asp-page-handler="AddBillDetail" method="get">
-                                                                                                                                                <table class="col-12">
-                                                                                                                                                <tr>
-                                                                                                                                                    <th class="col-3">
-                                                                                                                                                        Mã sản phẩm
-                                                                                                                                                    </th>
-                                                                                                                                                    <th class="col-3">
-                                                                                                                                                        Tên sản phẩm
-                                                                                                                                                    </th>
-                                                                                                                                                    <th class="col-3">
-                                                                                                                                                        Đơn giá
-                                                                                                                                                    </th>
-                                                                                                                                                    <th class="col-3">
-                                                                                                                                                        Tồn kho
-                                                                                                                                                    </th>
-                                                                                                                                                </tr>
-                                                                                                                                                <tr>
-                                                                                                                                                    <td>
-                                                                                                                                                        ${dataItem.productId}
-                                                                                                                                                        <input class="form-control" value="${dataItem.productId}" name="productId" hidden readonly />
-                                                                                                                                                    </td>
-                                                                                                                                                    <td>
-                                                                                                                                                        ${dataItem.productName}
-                                                                                                                                                        <input class="form-control" value="${dataItem.productName}" name="productName" hidden readonly/>
-                                                                                                                                                    </td>
-                                                                                                                                                    <td>
-                                                                                                                                                        ${dataItem.unitPrice}
-                                                                                                                                                        <input class="form-control" value="${dataItem.unitPrice}" name="unitPrice" hidden readonly/>
-                                                                                                                                                    </td>
-                                                                                                                                                    <td>
-                                                                                                                                                        ${dataItem.quantity}
-                                                                                                                                                        <input class="form-control" value="${dataItem.quantity}" name="quantity" hidden readonly/>
-                                                                                                                                                    </td>
+                                product += `<li class="result-search-items" id="pd-${dataItem.productId}" onclick="addBillDetail('${dataItem.productId}');">
+                    <table class="col-12">
+                        <tr>
+                            <th class="col-3">
+                                Mã sản phẩm
+                            </th>
+                            <th class="col-3">
+                                Tên sản phẩm
+                            </th>
+                            <th class="col-3">
+                                Đơn giá
+                            </th>
+                            <th class="col-3">
+                                Tồn kho
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                ${dataItem.productId}
+                                <input class="form-control" value="${dataItem.productId}" name="productId" hidden readonly />
+                            </td>
+                            <td>
+                                ${dataItem.productName}
+                                <input class="form-control" value="${dataItem.productName}" name="productName" hidden readonly />
+                            </td>
+                            <td>
+                                ${dataItem.unitPrice}
+                                <input class="form-control" value="${dataItem.unitPrice}" name="unitPrice" hidden readonly />
+                            </td>
+                            <td>
+                                ${dataItem.quantity}
+                                <input class="form-control" value="${dataItem.quantity}" name="quantity" hidden readonly />
+                            </td>
 
-                                                                                                                                                </tr>
-                                                                                                                                            </table>
-                                                                                                                                            </form>
-                                                                                                                                                        </li>`
+                        </tr>
+                    </table>
+                </li>`
                             });
                         }
                         $('#product-result').html(product)
@@ -186,7 +188,28 @@
                         let customer = "";
                         if (data) {
                             data.map((dataItem) => {
-                                customer += ""
+                                customer += `<li class="result-search-items" id="c-${dataItem.customerId}" onclick="fillCustomerInfo('${dataItem.customerId}');">
+                    <table class="col-12">
+                        <tr>
+                            <th class="col-3">
+                                Tên khách hàng
+                            </th>
+                            <th class="col-3">
+                                Số điện thoại
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                ${dataItem.customerName}
+                                <input class="form-control" value="${dataItem.customerName}" name="customerName" hidden readonly />
+                            </td>
+                            <td>
+                                ${dataItem.phone}
+                                <input class="form-control" value="${dataItem.phone}" name="phone" hidden readonly />
+                            </td>
+                        </tr>
+                    </table>
+                </li>`
                             });
                         }
                         $('#customer-result').html(customer)
@@ -221,6 +244,19 @@
 
             // Chuyển mảng sang chuỗi JSON và lưu vào localStorage
             //localStorage.setItem('billDetails', JSON.stringify(billDetails));
+        }
+
+        function fillCustomerInfo(id){
+            // lấy thông tin khách hàng 
+            var customerName = $('#c-' + id + ' input[name=customerName]').val();
+            var phone = $('#c-' + id + ' input[name=phone]').val();
+
+            $('#customer-result').html("")
+            $('#search-input-customer').val("");
+
+            $('#bill-info input[name=customerName]').val(customerName);
+            $('#bill-info input[name=phone]').val(phone);
+            
         }
 
         function addBillDetail(id) {
@@ -280,29 +316,21 @@
             delayTimer = setTimeout(function () {
                 let billDetail = billDetails.find(p => p.productId == id);
                 if (billDetail) {
-                    if ($('#bd-' + id + ' input[name="quantity"]').val()) {
-                        billDetail.quantity = parseInt($('#bd-' + id + ' input[name="quantity"]').val());
-                    } else {
-                        billDetail.quantity = 0;
-                    }
-                    if ($('#bd-' + id + ' input[name="discount"]').val()) {
-                        billDetail.discount = parseFloat($('#bd-' + id + ' input[name="discount"]').val()) / 100;
-                    } else {
-                        billDetail.discount = 0;
-                    }
-                    billDetail.unitPrice = parseInt(unitPrice)
+                    billDetail.quantity = parseInt($('#bd-' + id + ' input[name="quantity"]').val())||0;
+                    billDetail.discount = parseFloat($('#bd-' + id + ' input[name="discount"]').val()) / 100||0;
+                    billDetail.unitPrice = parseInt(unitPrice)||0;
                 }
 
-                console.log(billDetails)
+                $('#bill-info input[name=listBillDetail]').val(JSON.stringify(billDetails));
 
                 // Tính tổng số tiền của tất cả sản phẩm, sau khi đã áp dụng giảm giá
                 const total = billDetails.reduce((sum, billDetail) => {
                     const price = billDetail.unitPrice * billDetail.quantity * (1 - billDetail.discount);
                     return sum + price;
                 }, 0);
-                console.log(total)
 
                 $('#total').html(total.toFixed(2))
+                $('#bill-info input[name=total]').val(total.toFixed(2));
             }, 500)
         }
 
