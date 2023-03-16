@@ -13,8 +13,15 @@ namespace Waho.DataService
         public Boolean IsAuthor(int role)
         {
             var employeeJson = _httpContextAccessor.HttpContext.Session.GetString("Employee");
-            Employee employee = JsonSerializer.Deserialize<Employee>(employeeJson);
-            
+            Employee employee;
+            if (employeeJson == null)
+            {
+                return false;
+            }
+            else
+            {
+                employee = JsonSerializer.Deserialize<Employee>(employeeJson);
+            }
             if (employee == null)
             {
                 return false;
