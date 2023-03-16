@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Waho.DataService;
@@ -14,19 +14,30 @@ namespace Waho.Pages
             _context = context;
         }
         [BindProperty] public Employee Employee { get; set; } = default!;
-        [BindProperty] public WahoInformation WahoInformation { get; set; } = default!;
+        [BindProperty]
+        public string Message { get; set; }
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            //author
+            //if (!_author.IsAuthor(3))
+            //{
+            //    return RedirectToPage("/accessDenied", new { message = "Quản lý sản phẩm" });
+            //}
+            return Page();
+        }
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            Employee _employee = await _context.Employees.FindAsync(Employee.UserName);
+            if (_employee == null)
             {
-                return Page();
+                Employee.WahoId = 1;
+                _context.Employees.Add(Employee);
+                await _context.SaveChangesAsync();
+                Message = "tạo tài khoản thành công";
+                return RedirectToPage("./Index");
             }
-
-            _context.WahoInformations.Add(WahoInformation);
-            _context.Employees.Add(Employee);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            Message = "tài khoản đã tồn tại";
+            return Page();
         }
     }
 }

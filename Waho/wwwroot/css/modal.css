@@ -183,4 +183,12 @@
     .dropdown-menu .dropdown-item:hover {
         background-color: #f6f9ff;
     }
-
+.eyebutton {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    right: 0;
+    margin-right: 6px;
+    margin-top:8px;
+    z-index: 10px;
+}
