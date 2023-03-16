@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Cashier.Bills
@@ -19,39 +20,51 @@ namespace Waho.Pages.Cashier.Bills
             _context = context;
         }
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
+        public int TotalCount { get; set; } = 0;
+
+        [BindProperty(SupportsGet = true)]
         public Bill bill { get; set; }
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public List<BillDetail> billDetails { get; set; }
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
+        public BillDetail billDetail { get; set; }
+
+
+        [BindProperty(SupportsGet = true)]
         public List<Product> products { get; set; }
 
+        [BindProperty]
+        public Bill Bill { get; set; }
 
         public void OnGet()
         {
 
         }
-        
+
         public async Task<IActionResult> OnGetProducts(string? q)
         {
-            if (!string.IsNullOrEmpty(q.Trim()))
+            if (string.IsNullOrWhiteSpace(q) || string.IsNullOrEmpty(q))
             {
-                products = _context.Products.Where(p => p.ProductName.ToLower().Contains(q.ToLower())).Take(10).ToList();
+                return new JsonResult("");
             }
-
-            return new JsonResult(products);
+            else
+            {
+                products = await _context.Products.Where(p => (p.ProductName.ToLower().Contains(q.ToLower()) || p.ProductId.ToString().Contains(q)))
+                    .Where(p => p.Active == true)
+                    .Where(p => p.Quantity > 0)
+                    .Take(5).ToListAsync();
+                return new JsonResult(products);
+            }
         }
 
-        [BindProperty]
-        public Bill Bill { get; set; }
-        
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return Page();
             }

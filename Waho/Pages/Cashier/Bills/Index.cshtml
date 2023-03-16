@@ -13,13 +13,13 @@
 </head>
 <body class="bg-waho-white">
     <div class="mt-4">
-        <form id="billListForm" method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-status="@Model.status" asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo" style="margin-bottom: 20px; ">
+        <form id="billListForm" method="get" asp-page="./Index" style="margin-bottom: 20px;">
             <div class="d-flex">
                 <h3 class="col-2 me-4">Hoá đơn</h3>
                 <div class="form-group flex-grow-1 me-4">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Nhập mã hoá đơn, tên khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                        <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                        <input type="text" class="form-control" id="search-input-bill" placeholder="Nhập mã hoá đơn, tên khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label>
                     </div>
                 </div>
                 <div class="form-group me-4">
@@ -42,13 +42,18 @@
             </div>
 
             @*end filter*@
-            @if (Model.message != null)
+
+            @if (TempData["ErrorMessage"] != null)
             {
-                <div id="notification" class="alert alert-danger">@Model.message</div>
+                <div id="error-alert" class="d-flex justify-content-end">
+                    <div class="alert alert-danger text-center"><h5>@TempData["SuccessMessage"]</h5></div>
+                </div>
             }
-            @if (Model.successMessage != null)
+            @if (TempData["SuccessMessage"] != null)
             {
-                <div id="notificationSuccess" class="alert alert-success">@Model.successMessage</div>
+                <div id="success-alert" class="d-flex justify-content-end">
+                    <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
+                </div>
             }
             <div class="d-flex">
                 <div class="d-flex flex-column col-2 me-4">
@@ -82,13 +87,14 @@
                             </div>
                             <div class="text-center mt-4">
                                 <button class="btn btn-primary" type="button" onclick="validateForSubmit();">Lọc</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="clearForSubmit();">Xoá</button>
                             </div>
                         </div>
                     </div>
-                    <div class="row form-container py-4">
+                    <div class="row form-container py-4 mb-3">
                         <div class="m-auto">
                             <div>
-                                <h6>Trạng thái</h6>
+                                <h6>Tình trạng</h6>
                                 <hr />
                             </div>
                             <div class="form-check">
@@ -110,7 +116,7 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" onclick="this.form.submit()"  asp-for="@Model.status" asp-checked="@Model.status=='unDeliver'" name="status" type="radio" value="unDeliver">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='unDeliver'" name="status" type="radio" value="unDeliver">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Không giao được
                                 </label>
@@ -119,6 +125,32 @@
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='cancel'" name="status" type="radio" value="cancel">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Đã huỷ
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-container py-4">
+                        <div class="m-auto">
+                            <div>
+                                <h6>Trạng thái</h6>
+                                <hr />
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.active" asp-checked="@Model.active=='all'" type="radio" value="all" id="CheckDefault">
+                                <label class="form-check-label" for="CheckDefault">
+                                    Tất cả
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.active" asp-checked="@Model.active=='true'" type="radio" value="true">
+                                <label class="form-check-label" for="CheckDefault">
+                                    Kích hoạt
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.active" asp-checked="@Model.active=='false'" type="radio" value="false">
+                                <label class="form-check-label" for="CheckDefault">
+                                    Vô hiệu hoá
                                 </label>
                             </div>
                         </div>
@@ -143,6 +175,9 @@
                                         Mô tả
                                     </th>
                                     <th class="tbImportPrice">
+                                        Tình trạng
+                                    </th>
+                                    <th class="tbImportPrice">
                                         Trạng thái
                                     </th>
                                     <th></th>
@@ -156,7 +191,11 @@
                                             @Html.DisplayFor(modelItem => item.BillId)
                                         </td>
                                         <td class="tbImportPrice">
-                                            @Html.DisplayFor(modelItem => item.Date)
+                                            @{
+                                                DateTime date = (DateTime)item.Date;
+                                                @date.ToString("MM/dd/yyyy")
+                                                ;
+                                            }
                                         </td>
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.Customer.CustomerName)
@@ -164,9 +203,46 @@
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.Descriptions)
                                         </td>
+                                        @if (item.BillStatus == "pending")
+                                        {
+                                            <td class="tbImportPrice">
+                                                Đang xử lý
+                                            </td>
+                                        }
+                                        else if (item.BillStatus == "done")
+                                        {
+                                            <td class="tbImportPrice">
+                                                Vô hiệu hoá
+                                            </td>
+                                        }
+                                        else if (item.BillStatus == "unDeliver")
+                                        {
+                                            <td class="tbImportPrice">
+                                                Không giao được
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tbImportPrice">
+                                                Đã huỷ
+                                            </td>
+                                        }
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.BillStatus)
+
                                         </td>
+                                        @if (item.Active == true)
+                                        {
+                                            <td class="tbImportPrice">
+                                                Kích hoạt
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tbImportPrice">
+                                                Vô hiệu hoá
+                                            </td>
+                                        }
                                         <td>
                                             <a onclick="getProductDetail(@(item.BillId))">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -184,15 +260,15 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" >Trước</a></li>
+                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Trước</a></li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
-                                        <li class="page-item @(Model.pageIndex == i ? "active" : "")"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">@i</a></li>
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "")"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">@i</a></li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">Sau</a></li>
+                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Sau</a></li>
                                     }
                                 </ul>
                             </div>
@@ -214,11 +290,39 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+                $("#error-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 5000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+
+            $('#search-input-bill').keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    event.preventDefault();
+                    // Thực hiện các hành động cần thiết khi người dùng nhấn phím Enter
+                }
+            });
+
+            var delayTimer;
+            $('#search-input-bill').on('input', function () {
+                clearTimeout(delayTimer);
+                delayTimer = setTimeout(function () {
+                    $('#billListForm').submit()
+                }, 500); // Thời gian chờ tính bằng mili giây
+            });
+
+        });
+
         function validateForSubmit() {
             const dateFrom = $('#dateFrom').val();
             const dateTo = $('#dateTo').val();
 
-            
+
             // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
             if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
                 alert("Chưa nhập đủ ngày bắt đầu!")
@@ -233,6 +337,13 @@
                 $('#billListForm').submit()
             }
         }
+
+        function clearForSubmit() {
+            $('#dateFrom').val("");
+            $('#dateTo').val("");
+            $('#billListForm').submit()
+        }
+
     </script>
 </body>
 

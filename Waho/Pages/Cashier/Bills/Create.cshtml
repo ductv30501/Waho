@@ -1,5 +1,8 @@
 ﻿@page
 @model Waho.Pages.Cashier.Bills.CreateModel
+@using Newtonsoft.Json;
+@using Waho.WahoModels;
+
 
 @{
     ViewData["Title"] = "Create";
@@ -15,70 +18,63 @@
         <div class="d-flex">
             <div class="form-container flex-grow-1 me-4">
                 <div class="p-4">
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <div class="input-group mb-3">
-                            <input id="search-input-product" type="text" class="form-control" placeholder="Tìm sản phẩm" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                            <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                            <input id="search-input-product" type="text" class="form-control" placeholder="Tìm sản phẩm(nhập mã sản phẩm, tên sản phẩm)" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label>
                         </div>
+                        <ul class="result-search-input" id="product-result">
+                        </ul>
                     </div>
                     <hr />
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th class="tbProductName">
-                                    Mã sản phẩm
-                                </th>
-                                <th class="tbImportPrice">
-                                    Tên sản phẩm
-                                </th>
-                                <th class="tbImportPrice">
-                                    Số lượng
-                                </th>
-                                <th class="tbImportPrice">
-                                    Giảm giá(%)
-                                </th>
-                                <th class="tbImportPrice">
-                                    Đơn giá(đ)
-                                </th>
-                                <th class="tbImportPrice">
-                                    Tồn kho
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="">
-                                    1
-                                </td>
-                                <td class="">
-                                    2
-                                </td>
-                                <td class="col-2">
-                                    <input class=" form-control" type="number" />
-                                </td>
-                                <td class="col-2">
-                                    <input class=" form-control" type="number" />
-                                </td>
-                                <td class="">
-                                    4
-                                </td>
-                                <td>
-                                    666
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div style="overflow:auto;">
+                        <table class="table table-striped table-hover" id="bill-details-table" style="display:none; max-height:300px">
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="tbProductName ">
+                                        Mã sản phẩm
+                                    </th>
+                                    <th class="tbImportPrice ">
+                                        Tên sản phẩm
+                                    </th>
+                                    <th class="tbImportPrice col-2">
+                                        Số lượng
+                                    </th>
+                                    <th class="tbImportPrice col-2">
+                                        Giảm giá(%)
+                                    </th>
+                                    <th class="tbImportPrice ">
+                                        Đơn giá(đ)
+                                    </th>
+                                    <th class="tbImportPrice ">
+                                        Tồn kho
+                                    </th>
+                                    <th class="tbImportPrice ">
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="align-items-center mt-5" id="bill-details-default" style="display:flex">
+                    <h5 class="mx-auto mt-4">Vui lòng thêm sản phẩm</h5>
                 </div>
             </div>
-            <div class="form-container col-4">
+            <div class="form-container col-4 bill-form">
                 <div class="p-4">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Tìm khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                                <input id ="search-input-customer" type="text" class="form-control" placeholder="Tìm khách hàng(nhập tên, sđt)" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label> 
                             </div>
+                            <ul class="result-search-input" id="customer-result">
+                            </ul>
                         </div>
                         <hr />
                         <div class="form-group">
@@ -90,12 +86,15 @@
                             <label class="control-label">Ghi chú</label>
                             <input class="form-control" />
                         </div>
-                        <div class="form-group d-flex justify-content-between mt-5">
+                        <div class="form-group d-flex justify-content-between mt-5 ">
                             <h5>Tổng tiền hàng:</h5>
-                            <h5>300000</h5>
+                            <div class="d-flex">
+                                <h5 id="total" class="me-1">0</h5>
+                                <h5>đ</h5>
+                            </div>
                         </div>
-                        <div class="form-group text-center">
-                            <input type="submit" value="Tạo" class="btn btn-primary" />
+                        <div class="form-group text-center mt-4">
+                            <input type="submit" value="Tạo hoá đơn" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>
@@ -109,28 +108,203 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         var delayTimer;
+        var billDetails = [];
+
         $('#search-input-product').on('input', function () {
             clearTimeout(delayTimer);
             delayTimer = setTimeout(function () {
                 var searchQuery = $('#search-input-product').val();
-                var decodedSearchQuery = decodeURIComponent(searchQuery); // giải mã chuỗi
-                if (decodedSearchQuery) {
-                    alert(decodedSearchQuery)
-                    $.ajax({
-                        url: '/Cashier/Bills/Create/?handler=Products',
-                        method: 'GET',
-                        data: { q: decodedSearchQuery },
-                        success: function (data) {
-                            alert(data);
-                            // Xử lý dữ liệu trả về từ server
-                        },
-                        error: function () {
-                            // Xử lý lỗi nếu có
+                $.ajax({
+                    url: '/Cashier/Bills/Create/?handler=Products',
+                    type: 'GET',
+                    data: { q: searchQuery },
+                    success: function (data) {
+                        // Xử lý dữ liệu trả về từ server
+                        let product = "";
+                        if (data) {
+                            data.map((dataItem) => {
+                                product += `<li class="result-search-items" id="pd-${dataItem.productId}" onclick="addBillDetail('${dataItem.productId}');" >
+                                                                                                                                                <form asp-page-handler="AddBillDetail" method="get">
+                                                                                                                                                <table class="col-12">
+                                                                                                                                                <tr>
+                                                                                                                                                    <th class="col-3">
+                                                                                                                                                        Mã sản phẩm
+                                                                                                                                                    </th>
+                                                                                                                                                    <th class="col-3">
+                                                                                                                                                        Tên sản phẩm
+                                                                                                                                                    </th>
+                                                                                                                                                    <th class="col-3">
+                                                                                                                                                        Đơn giá
+                                                                                                                                                    </th>
+                                                                                                                                                    <th class="col-3">
+                                                                                                                                                        Tồn kho
+                                                                                                                                                    </th>
+                                                                                                                                                </tr>
+                                                                                                                                                <tr>
+                                                                                                                                                    <td>
+                                                                                                                                                        ${dataItem.productId}
+                                                                                                                                                        <input class="form-control" value="${dataItem.productId}" name="productId" hidden readonly />
+                                                                                                                                                    </td>
+                                                                                                                                                    <td>
+                                                                                                                                                        ${dataItem.productName}
+                                                                                                                                                        <input class="form-control" value="${dataItem.productName}" name="productName" hidden readonly/>
+                                                                                                                                                    </td>
+                                                                                                                                                    <td>
+                                                                                                                                                        ${dataItem.unitPrice}
+                                                                                                                                                        <input class="form-control" value="${dataItem.unitPrice}" name="unitPrice" hidden readonly/>
+                                                                                                                                                    </td>
+                                                                                                                                                    <td>
+                                                                                                                                                        ${dataItem.quantity}
+                                                                                                                                                        <input class="form-control" value="${dataItem.quantity}" name="quantity" hidden readonly/>
+                                                                                                                                                    </td>
+
+                                                                                                                                                </tr>
+                                                                                                                                            </table>
+                                                                                                                                            </form>
+                                                                                                                                                        </li>`
+                            });
                         }
-                    });
-                }
+                        $('#product-result').html(product)
+                    },
+                    error: function () {
+                        // Xử lý lỗi nếu có
+                    }
+                });
             }, 500); // Thời gian chờ tính bằng mili giây
         });
+
+        $('#search-input-customer').on('input', function () {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function () {
+                var searchQuery = $('#search-input-customer').val();
+                $.ajax({
+                    url: '/Cashier/Bills/Create/?handler=Customers',
+                    type: 'GET',
+                    data: { q: searchQuery },
+                    success: function (data) {
+                        // Xử lý dữ liệu trả về từ server
+                        let customer = "";
+                        if (data) {
+                            data.map((dataItem) => {
+                                customer += ""
+                            });
+                        }
+                        $('#customer-result').html(customer)
+                    },
+                    error: function () {
+                        // Xử lý lỗi nếu có
+                    }
+                });
+            }, 500); // Thời gian chờ tính bằng mili giây
+        });
+
+        function deleteBillDetail(id) {
+
+            // Lấy dữ liệu từ localStorage và chuyển sang mảng
+            //var billDetails = JSON.parse(localStorage.getItem('billDetails')) || [];
+
+            // xoá đối tượng data vào mảng
+            billDetails = billDetails.filter(function (item) {
+                return item.productId != id;
+            });
+
+
+            // Tìm thẻ cần xoá của bảng
+            var item = $('#bill-details-table tbody #bd-' + id);
+
+            item.remove()
+
+            if (!billDetails.length > 0) {
+                $('#bill-details-table').css('display', 'none');
+                $('#bill-details-default').css('display', 'flex');
+            }
+
+            // Chuyển mảng sang chuỗi JSON và lưu vào localStorage
+            //localStorage.setItem('billDetails', JSON.stringify(billDetails));
+        }
+
+        function addBillDetail(id) {
+
+            // lấy thông tin sản phẩm
+            var productId = $('#pd-' + id + ' input[name=productId]').val();
+            var productName = $('#pd-' + id + ' input[name=productName]').val();
+            var unitPrice = $('#pd-' + id + ' input[name=unitPrice]').val();
+            var quantity = $('#pd-' + id + ' input[name=quantity]').val();
+
+            $('#product-result').html("")
+            $('#search-input-product').val("");
+
+            var data = {
+                productId: productId,
+            }
+
+            // Lấy dữ liệu từ localStorage và chuyển sang mảng
+            //var billDetails = JSON.parse(localStorage.getItem('billDetails')) || [];
+
+
+
+            // Thêm đối tượng data vào mảng
+            if (!billDetails.find(b => b.productId == id)) {
+                billDetails.push(data);
+            }
+
+
+            // Tìm thẻ tbody của bảng
+            var tbody = $('#bill-details-table tbody');
+
+            // Tạo một dòng mới với các trường dữ liệu tương ứng
+            var newRow = $('<tr class="text-center" id="bd-' + productId + '">' +
+                '<td>' + productId + '</td>' +
+                '<td>' + productName + '</td>' +
+                '<td class="col-2"><input class="form-control input-table" name="quantity" type="number" oninput="updateArr(' + productId + ',' + unitPrice + ',' + quantity + ')"/></td>' +
+                '<td class="col-2"><input class="form-control input-table" name="discount" type="number" oninput="updateArr(' + productId + ',' + unitPrice + ',' + quantity + ')"/></td>' +
+                '<td>' + unitPrice + '</td>' +
+                '<td>' + quantity + '</td>' +
+                '<td><a onclick="deleteBillDetail(' + "'" + productId + "'" + ')">' +
+                '<i class="bi bi-trash3-fill icon-table icon-delete" > </i>' +
+                '</a></td></tr>');
+
+            // Thêm dòng mới vào cuối tbody
+            tbody.append(newRow);
+
+            $('#bill-details-table').css('display', 'block');
+            $('#bill-details-default').css('display', 'none');
+
+            // Chuyển mảng sang chuỗi JSON và lưu vào localStorage
+            //localStorage.setItem('billDetails', JSON.stringify(billDetails));
+
+        };
+
+        function updateArr(id, unitPrice) {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function () {
+                let billDetail = billDetails.find(p => p.productId == id);
+                if (billDetail) {
+                    if ($('#bd-' + id + ' input[name="quantity"]').val()) {
+                        billDetail.quantity = parseInt($('#bd-' + id + ' input[name="quantity"]').val());
+                    } else {
+                        billDetail.quantity = 0;
+                    }
+                    if ($('#bd-' + id + ' input[name="discount"]').val()) {
+                        billDetail.discount = parseFloat($('#bd-' + id + ' input[name="discount"]').val()) / 100;
+                    } else {
+                        billDetail.discount = 0;
+                    }
+                    billDetail.unitPrice = parseInt(unitPrice)
+                }
+
+                console.log(billDetails)
+
+                // Tính tổng số tiền của tất cả sản phẩm, sau khi đã áp dụng giảm giá
+                const total = billDetails.reduce((sum, billDetail) => {
+                    const price = billDetail.unitPrice * billDetail.quantity * (1 - billDetail.discount);
+                    return sum + price;
+                }, 0);
+                console.log(total)
+
+                $('#total').html(total.toFixed(2))
+            }, 500)
+        }
 
     </script>
 </body>
