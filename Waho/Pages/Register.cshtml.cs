@@ -31,6 +31,7 @@ namespace Waho.Pages
             if (_employee == null)
             {
                 Employee.WahoId = 1;
+                Employee.Active = true;
                 _context.Employees.Add(Employee);
                 await _context.SaveChangesAsync();
                 Message = "tạo tài khoản thành công";

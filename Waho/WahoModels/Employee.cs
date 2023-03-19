@@ -14,6 +14,7 @@ namespace Waho.WahoModels
             Oders = new HashSet<Oder>();
             ReturnOrders = new HashSet<ReturnOrder>();
         }
+
         [Required(ErrorMessage = "Phải có tên tài khoản")]
         [MinLength(6, ErrorMessage = "phải có ít nhất 6 ký tự")]
         [Display(Name = "Tên tài khoản")]
@@ -22,7 +23,7 @@ namespace Waho.WahoModels
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Chiều dài tên phải từ 3 đến 50 ký tự")]
         [Display(Name = "Tên nhân viên")]
         public string EmployeeName { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public DateTime? Dob { get; set; }
         public DateTime? HireDate { get; set; }
         public string? Address { get; set; }
@@ -39,6 +40,7 @@ namespace Waho.WahoModels
         [EmailAddress(ErrorMessage = "phải nhập đúng định dạng email vd: youremail@gmail.com")]
         [Display(Name = "EMAIL")]
         public string Email { get; set; }
+        public bool? Active { get; set; }
 
         public virtual WahoInformation Waho { get; set; }
         public virtual ICollection<Bill> Bills { get; set; }

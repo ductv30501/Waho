@@ -112,7 +112,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
                 raw_dateTo = "";
             }
             // get list WareHouse Employee
-            employees = await _context.Employees.Where(e => e.Role != 3).ToListAsync();
+            employees = await _context.Employees.Where(e => e.Role != 3).Where(e => e.Active == true).ToListAsync();
             var query = _context.ReturnOrders.Include(p => p.UserNameNavigation)
                            .Include(i => i.Customer)
                            .Where(i => i.Active == true)

@@ -20,16 +20,34 @@ namespace Waho.DataService
 
         public Employee GetEmployeeByUserAndPass(string userName, string password)
         {
-            return _context.Employees.FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
+            return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
         }
         //get employee by email
         public Employee GetEmployeeByEmail(string email)
         {
-            return _context.Employees.FirstOrDefault(emp => emp.Email == email);
+            return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.Email == email);
         }
         public Employee GetEmployeeByUserName(string userName)
         {
-            return _context.Employees.FirstOrDefault(emp => emp.UserName == userName);
+            return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.UserName == userName);
+        }
+        public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch)
+        {
+            List<Employee> employees = new List<Employee>();
+            var query = _context.Employees.Where(s => s.Active == true);
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                query = query.Where(e => e.EmployeeName.ToLower().Contains(textSearch) || e.Email.ToLower().Contains(textSearch)
+                                    || e.Dob.ToString().ToLower().Contains(textSearch) || e.Title.ToLower().Contains(textSearch)
+                                    || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
+                                    || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
+                                    || e.Role.ToString().Contains(textSearch));
+            }
+            employees = query.OrderBy(s => s.UserName)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return employees;
         }
         public List<SubCategory> GetSubCategories(int id)
         {

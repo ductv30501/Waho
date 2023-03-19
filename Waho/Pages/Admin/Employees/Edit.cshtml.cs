@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Waho.DataService;
 using Waho.WahoModels;
 
 namespace Waho.Pages.Admin.Employees
@@ -13,50 +14,82 @@ namespace Waho.Pages.Admin.Employees
     public class EditModel : PageModel
     {
         private readonly Waho.WahoModels.WahoContext _context;
-
-        public EditModel(Waho.WahoModels.WahoContext context)
+        private readonly Author _author;
+        public EditModel(Waho.WahoModels.WahoContext context, Author author)
         {
             _context = context;
+            _author = author;
         }
-
+        public string message { get; set; }
+        public string successMessage { get; set; }
         [BindProperty]
         public Employee Employee { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null || _context.Employees == null)
+            //author
+            if (!_author.IsAuthor(1))
             {
-                return NotFound();
+                return RedirectToPage("/accessDenied", new { message = "Trình quản lý của Admin" });
             }
-
-            var employee =  await _context.Employees.FirstOrDefaultAsync(m => m.UserName == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            Employee = employee;
-           ViewData["WahoId"] = new SelectList(_context.WahoInformations, "WahoId", "WahoId");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var req = HttpContext.Request;
+            //get data form form submit 
+            string raw_userName = req.Form["userName"];
+            string raw_EmployeeName = req.Form["employeeName"];
+            string raw_title = req.Form["title"];
+            string raw_dob = req.Form["dob"];
+            string raw_hireDate = req.Form["hireDate"];
+            string raw_phone = req.Form["phone"];
+            string raw_addrress = req.Form["addrress"];
+            string raw_region = req.Form["region"];
+            string raw_email = req.Form["email"];
+            string raw_note = req.Form["note"];
+            string raw_role = req.Form["role"];
+
+            Employee _Employee = _context.Employees.Find(raw_userName);
+            _Employee.EmployeeName = raw_EmployeeName;
+            _Employee.Title = raw_title;
+            if (string.IsNullOrEmpty(raw_dob))
             {
-                return Page();
+                message = "Bạn điền ngày sinh";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
             }
-
-            _context.Attach(Employee).State = EntityState.Modified;
-
+            _Employee.Dob = DateTime.Parse(raw_dob);
+            if (string.IsNullOrEmpty(raw_hireDate))
+            {
+                message = "Bạn điền ngày vào công ty";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            _Employee.Dob = DateTime.Parse(raw_hireDate);
+            if (string.IsNullOrEmpty(raw_email))
+            {
+                message = "Bạn điền email của nhân viên";
+                TempData["message"] = message;
+                return RedirectToPage("./Index");
+            }
+            _Employee.Email = raw_email;
+            _Employee.Note = raw_note;
+            _Employee.Phone= raw_phone;
+            _Employee.Address = raw_addrress;
+            _Employee.Region= raw_region;
+            _Employee.Role = Int32.Parse(raw_role);
+            
+            //update to data
+            _context.Attach(_Employee).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployeeExists(Employee.UserName))
+                if (!EmployeeExists(_Employee.UserName))
                 {
                     return NotFound();
                 }
@@ -65,7 +98,8 @@ namespace Waho.Pages.Admin.Employees
                     throw;
                 }
             }
-
+            successMessage = "Đã sửa thành công thông tin nhân viên";
+            TempData["successMessage"] = successMessage;
             return RedirectToPage("./Index");
         }
 
