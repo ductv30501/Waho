@@ -47,9 +47,45 @@ namespace Waho.DataService
                             .Include(p => p.Supplier)
                             .ToList();
         }
+        public List<Customer> GetCustomersPagingAndFilter(int pageIndex, int pageSize, string textSearch, string status, string dateFrom, string dateTo, string typeCustomer)
+        {
+
+            List<Customer> customers = new List<Customer>();
+            //default 
+            var query = from c in _context.Customers select c;
+
+            if (!string.IsNullOrEmpty(textSearch.Trim()))
+            {
+                query = query.Where(c => (c.CustomerName.Contains(textSearch)
+                                 || c.Phone.Contains(textSearch)
+                                 || c.Email.Contains(textSearch)
+                                 || c.TaxCode.Contains(textSearch)));
+            }
+
+            if (status != "all")
+            {
+                query = query.Where(c => (c.Active.ToString().Contains(status)));
+            }
+
+            if (typeCustomer != "all")
+            {
+                query = query.Where(c => (c.TypeOfCustomer.ToString().Contains(typeCustomer)));
+            }
+
+            if (!string.IsNullOrEmpty(dateFrom))
+            {
+                query = query.Where(c => (c.Dob >= DateTime.Parse(dateFrom) && c.Dob <= DateTime.Parse(dateTo)));
+            }
+
+            customers = query
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+            return customers;
+        }
 
         // paging bill
-        public List<Bill> GetBillsPagingAndFilter(int pageIndex, int pageSize, string textSearch, string status, string raw_dateFrom, DateTime dateFrom, DateTime dateTo)
+        public List<Bill> GetBillsPagingAndFilter(int pageIndex, int pageSize, string textSearch, string status, string dateFrom, string dateTo, string active)
         {
 
             List<Bill> bills = new List<Bill>();
@@ -62,17 +98,22 @@ namespace Waho.DataService
                                 || b.Customer.CustomerName.Contains(textSearch));
             }
 
+            if (active != "all")
+            {
+                query = query.Where(b => (b.Active.ToString().Contains(active)));
+            }
+
             if (status != "all")
             {
                 query = query.Where(b => (b.BillStatus.Contains(status)));
             }
 
-            if (!string.IsNullOrEmpty(raw_dateFrom))
+            if (!string.IsNullOrEmpty(dateFrom))
             {
-                query = query.Where(b => (b.Date >= dateFrom && b.Date <= dateTo));
+                query = query.Where(b => (b.Date >= DateTime.Parse(dateFrom) && b.Date <= DateTime.Parse(dateTo)));
             }
 
-            bills = query.Where(b => b.Active == true)
+            bills = query
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -82,18 +123,18 @@ namespace Waho.DataService
 
         public InventorySheet getInventorySheetByID(int id)
         {
-            return _context.InventorySheets.Where(i=> i.Active == true)
+            return _context.InventorySheets.Where(i => i.Active == true)
                                 .Include(p => p.UserNameNavigation)
                                 .Where(i => i.InventorySheetId == id).FirstOrDefault();
         }
         public List<InventorySheetDetail> GetInventorySheetDetails(int inventorySheetID)
         {
-            List<InventorySheetDetail> inventorySheetDetails= new List<InventorySheetDetail>();
+            List<InventorySheetDetail> inventorySheetDetails = new List<InventorySheetDetail>();
             inventorySheetDetails = _context.InventorySheetDetails
                                             .Include(p => p.Product)
                                             .Include(p => p.InventorySheet)
                                             .Where(i => i.InventorySheetId == inventorySheetID)
-                                            .ToList() ;
+                                            .ToList();
             return inventorySheetDetails;
         }
         public List<Supplier> getSupplierList()
@@ -115,7 +156,7 @@ namespace Waho.DataService
                                 .Include(r => r.Customer)
                                 .Where(i => i.ReturnOrderId == id).FirstOrDefault();
         }
-        
+
         // paging product
         public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize, string textSearch, int subCategoryID, int categoryID)
         {
@@ -130,9 +171,9 @@ namespace Waho.DataService
             }
             if (!string.IsNullOrEmpty(textSearch))
             {
-                query = query.Where(p => p.ProductName.ToLower().Contains(textSearch.ToLower()) 
-                                || p.Trademark.ToLower().Contains(textSearch.ToLower()) 
-                                || p.Supplier.Branch.ToLower().Contains(textSearch.ToLower()) 
+                query = query.Where(p => p.ProductName.ToLower().Contains(textSearch.ToLower())
+                                || p.Trademark.ToLower().Contains(textSearch.ToLower())
+                                || p.Supplier.Branch.ToLower().Contains(textSearch.ToLower())
                                 || p.SubCategory.SubCategoryName.ToLower().Contains(textSearch.ToLower()));
             }
 
@@ -168,7 +209,7 @@ namespace Waho.DataService
             {
                 raw_dateTo = "";
             }
-            List<InventorySheet> inventories= new List<InventorySheet>();
+            List<InventorySheet> inventories = new List<InventorySheet>();
             var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
                                                 .Where(i => i.Active == true)
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
@@ -182,7 +223,7 @@ namespace Waho.DataService
                 query = query.Where(i => i.UserName.Contains(userName));
             }
             inventories = query
-                         .OrderBy(i => i.InventorySheetId)    
+                         .OrderBy(i => i.InventorySheetId)
                          .Skip((pageIndex - 1) * pageSize)
                          .Take(pageSize)
                          .ToList();
@@ -205,7 +246,7 @@ namespace Waho.DataService
         //paging suppliers
         public List<Supplier> GetSupplierPagingAndFilter(int pageIndex, int pageSize, string textSearch)
         {
-            List<Supplier> suppliers= new List<Supplier>();
+            List<Supplier> suppliers = new List<Supplier>();
             var query = _context.Suppliers.Where(s => s.Active == true);
             if (!string.IsNullOrEmpty(textSearch))
             {
@@ -251,6 +292,7 @@ namespace Waho.DataService
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower())
                                                             || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+
             if (!string.IsNullOrEmpty(status))
             {
                 query = query.Where(i => i.State == _status);
@@ -260,6 +302,7 @@ namespace Waho.DataService
             {
                 query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
             }
+
             returnOrders = query
                          .OrderBy(i => i.ReturnOrderId)
                          .Skip((pageIndex - 1) * pageSize)
