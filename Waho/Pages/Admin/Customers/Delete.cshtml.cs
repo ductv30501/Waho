@@ -34,33 +34,19 @@ namespace Waho.Pages.Admin.Customers
             {
                 return NotFound();
             }
-
-            var customer = await _context.Customers.FirstOrDefaultAsync(m => m.CustomerId == id);
-
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                Customer = customer;
-            }
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.Customers == null)
-            {
-                return NotFound();
-            }
             var customer = await _context.Customers.FindAsync(id);
 
             if (customer != null)
             {
                 Customer = customer;
-                _context.Customers.Remove(Customer);
+                Customer.Active = false;
+                _context.Attach(Customer).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Vô hiệu hoá thành công khách hàng!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy khách hàng!";
             }
 
             return RedirectToPage("./Index");
