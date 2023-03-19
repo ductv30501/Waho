@@ -80,13 +80,13 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
 
             // get list WareHouse Employee
-            employees = await _context.Employees.ToListAsync();
+            employees = await _context.Employees.Where(e => e.Role != 2).ToListAsync();
             //get inventory sheet list 
             TotalCount = _context.InventorySheets.Include(p => p.UserNameNavigation)
                             .Where(i => i.Active == true)
                             .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch)
                                     || i.Description.ToLower().Contains(textSearch))
-                            .Where(i => i.UserName == employeeID || i.UserName.Contains(""))
+                            .Where(i => i.UserName == employeeID || employeeID == "")
                             .Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter
             if ((pageIndex - 1) > (TotalCount / pageSize))

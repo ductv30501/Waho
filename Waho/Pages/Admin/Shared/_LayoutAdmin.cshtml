@@ -58,6 +58,7 @@
                         <li class="nav-item m-1">
                             <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/InventorySheetManager/Index"><p><i class="bi bi-box2-fill"></i> Kiểm Kho</p></a>
                         </li>
+                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
                         <li class="nav-item m-1">
                             <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
                         </li>
@@ -73,7 +74,7 @@
                     <ul class="menuUser">
                         <li>
                             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                                <img src="img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                                <img src="~/img/profile-img.jpg" alt="Profile" class="rounded-circle">
                                 <span class="d-none d-md-block dropdown-toggle ps-2">@employee.EmployeeName</span>
                             </a><!-- End Profile Iamge Icon -->
 
@@ -139,13 +140,6 @@
 
                             </ul><!-- End Profile Dropdown Items -->
                         </li><!-- End Profile Nav -->
-                        @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Register"><p><i class="bi bi-person-plus-fill"></i> Đăng ký</p></a>
-                        </li>
-                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index"><p><i class="bi bi-person-fill-lock"></i> Đăng nhập</p></a>
-                        </li>*@
                     </ul>
                 </div>
             </div>
