@@ -106,7 +106,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
 
             // get list WareHouse Employee
-            employees = await _context.Employees.Where(e => e.Role != 2).ToListAsync();
+            employees = await _context.Employees.Where(e => e.Role != 2).Where(e => e.Active== true).ToListAsync();
             //get inventory sheet list 
             var query = _context.InventorySheets.Include(p => p.UserNameNavigation)
                            .Where(i => i.Active == true)

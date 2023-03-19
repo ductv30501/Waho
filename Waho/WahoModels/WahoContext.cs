@@ -182,6 +182,11 @@ namespace Waho.WahoModels
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Address)
                     .HasMaxLength(50)
                     .HasColumnName("address");
