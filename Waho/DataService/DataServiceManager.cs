@@ -188,13 +188,36 @@ namespace Waho.DataService
             return products;
         }
         // paging inventory sheet
-        public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
+        public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName, string raw_dateFrom, string raw_dateTo)
         {
+            DateTime dateFrom = DateTime.Now;
+            DateTime dateTo = DateTime.Now;
+            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                dateFrom = DateTime.Parse(raw_dateFrom);
+            }
+            else
+            {
+                raw_dateFrom = "";
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                dateTo = DateTime.Parse(raw_dateTo);
+            }
+            else
+            {
+                raw_dateTo = "";
+            }
             List<InventorySheet> inventories = new List<InventorySheet>();
             var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
                                                 .Where(i => i.Active == true)
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower()));
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            {
+                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+            }
             if (!string.IsNullOrEmpty(userName))
             {
                 query = query.Where(i => i.UserName.Contains(userName));
@@ -274,7 +297,8 @@ namespace Waho.DataService
             {
                 query = query.Where(i => i.State == _status);
             }
-            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo))
+            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
             {
                 query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
             }

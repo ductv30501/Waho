@@ -204,15 +204,24 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Trước</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)"
+                                            asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
+                                            asp-route-subCategory="@Model.employeeID"
+                                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Trước</a></li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
-                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">@i</a></li>
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index"
+                                            asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
+                                       asp-route-subCategory="@Model.employeeID" asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">@i</a>
+                                        </li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
-                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Sau</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)"
+                                            asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID"
+                                       asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Sau</a>
+                                        </li>
                                     }
                                 </ul>
                             </div>

@@ -49,7 +49,9 @@
     @*end insert model*@
     @*start filter*@
     <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
-        <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID" style="margin-bottom: 20px; ">
+        <form id="InventoryIndexForm" method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize"
+                            asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID"
+                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo" style="margin-bottom: 20px; ">
             <div class="d-flex">
                 <h3 class="col-2 me-4">Kiểm kho</h3>
                 <div class="form-group flex-grow-1 me-4">
@@ -100,6 +102,32 @@
                                     </label>
                                 </div>
                             }
+                        </div>
+                    </div>
+                    @*date*@
+                    <div class="row form-container py-4 mb-3">
+                        <div class="m-auto">
+                            <div>
+                                <h6>Thời gian</h6>
+                                <hr />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Từ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-minus-fill"></i></span>
+                                    <input asp-for="@Model.dateFrom" type="date" class="form-control" id="dateFrom">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Đến</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-plus-fill"></i></span>
+                                    <input asp-for="@Model.dateTo" type="date" class="form-control" id="dateTo">
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="btn btn-primary" type="button" onclick="validateForSubmit();">Lọc</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,15 +192,24 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID">Trước</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize"
+                                            asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID"
+                                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Trước</a>
+                                        </li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
-                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID">@i</a></li>
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index"
+                                            asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
+                                            asp-route-employeeID="@Model.employeeID" asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">@i</a>
+                                        </li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
-                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID">Sau</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize"
+                                            asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID"
+                                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Sau</a>
+                                        </li>
                                     }
                                 </ul>
                             </div>
@@ -195,4 +232,22 @@
     <script src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
+    <script>
+        function validateForSubmit() {
+            const dateFrom = $('#dateFrom').val();
+            const dateTo = $('#dateTo').val();
+            // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
+            if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
+                alert("Chưa nhập đủ ngày bắt đầu!")
+            } else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
+                alert("Chưa nhập đủ ngày kết thúc!")
+            }
+            else if (Date.parse(dateFrom) > Date.parse(dateTo)) {
+                alert("Ngày bắt đầu lớn hơn ngày kết thúc!")
+            }
+            else {
+                $('#InventoryIndexForm').submit()
+            }
+        }
+    </script>
 </body>

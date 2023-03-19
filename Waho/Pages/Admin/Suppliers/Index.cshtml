@@ -8,10 +8,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Waho - Sản Phẩm</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
     <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
 </head>
 <body style="background: #f2f2f2">
@@ -63,8 +59,8 @@
                     </div>
                 </div>
                 <div class="text-center mt-5">
-                    <button id="btnSubmit" class="input-box button" type="submit" style="padding: 5px;border-radius: 5px">Thêm mới</button>
-                    <button style="margin-left: 10px;padding:5px;border-radius: 5px" class="input-box button btn btn-primary profile-button" type="button" onclick="modal('insert-modal', 0, 'scale(0)')">Đóng</button>
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Thêm mới</button>
+                    <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(0)')">Đóng</button>
                 </div>
             </form>
         </div>
@@ -119,9 +115,9 @@
                     </div>
                 </div>
                 <div class="text-center mt-5">
-                    <button id="btnSubmit" class="input-box button" type="submit" style="padding: 5px;border-radius: 5px">Lưu</button>
-                    <button id="btnSubmit" class="input-box button" type="button" onclick="DeleteSupplier()" style="padding: 5px;border-radius: 5px">Xóa</button>
-                    <button style="margin-left: 10px;padding:5px;border-radius: 5px" class="input-box button btn btn-primary profile-button" type="button" onclick="modal('update-modal', 1, 'scale(0)')">Đóng</button>
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
+                    <button id="btnSubmit" class="btn btn-primary" type="button" onclick="DeleteSupplier()">Xóa</button>
+                    <button class="btn btn-primary" type="button" onclick="modal('update-modal', 1, 'scale(0)')">Đóng</button>
                 </div>
             </form>
         </div>
@@ -130,45 +126,32 @@
     @*start filter*@
     <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
         <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" style="margin-bottom: 20px; ">
-            <div class="row d-flex justify-content-between" style="width:95%">
-                <div class="col-5 row">
-                    <div class="form-group col-md-3">
-                        <label for="inputState">Hiển thị</label>
-                        <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
-                            <option value="5"> 5 hàng</option>
-                            <option value="10">10 hàng</option>
-                            <option value="15">15 hàng</option>
-                            <option value="20">20 hàng</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-9">
-                        <div class="d-flex">
-                            <div class="col-md-10">
-                                <input type="text" asp-for="textSearch" class="w-100" placeholder="Nhập thông tin tìm kiếm" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
-                            </div>
-                            <div class="col-md-2">
-                                <button class="input-box button" type="submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;padding: 5px 10px 5px 10px; margin-top: 20px">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+            <div class="d-flex">
+                <h3 class="me-4">Nhà cung cấp</h3>
+                <div class="form-group me-4">
+                    <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
+                        <option value="5"> 5 hàng</option>
+                        <option value="10">10 hàng</option>
+                        <option value="15">15 hàng</option>
+                        <option value="20">20 hàng</option>
+                    </select>
+                </div>
+                <div class="form-group flex-grow-1 me-4">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" asp-for="textSearch" placeholder="Nhập tên sản phẩm, loại sản phẩm, tên nhà cung cấp" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
                     </div>
                 </div>
-                <div class="form-group col-md-2">
-                    <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
-                        <i class="bi " asp-page="Create"> Thêm mới</i>
+                <div class="form-group me-4">
+                    <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
+                        <i class="bi bi-plus-circle-fill" asp-page="Create"> Thêm mới</i>
                     </button>
                 </div>
-                <div class="form-group col-md-2">
-                    <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="submit">
-                        <a class="bi " style="text-decoration: none; color: white" asp-page="./ExportSuppliers">
+                <div class="form-group me-4">
+                    <button class="btn btn-primary" type="submit">
+                        <a style="text-decoration: none; color: white" asp-page="./ExportSuppliers">
                             Export Excel
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
-                            </svg>
+                            <i class="bi bi-download"></i>
                         </a>
                     </button>
                 </div>
@@ -309,24 +292,24 @@
             modal('update-modal', 1, 'scale(1)')
         }
         //delete Supplier
-            function DeleteSupplier() {
-                var supplierID = $("#supplierID").val().toString();
-                if (confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) {
-                    $.ajax({
-                        url: '/Admin/Suppliers/Delete',
-                        type: 'GET',
-                        data: { supplierID: supplierID },
-                        success: function (data) {
-                            // handle success
-                            alert("xóa thành công khách hàng ra khỏi danh sách");
-                            window.location.reload();
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.log(textStatus, errorThrown);
-                        }
-                    });
-                }
+        function DeleteSupplier() {
+            var supplierID = $("#supplierID").val().toString();
+            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) {
+                $.ajax({
+                    url: '/Admin/Suppliers/Delete',
+                    type: 'GET',
+                    data: { supplierID: supplierID },
+                    success: function (data) {
+                        // handle success
+                        alert("xóa thành công khách hàng ra khỏi danh sách");
+                        window.location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
             }
+        }
     </script>
     <script src="../../../admin/js/tabler.min.js" defer></script>
     <script src="../../../admin/js/demo.min.js" defer></script>
