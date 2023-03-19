@@ -193,9 +193,12 @@ namespace Waho.DataService
             List<InventorySheet> inventories = new List<InventorySheet>();
             var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
                                                 .Where(i => i.Active == true)
-                                                .Where(i => i.UserName.Contains(userName))
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower()));
+            if (!string.IsNullOrEmpty(userName))
+            {
+                query = query.Where(i => i.UserName.Contains(userName));
+            }
             inventories = query
                          .OrderBy(i => i.InventorySheetId)
                          .Skip((pageIndex - 1) * pageSize)
@@ -235,8 +238,29 @@ namespace Waho.DataService
         }
 
         // paging return orders
-        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
+        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName,string status, string raw_dateFrom, string raw_dateTo)
         {
+            // filter by status and date
+            Boolean _status = status == "true" ? true : false;
+            DateTime dateFrom = DateTime.Now;
+            DateTime dateTo = DateTime.Now;
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                dateFrom = DateTime.Parse(raw_dateFrom);
+            }
+            else
+            {
+                raw_dateFrom = "";
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                dateTo = DateTime.Parse(raw_dateTo);
+            }
+            else
+            {
+                raw_dateTo = "";
+            }
+            
             List<ReturnOrder> returnOrders = new List<ReturnOrder>();
             var query = _context.ReturnOrders.Include(i => i.UserNameNavigation)
                                                 .Include(i => i.Customer)
@@ -245,6 +269,15 @@ namespace Waho.DataService
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower())
                                                             || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(i => i.State == _status);
+            }
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo))
+            {
+                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+            }
 
             returnOrders = query
                          .OrderBy(i => i.ReturnOrderId)
