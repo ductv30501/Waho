@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Waho.DataService;
 using Waho.WahoModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Waho.Pages.WarehouseStaff.InventorySheetManager
 {
@@ -34,7 +36,12 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         public string textSearch { get; set; } = "";
         [BindProperty(SupportsGet = true)]
         public string employeeID { get; set; } = "";
-        private string raw_pageSize, raw_EmployeeSearch, raw_textSearch;
+        [BindProperty(SupportsGet = true)]
+        public DateTime dateFrom { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public DateTime dateTo { get; set; }
+        private string raw_pageSize, raw_EmployeeSearch, raw_textSearch, raw_dateFrom, raw_dateTo;
         public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
@@ -78,16 +85,41 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             {
                 textSearch = "";
             }
+            raw_dateFrom = HttpContext.Request.Query["dateFrom"];
+            raw_dateTo = HttpContext.Request.Query["dateTo"];
+
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                dateFrom = DateTime.Parse(raw_dateFrom);
+            }
+            else
+            {
+                raw_dateFrom = "";
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                dateTo = DateTime.Parse(raw_dateTo);
+            }
+            else
+            {
+                raw_dateTo = "";
+            }
 
             // get list WareHouse Employee
             employees = await _context.Employees.Where(e => e.Role != 2).ToListAsync();
             //get inventory sheet list 
-            TotalCount = _context.InventorySheets.Include(p => p.UserNameNavigation)
-                            .Where(i => i.Active == true)
-                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch)
-                                    || i.Description.ToLower().Contains(textSearch))
-                            .Where(i => i.UserName == employeeID || employeeID == "")
-                            .Count();
+            var query = _context.InventorySheets.Include(p => p.UserNameNavigation)
+                           .Where(i => i.Active == true)
+                           .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch)
+                                   || i.Description.ToLower().Contains(textSearch))
+                           .Where(i => i.UserName == employeeID || employeeID == "");
+            // compare date to filter
+            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            {
+                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+            }
+            TotalCount = query.Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter
             if ((pageIndex - 1) > (TotalCount / pageSize))
             {
@@ -97,7 +129,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             successMessage = TempData["successMessage"] as string;
             if (_context.InventorySheets != null)
             {
-                InventorySheetList = _dataService.getInventoryPagingAndFilter(pageIndex, pageSize, textSearch, employeeID);
+                InventorySheetList = _dataService.getInventoryPagingAndFilter(pageIndex, pageSize, textSearch, employeeID, raw_dateFrom, raw_dateTo);
             }
             return Page();
         }

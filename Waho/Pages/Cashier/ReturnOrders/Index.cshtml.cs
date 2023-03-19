@@ -126,7 +126,8 @@ namespace Waho.Pages.Cashier.ReturnOrders
                 query = query.Where(i => i.State == _status);
             }
             // compare date to filter
-            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo))
+            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
             {
                 query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
             }
