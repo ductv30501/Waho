@@ -11,7 +11,7 @@ namespace Waho.WahoModels
         }
 
         public int OderId { get; set; }
-        public string UserName { get; set; } = null!;
+        public string UserName { get; set; }
         public int CustomerId { get; set; }
         public int ShipperId { get; set; }
         public string? OderState { get; set; }
@@ -19,10 +19,12 @@ namespace Waho.WahoModels
         public string? Cod { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime? EstimatedDate { get; set; }
+        public decimal Total { get; set; }
+        public decimal Deposit { get; set; }
 
-        public virtual Customer Customer { get; set; } = null!;
-        public virtual Shipper Shipper { get; set; } = null!;
-        public virtual Employee UserNameNavigation { get; set; } = null!;
+        public virtual Customer Customer { get; set; }
+        public virtual Shipper Shipper { get; set; }
+        public virtual Employee UserNameNavigation { get; set; }
         public virtual ICollection<OderDetail> OderDetails { get; set; }
     }
 }

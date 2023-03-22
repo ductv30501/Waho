@@ -11,17 +11,18 @@ namespace Waho.WahoModels
         }
 
         public int ReturnOrderId { get; set; }
-        public string UserName { get; set; } = null!;
+        public string UserName { get; set; }
         public int CustomerId { get; set; }
         public bool? State { get; set; }
         public DateTime? Date { get; set; }
-        public string Description { get; set; }
-        public bool? Active { get; set; }
-        public int? PayCustomer { get; set; }
-        public int PaidCustomer { get; set; }
+        public string? Description { get; set; }
+        public bool Active { get; set; }
+        public decimal PayCustomer { get; set; }
+        public decimal PaidCustomer { get; set; }
+        public int? BillId { get; set; }
 
-        public virtual Customer Customer { get; set; } = null!;
-        public virtual Employee UserNameNavigation { get; set; } = null!;
+        public virtual Customer Customer { get; set; }
+        public virtual Employee UserNameNavigation { get; set; }
         public virtual ICollection<ReturnOrderProduct> ReturnOrderProducts { get; set; }
     }
 }
