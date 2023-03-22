@@ -300,6 +300,10 @@ namespace Waho.WahoModels
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
+                entity.Property(e => e.Deposit)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("deposit");
+
                 entity.Property(e => e.EstimatedDate)
                     .HasColumnType("date")
                     .HasColumnName("estimatedDate");
@@ -317,6 +321,10 @@ namespace Waho.WahoModels
                     .HasColumnName("region");
 
                 entity.Property(e => e.ShipperId).HasColumnName("shipperID");
+
+                entity.Property(e => e.Total)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("total");
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
@@ -447,6 +455,8 @@ namespace Waho.WahoModels
                     .HasColumnName("active")
                     .HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.BillId).HasColumnName("billID");
+
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
 
                 entity.Property(e => e.Date)
@@ -457,9 +467,13 @@ namespace Waho.WahoModels
                     .HasMaxLength(50)
                     .HasColumnName("description");
 
-                entity.Property(e => e.PaidCustomer).HasColumnName("paidCustomer");
+                entity.Property(e => e.PaidCustomer)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("paidCustomer");
 
-                entity.Property(e => e.PayCustomer).HasColumnName("payCustomer");
+                entity.Property(e => e.PayCustomer)
+                    .HasColumnType("decimal(10, 2)")
+                    .HasColumnName("payCustomer");
 
                 entity.Property(e => e.State).HasColumnName("state");
 
@@ -491,6 +505,8 @@ namespace Waho.WahoModels
                 entity.Property(e => e.ProductId).HasColumnName("productID");
 
                 entity.Property(e => e.ReturnOrderId).HasColumnName("returnOrderID");
+
+                entity.Property(e => e.Discount).HasColumnName("discount");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 

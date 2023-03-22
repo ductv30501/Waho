@@ -23,7 +23,7 @@ namespace Waho.Pages.Admin
         public int numberBill { get; set; } = 0;
         public double totalMoney { get; set; } = 0;
         public int numberReturn { get; set; } = 0;
-        public double totalMoneyReturn { get; set; } = 0;
+        public decimal totalMoneyReturn { get; set; } = 0;
         private DateTime now = DateTime.Today;
         private List<BillDetail> billDetailInday { get; set; }
         private List<ReturnOrder> returnOrders { get; set; }
