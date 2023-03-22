@@ -4,93 +4,276 @@
 @{
     ViewData["Title"] = "Index";
 }
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Waho - Admin</title>
+    <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body style="background: #f2f2f2">
+    @*update model*@
+    <div class="modal">
+        <div id="update-modal">
+            <form asp-page="./Edit" method="post">
+                <div class="col-md-6">
+                    <h4 class="text-right">Thông tin nhân viên</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Tên Nhân viên</label>
+                        <input name="employeeName" id="employeeName" class="form-control input" type="text" placeholder="Nhập tên nhân viên" required />
+                        <input name="userName" id="userName" class="form-control input" type="hidden" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Chức vụ</label>
+                        <input name="title" id="title" class="form-control input" type="text" placeholder="Nhập chức vụ" required />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <label class="labels">Ngày sinh</label>
+                        <input name="dob" id="dob" class="form-control input" type="date" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="labels">Ngày vào</label>
+                        <input name="hireDate" id="hireDate" class="form-control input" type="date" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="labels">Số điện thoại</label>
+                        <input name="phone" id="phone" class="form-control input" type="text" placeholder="Nhập số điện thoại" required />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Địa chỉ</label>
+                        <input name="addrress" id="addrress" class="form-control input" type="text" placeholder="Nhập địa chỉ" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Khu vực</label>
+                        <input name="region" id="region" class="form-control input" type="text" placeholder="Nhập khu vực" required />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Email</label>
+                        <input name="email" id="email" class="form-control input" type="text" placeholder="Nhập email" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Ghi chú</label>
+                        <input name="note" id="note" class="form-control input" type="text" placeholder="Ghi chú" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Phân quyền</label>
+                        <select name="role" id="role" class="form-control input" aria-label="Default select example">
+                            <option value="1">Admin</option>
+                            <option value="2">Thu ngân</option>
+                            <option value="3">Nhân viên kho</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center mt-5">
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
+                    <button class="btn btn-primary" type="button" onclick="modal('update-modal', 0, 'scale(0)')">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @*end update model*@
+    @*start filter*@
+    <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
+        <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" style="margin-bottom: 20px; ">
+            <div class="d-flex">
+                <h3 class="me-4">Nhà cung cấp</h3>
+                <div class="form-group me-4">
+                    <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
+                        <option value="5"> 5 hàng</option>
+                        <option value="10">10 hàng</option>
+                        <option value="15">15 hàng</option>
+                        <option value="20">20 hàng</option>
+                    </select>
+                </div>
+                <div class="form-group flex-grow-1 me-4">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" asp-for="textSearch" placeholder="Nhập thông tin nhân viên" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+                <div class="form-group me-4">
+                    <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
+                        <i class="bi bi-plus-circle-fill" asp-page="Create"> Thêm mới</i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    @*end filter*@
+    @if (Model.message != null)
+    {
+        <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
+    }
+    @if (Model.successMessage != null)
+    {
+        <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
+    }
+    <div class="col-lg-12" style="overflow-x: auto; background-color: #fff; border-radius: 10px; padding:10px;margin-left:10px">
+        @if (Model.TotalCount > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Tên nhân viên
+                        </th>
+                        <th>
+                            Chức vụ
+                        </th>
+                        <th>
+                            Ngày sinh
+                        </th>
+                        <th>
+                            Địa chỉ
+                        </th>
+                        <th>
+                            Số điện thoại
+                        </th>
+                        <th>
+                            Ghi chú
+                        </th>
+                        <th>
+                            Phân quyền
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Employee)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmployeeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @{
+                                    var date = "";
+                                    if (item.Dob != null)
+                                    {
+                                        date = item.Dob.Value.Day + "/" + item.Dob.Value.Month + "/" + item.Dob.Value.Year;
+                                    }
+                                }
+                                @date
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Phone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Note)
+                            </td>
 
-<h1>Index</h1>
+                            @if (item.Role == 1)
+                            {
+                                <td>Admin</td>
+                            }
+                            else
+                            {
+                                if (item.Role == 2)
+                                {
+                                    <td>Thu Ngân</td>
+                                }
+                                else
+                                {
+                                    <td>Nhân viên kho</td>
+                                }
+                            }
+                            <td>
+                                <a onclick="getEmployeeDetail('@(item.UserName)')">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>|
+                                <a asp-page="./Delete" asp-route-id="@item.UserName"><i class="bi bi-trash3-fill text-danger"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="text-center mt-5">
+                <div class="pagination">
+                    <ul class="pagination">
+                        @if (Model.pageIndex > 1)
+                        {
+                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">Trước</a></li>
+                        }
+                        @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
+                        {
+                            <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">@i</a></li>
+                        }
+                        @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
+                        {
+                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">Sau</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center">Không có nhân viên nào phù hợp</div>
+        }
+    </div>
+</body>
+<script>
+    // supplier details
+    function getEmployeeDetail(userName) {
+        $.ajax({
+            url: "/Admin/Employees/Details",
+            type: "GET",
+            data: { userName: userName },
+            success: function (data) {
+                // Gán dữ liệu vào các trường của form
+                $("#userName").val(data.userName);
+                $("#employeeName").val(data.employeeName);
+                $("#title").val(data.title);
+                $("#dob").val(formatDate(data.dob));
+                if (data.hireDate == null) {
+                    $("#hireDate").val("");
+                }else{
+                    $("#hireDate").val(formatDate(data.hireDate));
+                }
+                $("#phone").val(data.phone);
+                $("#addrress").val(data.address);
+                $("#region").val(data.region);
+                $("#email").val(data.email);
+                $("#note").val(data.note);
+                $("#role").val(data.role);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            }
+        });
+        modal('update-modal', 0, 'scale(1)')
+    }
+    //format date
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].EmployeeName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Dob)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].HireDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Region)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee[0].Waho)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Employee) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dob)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HireDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Region)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Note)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Waho.WahoId)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.UserName">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.UserName">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.UserName">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+    
+</script>

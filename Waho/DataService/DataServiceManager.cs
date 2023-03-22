@@ -20,16 +20,34 @@ namespace Waho.DataService
 
         public Employee GetEmployeeByUserAndPass(string userName, string password)
         {
-            return _context.Employees.FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
+            return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.UserName == userName && emp.Password == password);
         }
         //get employee by email
         public Employee GetEmployeeByEmail(string email)
         {
-            return _context.Employees.FirstOrDefault(emp => emp.Email == email);
+            return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.Email == email);
         }
         public Employee GetEmployeeByUserName(string userName)
         {
-            return _context.Employees.FirstOrDefault(emp => emp.UserName == userName);
+            return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.UserName == userName);
+        }
+        public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch)
+        {
+            List<Employee> employees = new List<Employee>();
+            var query = _context.Employees.Where(s => s.Active == true);
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                query = query.Where(e => e.EmployeeName.ToLower().Contains(textSearch) || e.Email.ToLower().Contains(textSearch)
+                                    || e.Dob.ToString().ToLower().Contains(textSearch) || e.Title.ToLower().Contains(textSearch)
+                                    || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
+                                    || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
+                                    || e.Role.ToString().Contains(textSearch));
+            }
+            employees = query.OrderBy(s => s.UserName)
+                         .Skip((pageIndex - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
+            return employees;
         }
         public List<SubCategory> GetSubCategories(int id)
         {
@@ -188,14 +206,40 @@ namespace Waho.DataService
             return products;
         }
         // paging inventory sheet
-        public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
+        public List<InventorySheet> getInventoryPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName, string raw_dateFrom, string raw_dateTo)
         {
+            DateTime dateFrom = DateTime.Now;
+            DateTime dateTo = DateTime.Now;
+            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                dateFrom = DateTime.Parse(raw_dateFrom);
+            }
+            else
+            {
+                raw_dateFrom = "";
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                dateTo = DateTime.Parse(raw_dateTo);
+            }
+            else
+            {
+                raw_dateTo = "";
+            }
             List<InventorySheet> inventories = new List<InventorySheet>();
             var query = _context.InventorySheets.Include(i => i.UserNameNavigation)
                                                 .Where(i => i.Active == true)
-                                                .Where(i => i.UserName.Contains(userName))
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower()));
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            {
+                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+            }
+            if (!string.IsNullOrEmpty(userName))
+            {
+                query = query.Where(i => i.UserName.Contains(userName));
+            }
             inventories = query
                          .OrderBy(i => i.InventorySheetId)
                          .Skip((pageIndex - 1) * pageSize)
@@ -235,8 +279,29 @@ namespace Waho.DataService
         }
 
         // paging return orders
-        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName)
+        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName,string status, string raw_dateFrom, string raw_dateTo)
         {
+            // filter by status and date
+            Boolean _status = status == "true" ? true : false;
+            DateTime dateFrom = DateTime.Now;
+            DateTime dateTo = DateTime.Now;
+            if (!string.IsNullOrEmpty(raw_dateFrom))
+            {
+                dateFrom = DateTime.Parse(raw_dateFrom);
+            }
+            else
+            {
+                raw_dateFrom = "";
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                dateTo = DateTime.Parse(raw_dateTo);
+            }
+            else
+            {
+                raw_dateTo = "";
+            }
+            
             List<ReturnOrder> returnOrders = new List<ReturnOrder>();
             var query = _context.ReturnOrders.Include(i => i.UserNameNavigation)
                                                 .Include(i => i.Customer)
@@ -245,6 +310,16 @@ namespace Waho.DataService
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower())
                                                             || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(i => i.State == _status);
+            }
+            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            {
+                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+            }
 
             returnOrders = query
                          .OrderBy(i => i.ReturnOrderId)

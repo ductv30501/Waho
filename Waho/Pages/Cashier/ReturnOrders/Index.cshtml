@@ -8,183 +8,230 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Waho - Sản Phẩm</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
     <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
 </head>
 
 <body style="background: #f2f2f2">
     @*start filter*@
-    <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
-        <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID" style="margin-bottom: 20px; ">
-            <div class="row d-flex justify-content-between" style="width:95%">
-                <div class="col-5 row">
-                    <div class="form-group col-md-3">
-                        <label for="inputState">Hiển thị</label>
-                        <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
+    <div style=" padding:10px;margin-top: 20px; border-radius: 10px;">
+        <form id="returnOrderIndexForm" method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize"
+                asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID" asp-route-status="@Model.status"
+                asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo" style="margin-bottom: 20px; ">
+            <div class="d-flex">
+                <h3 class="col-2 me-4">Hoàn đơn</h3>
+                <div class="form-group flex-grow-1 me-4">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" asp-for="textSearch" placeholder="Nhập tên khách hàng, người tạo, mô tả" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+                <div class="form-group me-4">
+                    <a class="btn btn-primary" asp-page="./Create">
+                        <i class="bi bi-plus-circle-fill" asp-page="Create"> Tạo đơn hoàn</i>
+                    </a>
+                </div>
+            </div>
+
+            @*end filter*@
+            @if (Model.message != null)
+            {
+                <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
+            }
+            @if (Model.successMessage != null)
+            {
+                <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
+            }
+            <div class="d-flex">
+                <div class="d-flex flex-column col-2 me-4">
+                    @*page size*@
+                    <div class="form-group col-6 mx-auto mb-3">
+                        <select id="inputState" class="form-select" asp-for="@Model.pageSize" onchange="this.form.submit()">
                             <option value="5"> 5 hàng</option>
                             <option value="10">10 hàng</option>
                             <option value="15">15 hàng</option>
                             <option value="20">20 hàng</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-9">
-                        <div class="d-flex">
-                            <div class="col-md-10">
-                                <input type="text" asp-for="textSearch" class="w-100" placeholder="Nhập tên người tạo phiếu, mô tả" style="margin-top: 20px; border-top-left-radius: 5px; border-bottom-left-radius: 5px;padding: 5px 10px 5px 10px;border-width:1px; border-color:lightgray">
+                    @*filter*@
+                    <div class="row form-container py-4">
+                        <div class="m-auto">
+                            <div>
+                                <h6>Nhân viên</h6>
+                                <hr />
                             </div>
-                            <div class="col-md-2">
-                                <button class="input-box button" type="submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;padding: 5px 10px 5px 10px; margin-top: 20px">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                    </svg>
-                                </button>
+                            @foreach (var item in Model.employees)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" asp-checked="@Model.employeeID=='@item.UserName'" asp-for="@(Model.employeeID)" value="@item.UserName" onclick="this.form.submit()" type="radio" />
+                                    <label class="form-check-label">
+                                        @(item.EmployeeName)
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @*date*@
+                    <div class="row form-container py-4 mb-3">
+                        <div class="m-auto">
+                            <div>
+                                <h6>Thời gian</h6>
+                                <hr />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Từ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-minus-fill"></i></span>
+                                    <input asp-for="@Model.dateFrom" type="date" class="form-control" id="dateFrom">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Đến</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-plus-fill"></i></span>
+                                    <input asp-for="@Model.dateTo" type="date" class="form-control" id="dateTo">
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="btn btn-primary" type="button" onclick="validateForSubmit();">Lọc</button>
+                            </div>
+                        </div>
+                    </div>
+                    @*state*@
+                    <div class="row form-container py-4">
+                        <div class="m-auto">
+                            <div>
+                                <h6>Trạng thái</h6>
+                                <hr />
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status == 'false'" name="status" type="radio" value="false">
+                                <label class="form-check-label" >
+                                    Đang xử lý
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status == 'true'" name="status" type="radio" value="true">
+                                <label class="form-check-label" >
+                                    Hoàn thành
+                                </label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-2">
-                    <button style="padding: 5px 15px 5px 15px;border-radius: 5px;text-align: center; margin-top: 20px" class="input-box button" type="submit">
-                        <a class="bi " style="text-decoration: none; color: white" asp-page="./Create">
-                            Tạo đơn hoàn
-                        </a>
-                    </button>
-                </div>
+
+                @if (Model.TotalCount > 0)
+                {
+                    <div class="col-lg-12" style="overflow-x: auto; background-color: #fff; border-radius: 10px; padding:10px;margin-left:10px">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Mã phiếu
+                                    </th>
+                                    <th>
+                                        Tên khách hàng
+                                    </th>
+                                    <th>
+                                        Nhân viên tiếp nhận
+                                    </th>
+                                    <th>
+                                        Số tiền cần trả khách
+                                    </th>
+                                    <th>
+                                        Số tiền đã trả khách
+                                    </th>
+                                    <th>
+                                        Trạng thái
+                                    </th>
+                                    <th>
+                                        Ngày nhận
+                                    </th>
+                                    <th>
+                                        Nội dung
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ReturnOrder)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ReturnOrderId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Customer.CustomerName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserNameNavigation.EmployeeName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PayCustomer)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PaidCustomer)
+                                        </td>
+                                        <td>
+                                            @(item.State == true ? "Hoàn Thành" : "Đang xử lý")
+                                        </td>
+                                        <td>
+                                            @{
+                                                var date = item.Date.Value.Day + "/" + item.Date.Value.Month + "/" + item.Date.Value.Year;
+                                            }
+                                            @date
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td>
+                                            <a asp-page="./Details" asp-route-returnOrderID="@item.ReturnOrderId">
+                                                <i class="bi bi-pencil-fill"></i>
+                                            </a>|
+                                            <a asp-page="./Delete" asp-route-id="@item.ReturnOrderId">
+                                                <i class="bi bi-trash3-fill text-danger"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="text-center mt-5">
+                            <div class="pagination">
+                                <ul class="pagination">
+                                    @if (Model.pageIndex > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)"
+                                            asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
+                                            asp-route-subCategory="@Model.employeeID"
+                                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Trước</a></li>
+                                    }
+                                    @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
+                                    {
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index"
+                                            asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
+                                       asp-route-subCategory="@Model.employeeID" asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">@i</a>
+                                        </li>
+                                    }
+                                    @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
+                                    {
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)"
+                                            asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID"
+                                       asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Sau</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex-grow-1 d-flex align-items-center form-container">
+                        <h5 class="m-auto">Không có phiếu hoàn đơn nào</h5>
+                    </div>
+                }
             </div>
         </form>
-    </div>
-    @*end filter*@
-    @if (Model.message != null)
-    {
-        <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
-    }
-    @if (Model.successMessage != null)
-    {
-        <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
-    }
-    <div class="row">
-        <div class="col-lg-2" style="background-color: #fff; border-radius: 10px; padding:10px;margin-right: 10px">
-            <div class="row">
-                <form method="get" asp-page="./Index" id="employeeForm">
-                    <div class="text-center" style="font-size: 20px">Nhân viên kiểm kho</div>
-                    <ul class="w-75 rounded-2 list-inline" style="padding-left:30px; padding-top:20px; font-size: small">
-                        @foreach (var item in Model.employees)
-                        {
-                            <li class="m-1 pointer-event" onclick="this.form.submit()">
-                                <button style="padding: 5px 15px 5px 15px;border-radius: 50px;text-align: center;font-size: 16px" class="link-filter">
-                                    <a class="text-decoration-none" style="color: black" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@(item.UserName)">
-                                        @(item.EmployeeName)
-                                    </a>
-                                </button>
-                            </li>
-                        }
-                    </ul>
-                </form>
-            </div>
-        </div>
-        <div class="col-lg-9" style="overflow-x: auto; background-color: #fff; border-radius: 10px; padding:10px;margin-left:10px">
-            @if (Model.TotalCount > 0)
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Mã phiếu
-                            </th>
-                            <th>
-                                Tên khách hàng
-                            </th>
-                            <th>
-                                Nhân viên tiếp nhận
-                            </th>
-                            <th>
-                                Số tiền cần trả khách
-                            </th>
-                            <th>
-                                Số tiền đã trả khách
-                            </th>
-                            <th>
-                                Trạng thái
-                            </th>
-                            <th>
-                                Ngày nhận
-                            </th>
-                            <th>
-                                Nội dung
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ReturnOrder)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ReturnOrderId)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Customer.CustomerName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.UserNameNavigation.EmployeeName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PayCustomer)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PaidCustomer)
-                                </td>
-                                <td>
-                                    @(item.State == true ? "Hoàn Thành":"Chưa xử lý")
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Date)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
-                                </td>
-                                <td>
-                                    <a asp-page="./Details" asp-route-returnOrderID="@item.ReturnOrderId">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill text-black" viewBox="0 0 16 16">
-                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                                        </svg>
-                                    </a>
-                                    <a asp-page="./Delete" asp-route-id="@item.ReturnOrderId">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3-fill text-danger" viewBox="0 0 16 16">
-                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
-                                        </svg>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <div class="text-center mt-5">
-                    <div class="pagination">
-                        <ul class="pagination">
-                            @if (Model.pageIndex > 1)
-                            {
-                                <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Trước</a></li>
-                            }
-                            @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
-                            {
-                                <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">@i</a></li>
-                            }
-                            @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
-                            {
-                                <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.employeeID">Sau</a></li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="text-center">Không có phiếu hoàn đơn nào</div>
-            }
-        </div>
     </div>
     <script src="../../../admin/js/tabler.min.js" defer></script>
     <script src="../../../admin/js/demo.min.js" defer></script>
@@ -193,4 +240,22 @@
     <script src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
+    <script>
+        function validateForSubmit() {
+            const dateFrom = $('#dateFrom').val();
+            const dateTo = $('#dateTo').val();
+            // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
+            if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
+                alert("Chưa nhập đủ ngày bắt đầu!")
+            } else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
+                alert("Chưa nhập đủ ngày kết thúc!")
+            }
+            else if (Date.parse(dateFrom) > Date.parse(dateTo)) {
+                alert("Ngày bắt đầu lớn hơn ngày kết thúc!")
+            }
+            else {
+                $('#returnOrderIndexForm').submit()
+            }
+        }
+    </script>
 </body>
