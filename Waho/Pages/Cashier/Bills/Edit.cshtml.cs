@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Waho.DataService;
 using Waho.WahoModels;
+
 
 namespace Waho.Pages.Cashier.Bills
 {
@@ -24,6 +28,11 @@ namespace Waho.Pages.Cashier.Bills
         [BindProperty]
         public Bill Bill { get; set; } = default!;
 
+        [BindProperty]
+        public List<BillDetail> billDetails { get; set; } = default!;
+
+        private Employee employee { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             //author
@@ -32,19 +41,18 @@ namespace Waho.Pages.Cashier.Bills
                 return RedirectToPage("/accessDenied", new { message = "Thu Ngân" });
             }
 
-            if (id == null || _context.Bills == null)
+            Bill = await _context.Bills.Include(b => b.UserNameNavigation).Include(b => b.Customer).FirstOrDefaultAsync(m => m.BillId == id);
+            billDetails = await _context.BillDetails.Include(bd => bd.Product).Where(bd => bd.BillId == id).ToListAsync();
+            var lbillProducts = await _context.BillDetails.Include(bd => bd.Product).Where(bd => bd.BillId == id).Select(x => new
             {
-                return NotFound();
-            }
+                productId = x.ProductId,
+                quantity = x.Quantity,
+                discount = x.Discount,
+                unitPrice = x.Product.UnitPrice,
+            }).ToListAsync();
 
-            var bill =  await _context.Bills.FirstOrDefaultAsync(m => m.BillId == id);
-            if (bill == null)
-            {
-                return NotFound();
-            }
-            Bill = bill;
-           ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId");
-           ViewData["UserName"] = new SelectList(_context.Employees, "UserName", "UserName");
+            ViewData["billProducts"] = lbillProducts;
+
             return Page();
         }
 
@@ -52,16 +60,29 @@ namespace Waho.Pages.Cashier.Bills
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            string customerId = HttpContext.Request.Form["customerId"];
+            string billId = HttpContext.Request.Form["billId"];
+            string total = HttpContext.Request.Form["total"];
+            string listBillDetail = HttpContext.Request.Form["listBillDetail"];
+            List<BillDetail> billDetails = JsonConvert.DeserializeObject<List<BillDetail>>(listBillDetail);
 
-            _context.Attach(Bill).State = EntityState.Modified;
+            Bill.CustomerId = int.Parse(customerId);
+            Bill.Total = decimal.Parse(total.ToString());
 
             try
             {
+                _context.Attach(Bill).State = EntityState.Modified;
+
+                foreach (var billDetail in billDetails)
+                {
+                    // Thiết lập giá trị BillId cho bản ghi BillDetail
+                    billDetail.BillId = Bill.BillId;
+                    _context.BillDetails.Update(billDetail);
+                }
+
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Sửa hoá đơn thành công!";
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,7 +92,7 @@ namespace Waho.Pages.Cashier.Bills
                 }
                 else
                 {
-                    throw;
+                    TempData["ErrorMessage"] = "Sửa hoá đơn thất bại!";
                 }
             }
 
@@ -80,7 +101,7 @@ namespace Waho.Pages.Cashier.Bills
 
         private bool BillExists(int id)
         {
-          return _context.Bills.Any(e => e.BillId == id);
+            return _context.Bills.Any(e => e.BillId == id);
         }
     }
 }
