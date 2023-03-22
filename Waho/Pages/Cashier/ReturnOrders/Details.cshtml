@@ -17,21 +17,19 @@
         <form method="get" asp-page="./Details" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" style="margin-bottom: 20px; ">
             <div class="d-flex">
                 <div class="form-group me-4">
-                        <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
-                            <option value="5"> 5 hàng</option>
-                            <option value="10">10 hàng</option>
-                            <option value="15">15 hàng</option>
-                            <option value="20">20 hàng</option>
-                        </select>
-                        <input name="returnOrderID" type="hidden" value="@Model._returnOrderID" />
+                    <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
+                        <option value="5"> 5 hàng</option>
+                        <option value="10">10 hàng</option>
+                        <option value="15">15 hàng</option>
+                        <option value="20">20 hàng</option>
+                    </select>
+                    <input name="returnOrderID" type="hidden" value="@Model._returnOrderID" />
                 </div>
                 <div class="form-group me-4">
-                    <button class="btn btn-primary" type="submit">
-                        <a style="text-decoration: none; color: white" asp-page="./ExportReturnOrderDetail" asp-route-returnOrderID="@Model.ReturnOrder.ReturnOrderId">
-                            Export Excel
-                            <i class="bi bi-download"></i>
-                        </a>
-                    </button>
+                    <a class="btn btn-primary" style="text-decoration: none; color: white" asp-page="./ExportReturnOrderDetail" asp-route-returnOrderID="@Model.ReturnOrder.ReturnOrderId">
+                        Export Excel
+                        <i class="bi bi-download"></i>
+                    </a>
                 </div>
             </div>
         </form>
@@ -64,7 +62,7 @@
                             <label>Số tiền cần trả khách</label>
                             <input name="payCustomer" type="text" readonly value="@Model.ReturnOrder.PayCustomer" />
                             <label>Số tiền đã trả khách</label>
-                            <input name="paidCustomer" type="number" min="0" value="@Model.ReturnOrder.PaidCustomer" required/>
+                            <input name="paidCustomer" type="number" min="0" value="@Model.ReturnOrder.PaidCustomer" required />
                             <label>Trạng thái</label>
                             <label class="row">
                                 <input name="state" type="checkbox" class="col-1" style="width:20%" value="true" @(Model.ReturnOrder.State == true ? "checked":"") /> <div class="w-75 col-5">Đã hoàn thành</div>
@@ -76,8 +74,8 @@
                         </div>
                     </div>
                     <div style="margin-top:20px">
-                    <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
-                    <a class="btn btn-primary" asp-page="./Index"> Quay lại</a>
+                        <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
+                        <a class="btn btn-primary" asp-page="./Index"> Quay lại</a>
                     </div>
                 </form>
             </div>

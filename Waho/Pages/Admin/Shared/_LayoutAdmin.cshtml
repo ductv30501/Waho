@@ -102,7 +102,7 @@
                                 </li>
 
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                    <a class="dropdown-item d-flex align-items-center" asp-page="/UserProfile/UserProfile" asp-route-userName="@employee.UserName">
                                         <i class="bi bi-person"></i>
                                         <span>My Profile</span>
                                     </a>
@@ -138,8 +138,8 @@
                                     </a>
                                 </li>
 
-                            </ul><!-- End Profile Dropdown Items -->
-                        </li><!-- End Profile Nav -->
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -16,15 +16,15 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Waho.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link href="~/css/styles.css" rel="stylesheet" />
     <link href="~/css/modal.css" rel="stylesheet" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Cashier/Index">
+                <a class="navbar-brand" asp-area="" asp-page="/WarehouseStaff/Index">
                     <div class="d-flex">
                         <h2 class="mx-auto d-flex align-items-center">
                             <img src="~/img/wahologo.png" width="50px" height="50px" />Wa<span class="primary-color">Ho</span>
@@ -52,25 +52,48 @@
                             </li>
                             <h6 class="d-flex align-self-center m-0 vertical">|</h6>
                             <li class="nav-item m-1">
-                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/Products/Index"><p><i class="bi bi-box-seam-fill"></i> Sản phẩm</p></a>
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/Products/Index"><p><i class="bi bi-box-seam-fill"></i> Sản Phẩm</p></a>
                             </li>
                             <h6 class="d-flex align-self-center m-0 vertical">|</h6>
                             <li class="nav-item m-1">
                                 <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/InventorySheetManager/Index"><p><i class="bi bi-box2-fill"></i> Kiểm Kho</p></a>
                             </li>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
+                            </li>
                             <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Orders/Index"><p><i class="bi bi-truck"></i> Vận Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/ReturnOrders/Index"><p><i class="bi bi-receipt"></i> Hoàn Đơn</p></a>
+                            </li>
                         }
-                        <li class="nav-item m-1">
-                            <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
-                        </li>
-                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
-                        <li class="nav-item m-1">
-                            <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Orders/Index"><p><i class="bi bi-truck"></i> Vận Đơn</p></a>
-                        </li>
-                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
-                        <li class="nav-item m-1">
-                            <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/ReturnOrders/Index"><p><i class="bi bi-receipt"></i> Hoàn Đơn</p></a>
-                        </li>
+                        @if (employee.Role == 3)
+                        {
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/Products/Index"><p><i class="bi bi-box-seam-fill"></i> Sản Phẩm</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/InventorySheetManager/Index"><p><i class="bi bi-box2-fill"></i> Kiểm Kho</p></a>
+                            </li>
+                        }
+                        @if (employee.Role == 2)
+                        {
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Orders/Index"><p><i class="bi bi-truck"></i> Vận Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/ReturnOrders/Index"><p><i class="bi bi-receipt"></i> Hoàn Đơn</p></a>
+                            </li>
+                        }
                     </ul>
                     <ul class="menuUser">
                         <li>
