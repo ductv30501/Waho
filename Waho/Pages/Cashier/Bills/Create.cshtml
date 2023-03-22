@@ -98,6 +98,7 @@
                             </div>
                         </div>
                         <div class="form-group text-center mt-4">
+                            <a asp-page="Index"><button class="btn btn-outline-primary me-2" type="button">Trở lại</button></a>
                             <input type="submit" value="Tạo hoá đơn" class="btn btn-primary" />
                         </div>
                     </form>
@@ -107,7 +108,7 @@
     </div>
     
     <div>
-        <a asp-page="Index">Back to List</a>
+        
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
@@ -202,6 +203,7 @@
                             <td>
                                 ${dataItem.customerName}
                                 <input class="form-control" value="${dataItem.customerName}" name="customerName" hidden readonly />
+                                <input class="form-control" value="${dataItem.customerId}" name="customerId" hidden readonly />
                             </td>
                             <td>
                                 ${dataItem.phone}
@@ -223,14 +225,11 @@
 
         function deleteBillDetail(id) {
 
-            // Lấy dữ liệu từ localStorage và chuyển sang mảng
-            //var billDetails = JSON.parse(localStorage.getItem('billDetails')) || [];
 
             // xoá đối tượng data vào mảng
             billDetails = billDetails.filter(function (item) {
                 return item.productId != id;
             });
-
 
             // Tìm thẻ cần xoá của bảng
             var item = $('#bill-details-table tbody #bd-' + id);
@@ -241,20 +240,19 @@
                 $('#bill-details-table').css('display', 'none');
                 $('#bill-details-default').css('display', 'flex');
             }
-
-            // Chuyển mảng sang chuỗi JSON và lưu vào localStorage
-            //localStorage.setItem('billDetails', JSON.stringify(billDetails));
         }
 
         function fillCustomerInfo(id){
             // lấy thông tin khách hàng 
             var customerName = $('#c-' + id + ' input[name=customerName]').val();
             var phone = $('#c-' + id + ' input[name=phone]').val();
+            var customerId = $('#c-' + id + ' input[name=customerId]').val();
 
             $('#customer-result').html("")
             $('#search-input-customer').val("");
 
             $('#bill-info input[name=customerName]').val(customerName);
+            $('#bill-info input[name=customerId]').val(customerId);
             $('#bill-info input[name=phone]').val(phone);
             
         }
@@ -271,12 +269,8 @@
             $('#search-input-product').val("");
 
             var data = {
-                productId: productId,
+                productId: parseInt(productId),
             }
-
-            // Lấy dữ liệu từ localStorage và chuyển sang mảng
-            //var billDetails = JSON.parse(localStorage.getItem('billDetails')) || [];
-
 
 
             // Thêm đối tượng data vào mảng
@@ -292,8 +286,8 @@
             var newRow = $('<tr class="text-center" id="bd-' + productId + '">' +
                 '<td>' + productId + '</td>' +
                 '<td>' + productName + '</td>' +
-                '<td class="col-2"><input class="form-control input-table" name="quantity" type="number" oninput="updateArr(' + productId + ',' + unitPrice + ',' + quantity + ')"/></td>' +
-                '<td class="col-2"><input class="form-control input-table" name="discount" type="number" oninput="updateArr(' + productId + ',' + unitPrice + ',' + quantity + ')"/></td>' +
+                '<td class="col-2"><input class="form-control input-table" name="quantity" type="number" oninput="updateArr(' + productId + ',' + unitPrice + ')"/></td>' +
+                '<td class="col-2"><input class="form-control input-table" name="discount" type="number" oninput="updateArr(' + productId + ',' + unitPrice + ')"/></td>' +
                 '<td>' + unitPrice + '</td>' +
                 '<td>' + quantity + '</td>' +
                 '<td><a onclick="deleteBillDetail(' + "'" + productId + "'" + ')">' +
@@ -306,30 +300,38 @@
             $('#bill-details-table').css('display', 'block');
             $('#bill-details-default').css('display', 'none');
 
-            // Chuyển mảng sang chuỗi JSON và lưu vào localStorage
-            //localStorage.setItem('billDetails', JSON.stringify(billDetails));
 
         };
 
         function updateArr(id, unitPrice) {
             clearTimeout(delayTimer);
+            let billDetail = billDetails.find(p => p.productId == id);
+            if (billDetail) {
+                billDetail.quantity = parseInt($('#bd-' + id + ' input[name="quantity"]').val()) || 0;
+                billDetail.discount = parseFloat($('#bd-' + id + ' input[name="discount"]').val()) / 100 || 0;
+                billDetail.unitPrice = parseInt(unitPrice) || 0;
+            }
+            console.log(billDetails)
             delayTimer = setTimeout(function () {
-                let billDetail = billDetails.find(p => p.productId == id);
-                if (billDetail) {
-                    billDetail.quantity = parseInt($('#bd-' + id + ' input[name="quantity"]').val())||0;
-                    billDetail.discount = parseFloat($('#bd-' + id + ' input[name="discount"]').val()) / 100||0;
-                    billDetail.unitPrice = parseInt(unitPrice)||0;
-                }
-
-                $('#bill-info input[name=listBillDetail]').val(JSON.stringify(billDetails));
+                
 
                 // Tính tổng số tiền của tất cả sản phẩm, sau khi đã áp dụng giảm giá
+                
                 const total = billDetails.reduce((sum, billDetail) => {
-                    const price = billDetail.unitPrice * billDetail.quantity * (1 - billDetail.discount);
+                    const price = billDetail.unitPrice * billDetail.quantity * (1 - billDetail.discount)||0;
                     return sum + price;
                 }, 0);
 
+                billDetails = billDetails.map(function (billDetail) {
+                    delete billDetail.unitPrice;
+                    return billDetail;
+                });
+
+                $('#bill-info input[name=listBillDetail]').val(JSON.stringify(billDetails));
+                console.log("list",$('#bill-info input[name=listBillDetail]').val())
+
                 $('#total').html(total.toFixed(2))
+                console.log(total.toFixed(2))
                 $('#bill-info input[name=total]').val(total.toFixed(2));
             }, 500)
         }

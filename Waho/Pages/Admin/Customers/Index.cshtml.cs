@@ -14,18 +14,12 @@ namespace Waho.Pages.Admin.Customers
     {
         private readonly Waho.WahoModels.WahoContext _context;
         private readonly DataServiceManager _dataService;
-
-        public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService)
-        {
-            _context = context;
-            _dataService = dataService;
-        }
-        
         private readonly Author _author;
-        public IndexModel(Waho.WahoModels.WahoContext context, Author author)
+        public IndexModel(Waho.WahoModels.WahoContext context, Author author, DataServiceManager dataService)
         {
             _context = context;
             _author = author;
+            _dataService = dataService;
         }
 
         [BindProperty(SupportsGet = true)]

@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Waho.DataService;
 using Waho.WahoModels;
+using System.Diagnostics;
+using Newtonsoft.Json;
+
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Waho.Pages.Cashier.Bills
 {
@@ -43,6 +46,8 @@ namespace Waho.Pages.Cashier.Bills
 
         [BindProperty]
         public Bill Bill { get; set; }
+
+        private Employee employee { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -89,27 +94,42 @@ namespace Waho.Pages.Cashier.Bills
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
 
             string customerId = HttpContext.Request.Form["customerId"];
+            string total = HttpContext.Request.Form["total"];
+            string listBillDetail = HttpContext.Request.Form["listBillDetail"];
+            List<BillDetail> billDetails = JsonConvert.DeserializeObject<List<BillDetail>>(listBillDetail);
 
-            // Lấy giá trị từ session
-            //string employeeJson = HttpContext.Session.GetString("Employee");
+            var employeeJson = HttpContext.Session.GetString("Employee");
 
-            //// Chuyển đổi chuỗi JSON thành đối tượng Employee
-            //    Employee employee = JsonSerializer.Deserialize<Employee>(employeeJson);
-
-            //// Sử dụng giá trị đối tượng Employee
-            //if (employee != null)
-            //{
-            //    // ...
-            //}
+            if (employeeJson != null)
+            {
+                employee = JsonSerializer.Deserialize<Employee>(employeeJson);
+                
+            }
+            Bill.UserName = employee.UserName;
+            Bill.CustomerId = int.Parse(customerId);
+            Bill.Date = DateTime.Now;
+            Bill.Active = true;
+            Bill.BillStatus = "pending";
+            Bill.Total = decimal.Parse(total);
 
             _context.Bills.Add(Bill);
-            await _context.SaveChangesAsync();
+            int result = _context.SaveChanges();
+            if (result != 0)
+            {
+                foreach (var billDetail in billDetails)
+                {
+                    // Thiết lập giá trị BillId cho bản ghi BillDetail
+                    billDetail.BillId = Bill.BillId;
+                }
+
+                // Thêm bản ghi BillDetail vào context
+                _context.BillDetails.AddRange(billDetails);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Tạo hoá đơn thành công!";
+            }
+
 
             return RedirectToPage("./Index");
         }
