@@ -83,8 +83,7 @@ namespace Waho.Pages.Cashier.Bills
             var raw_filterForTotalCount = _context.Bills
                              .Include(b => b.Customer)
                              .Where(b => (b.BillId.ToString().Contains(textSearch)
-                                 || b.Customer.CustomerName.Contains(textSearch)))
-                             .Where(b => b.Active == true);
+                                 || b.Customer.CustomerName.Contains(textSearch)));
 
             if (active != "all")
             {

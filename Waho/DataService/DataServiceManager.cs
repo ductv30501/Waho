@@ -112,7 +112,7 @@ namespace Waho.DataService
 
             if (!string.IsNullOrEmpty(textSearch))
             {
-                query = query.Include(b => b.Customer).Where(b => b.BillId.ToString().Contains(textSearch)
+                query = query.Where(b => b.BillId.ToString().Contains(textSearch)
                                 || b.Customer.CustomerName.Contains(textSearch));
             }
 
@@ -131,7 +131,7 @@ namespace Waho.DataService
                 query = query.Where(b => (b.Date >= DateTime.Parse(dateFrom) && b.Date <= DateTime.Parse(dateTo)));
             }
 
-            bills = query
+            bills = query.Include(b => b.Customer)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
