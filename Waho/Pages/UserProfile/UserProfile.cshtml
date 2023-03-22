@@ -1,0 +1,116 @@
+﻿@page
+@model Waho.Pages.UserProfile.UserProfileModel
+@{
+}
+<body style="background: #f2f2f2">
+    <h3 class="me-4" style="margin-bottom:50px;">Thông tin cá nhân</h3>
+
+    <div class="d-flex">
+        <div class="col-4 me-4">
+            <div class="card">
+                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                    <img src="~/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                    @*<h2>@Model.employee.EmployeeName</h2>*@
+                    <h2>Chi Tùng Nguyễn</h2>
+                    <h3>Admin</h3>
+                    @*@if (Model.employee.Role == 1)
+                    {
+                    <h3>Admin</h3>
+                    }
+                    @if (Model.employee.Role == 2)
+                    {
+                    <h3>Thu Ngân</h3>
+                    }
+                    @if (Model.employee.Role == 3)
+                    {
+                    <h3>Nhân Viên Kho</h3>
+                    }*@
+                    <div class="social-links mt-2">
+                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 me-4 d-flex">
+            <div class="card col-8">
+                <div class="card-body pt-3">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active profile-overview p-3" id="profile-overview">
+                            <h5 class="card-title">Slogan</h5>
+                            <p class="fst-italic">
+                                Lao động và cống hiến là niềm vui
+                            </p>
+                            <hr />
+                            <h5 class="card-title">Thông tin</h5>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label ">Họ Tên</div>
+                                <div class="col-lg-9 col-md-8">Kevin Anderson</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Chức vụ</div>
+                                <div class="col-lg-9 col-md-8">Web Designer</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Phone</div>
+                                <div class="col-lg-9 col-md-8">(436) 486-3538 x29071</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Email</div>
+                                <div class="col-lg-9 col-md-8">Lueilwitz, Wisoky and Leuschke</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Địa chỉ</div>
+                                <div class="col-lg-9 col-md-8">USA</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Ngày sinh</div>
+                                <div class="col-lg-9 col-md-8">A108 Adam Street, New York, NY 535022</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Công ty</div>
+                                <div class="col-lg-9 col-md-8">k.anderson@example.com</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card col-4">
+                <div class="card-body pt-3">
+                    <div class="tab-content d-flex align-items-center">
+                        <div class="mx-auto">
+                            <h2 class="mx-auto d-flex align-items-center">
+                                <img src="~/img/wahologo.png" width="50px" height="50px" />Wa<span class="primary-color">Ho</span>
+                            </h2>
+                            <h5>
+                                Cam kết thành công, cùng chung trách nhiệm
+                            </h5>
+                            <div style="margin-left:20px">
+                                Cung cấp giải pháp công nghệ 
+                            </div>
+                            <div>
+                                nhằm giúp các doanh nghiệp vừa, nhỏ và siêu nhỏ kinh doanh dễ dàng và hiệu quả hơn.
+                            </div>
+                            <div style="margin-left:20px">
+                                Khách hàng là trung tâm, 
+                            </div>
+                            <div>
+                                đặt nhu cầu và kỳ vọng của khách hàng là kim chỉ nam cho mọi hành động.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
