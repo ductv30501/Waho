@@ -12,35 +12,26 @@
     <title>@ViewData["Title"] - Waho - Hoá đơn</title>
 </head>
 <body class="bg-waho-white">
+    <div class="modal-confirmation" id="modal-confirmation">
+    </div>
     <div class="mt-4 position-relative bodydiv">
         <form id="billListForm" method="get" asp-page="./Index" style="margin-bottom: 20px;">
             <div class="d-flex">
                 <h3 class="col-2 me-4">Hoá đơn</h3>
-                <div class="form-group flex-grow-1 me-4">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" asp-for="textSearch" id="search-input-bill" placeholder="Nhập mã hoá đơn, tên khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                        <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label>
+                <div class="d-flex col-10 justify-content-between">
+                    <div class="form-group col-6 me-4">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" asp-for="textSearch" id="search-input-bill" placeholder="Nhập mã hoá đơn, tên khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label>
+                        </div>
+                    </div>
+                    <div class="form-group me-4">
+                        <a class="btn btn-primary" asp-page="./create">
+                            <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm hoá đơn
+                        </a>
                     </div>
                 </div>
-                <div class="form-group me-4">
-                    <a class="btn btn-primary" asp-page="./create">
-                        <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm hoá đơn
-                    </a>
-                </div>
-                <div class="form-group me-4">
-                    <button class="btn btn-primary" type="button" onclick="modal('upload-products-modal', 3, 'scale(1)');">
-                        <i class="bi bi-upload"></i> Tải lên Excel
-                    </button>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary" type="submit">
-                        <a style="text-decoration: none; color: white" asp-page="./ExportProducts">
-                            <i class="bi bi-download"></i> Tải xuống Excel
-                        </a>
-                    </button>
-                </div>
             </div>
-
             @*end filter*@
 
             @if (TempData["ErrorMessage"] != null)
@@ -73,6 +64,7 @@
                                 <hr />
                             </div>
                             <div class="form-group">
+                                <span id="dateValid" class="text-danger"></span>
                                 <label class="control-label">Từ</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-minus-fill"></i></span>
@@ -105,21 +97,9 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='pending'" name="status" type="radio" value="pending">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Đang xử lý
-                                </label>
-                            </div>
-                            <div class="form-check">
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='done'" name="status" type="radio" value="done">
                                 <label class="form-check-label" for="flexCheckDefault">
-                                    Hoàn thành
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='unDeliver'" name="status" type="radio" value="unDeliver">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Không giao được
+                                    Đã thanh toán
                                 </label>
                             </div>
                             <div class="form-check">
@@ -145,13 +125,13 @@
                             <div class="form-check">
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.active" asp-checked="@Model.active=='true'" type="radio" value="true">
                                 <label class="form-check-label" for="CheckDefault">
-                                    Kích hoạt
+                                    Chưa xoá
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.active" asp-checked="@Model.active=='false'" type="radio" value="false">
                                 <label class="form-check-label" for="CheckDefault">
-                                    Vô hiệu hoá
+                                    Đã xoá
                                 </label>
                             </div>
                         </div>
@@ -198,22 +178,10 @@
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.Customer.CustomerName)
                                         </td>
-                                        @if (item.BillStatus == "pending")
+                                        @if (item.BillStatus == "done")
                                         {
                                             <td class="tbImportPrice">
-                                                Đang xử lý
-                                            </td>
-                                        }
-                                        else if (item.BillStatus == "done")
-                                        {
-                                            <td class="tbImportPrice">
-                                                Đã xong
-                                            </td>
-                                        }
-                                        else if (item.BillStatus == "unDeliver")
-                                        {
-                                            <td class="tbImportPrice">
-                                                Không giao được
+                                                Đã thanh toán
                                             </td>
                                         }
                                         else
@@ -225,13 +193,13 @@
                                         @if (item.Active == true)
                                         {
                                             <td class="tbImportPrice">
-                                                Hiện
+                                                Chưa xoá
                                             </td>
                                         }
                                         else
                                         {
                                             <td class="tbImportPrice">
-                                                Ẩn
+                                                Đã xoá
                                             </td>
                                         }
                                         <td class="d-flex align-items-center justify-content-between">
@@ -239,7 +207,7 @@
                                                 <i class="bi bi-pencil-square icon-table icon-edit"></i>
                                             </a>
                                             <h6 class="m-0 vertical">|</h6>
-                                            <a onclick="deleteCustomer(@(item.BillId))">
+                                            <a onclick="deleteBill('@item.BillId','@item.Customer.CustomerName','@item.Customer.Phone')">
                                                 <i class="bi bi-trash3-fill icon-table icon-delete"></i>
                                             </a>
                                         </td>
@@ -252,15 +220,15 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Trước</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Trước</a></li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
-                                        <li class="page-item @(Model.pageIndex == i ? "active" : "")"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">@i</a></li>
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">@i</a></li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Sau</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Sau</a></li>
                                     }
                                 </ul>
                             </div>
@@ -275,6 +243,7 @@
                 }
             </div>
         </form>
+        
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
@@ -317,19 +286,13 @@
 
             // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
             if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
-                $(".bodydiv").append($(`<div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
-                    <div class= "alert alert-danger text-center"><h5>Chưa nhập đủ ngày bắt đầu! </h5></div>
-                </div>`))
+                $("#dateValid").html(`Chưa nhập đủ ngày bắt đầu!`)
 
-            }else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
-                $(".bodydiv").append($(`<div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
-                    <div class= "alert alert-danger text-center"><h5>Chưa nhập đủ ngày kết thúc!</h5></div>
-                </div>`))
+            } else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
+                $("#dateValid").html(`Chưa nhập đủ ngày kết thúc!`)
             }
             else if (Date.parse(dateFrom) > Date.parse(dateTo)) {
-                $(".bodydiv").append($(`<div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
-                    <div class= "alert alert-danger text-center"><h5>Ngày bắt đầu lớn hơn ngày kết thúc!</h5></div>
-                </div>`))
+                $("#dateValid").html(`Ngày bắt đầu lớn hơn ngày kết thúc!`)
             }
             else {
                 $('#billListForm').submit()
@@ -340,6 +303,48 @@
             $('#dateFrom').val("");
             $('#dateTo').val("");
             $('#billListForm').submit()
+        }
+
+        function deleteBill(id, name, phone) {
+            renderConfirmationModal(id, name, phone)
+            $('#modal-confirmation').css('display', 'flex')
+        }
+
+        function renderConfirmationModal(id, name, phone) {
+            $('#modal-confirmation').html(`
+                    <div class="modal-dialog ">
+                        <div class="modal-content modal-content-confirmation">
+                            <div class=" modal-header p-1">
+                                <h6 class="modal-title ms-3">
+                                    <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                                    Xác nhận muốn xoá hoá đơn này?
+                                </h6>
+                                <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                                    <i class="bi bi-x-lg"></i>
+                                </h5>
+                            </div>
+                            <div class="modal-body">
+                                <h6>Thông tin hoá đơn:</h6>
+                                <p>Mã hoá đơn: ${id}</p>
+                                <p>Tên khách hàng: ${name}</p>
+                                <p>Số điện thoại: ${phone}</p>
+                            </div>
+                            <div class="modal-footer p-1">
+                                <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                                <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                                    data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>`)
+        }
+
+        function handleDelete(id) {
+            closeModalConfirmation()
+            window.location.href = "Bills/Delete?id=" + id;
+        }
+
+        function closeModalConfirmation() {
+            $('#modal-confirmation').css('display', 'none')
         }
 
     </script>

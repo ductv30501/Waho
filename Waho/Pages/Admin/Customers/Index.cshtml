@@ -12,6 +12,7 @@
     <link href="~/css/modal.css" rel="stylesheet" />
 </head>
 <body class="bg-waho-white">
+    <div class="modal-confirmation" id="modal-confirmation"></div>
     @*insert model*@
     <div class="modal">
         <div id="insert-modal">
@@ -209,7 +210,7 @@
                     </div>
                     <div class="form-group me-4">
                         <a class="btn btn-primary" onclick="modal('insert-modal', 0, 'scale(1)');">
-                            <i class="bi bi-person-plus-fill" asp-page="Create"></i> Thêm khách hàng
+                            <i class="bi bi-person-plus-fill"></i> Thêm khách hàng
                         </a>
                     </div>
                 </div>
@@ -246,6 +247,7 @@
                                 <hr />
                             </div>
                             <div class="form-group">
+                                <span id="dateValid" class="text-danger"></span>
                                 <label class="control-label">Từ</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-minus-fill"></i></span>
@@ -325,6 +327,9 @@
                             <thead>
                                 <tr>
                                     <th class="tbProductName">
+                                        Mã khách hàng
+                                    </th>
+                                    <th class="tbProductName">
                                         Tên khách hàng
                                     </th>
                                     <th class="tbImportPrice">
@@ -352,6 +357,9 @@
                                 @foreach (var item in Model.Customers)
                                 {
                                     <tr>
+                                        <td class="tbProductName">
+                                            @Html.DisplayFor(modelItem => item.CustomerId)
+                                        </td>
                                         <td class="tbProductName">
                                             @Html.DisplayFor(modelItem => item.CustomerName)
                                         </td>
@@ -400,7 +408,7 @@
                                                 <i class="bi bi-pencil-square icon-table icon-edit"></i>
                                             </a>
                                             <h6 class="m-0 vertical">|</h6>
-                                            <a onclick="deleteCustomer(@(item.CustomerId))">
+                                            <a onclick="deleteCustomer('@item.CustomerId','@item.CustomerName','@item.Phone','@item.Email','@item.TaxCode')">
                                                 <i class="bi bi-trash3-fill icon-table icon-delete"></i>
                                             </a>
                                         </td>
@@ -413,15 +421,15 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-typeCustomer="@Model.typeCustomer" asp-route-status="@Model.status">Trước</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-typeCustomer="@Model.typeCustomer" asp-route-status="@Model.status">Trước</a></li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
-                                        <li class="page-item @(Model.pageIndex == i ? "active" : "")"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-typeCustomer="@Model.typeCustomer" asp-route-status="@Model.status">@i</a></li>
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-typeCustomer="@Model.typeCustomer" asp-route-status="@Model.status">@i</a></li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
-                                        <li class="page-item"><a class="page-link" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-typeCustomer="@Model.typeCustomer" asp-route-status="@Model.status">Sau</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-typeCustomer="@Model.typeCustomer" asp-route-status="@Model.status">Sau</a></li>
                                     }
                                 </ul>
                             </div>
@@ -436,8 +444,6 @@
                 }
             </div>
         </form>
-        <div class="toast-container">
-        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
@@ -454,7 +460,7 @@
                 $("#error-alert").fadeOut("slow", function () {
                     $(this).remove();
                 });
-            }, 5000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+            }, 3000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
 
             $('#input-search-customer').keypress(function (event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -543,10 +549,48 @@
             return [year, month, day].join('-');
         }
 
-        function deleteCustomer(id) {
-            if (confirm("Bạn có chắc chắn muốn vô hiệu hoá khách hàng này không?")) {
-                window.location.href = "Customers/Delete?id=" + id;
-            }
+        function deleteCustomer(id, name, phone, email, taxcode) {
+            renderConfirmationModal(id,name,phone,email,taxcode)
+            $('#modal-confirmation').css('display', 'flex')
+        }
+
+        function renderConfirmationModal(id, name, phone, email, taxcode) {
+            $('#modal-confirmation').html(`
+            <div class="modal-dialog ">
+                <div class="modal-content modal-content-confirmation">
+                    <div class=" modal-header p-1">
+                        <h6 class="modal-title ms-3">
+                            <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                            Xác nhận muốn xoá?
+                        </h6>
+                         <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                             <i class="bi bi-x-lg"></i>
+                         </h5>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Thông tin khách hàng:</h6>
+                        <p>Mã khách hàng: ${id}</p>
+                        <p>Tên khách hàng: ${name}</p>
+                        <p>Số điện thoại: ${phone}</p>
+                        <p>Email: ${email}</p>
+                        <p>Mã thuế: ${taxcode}</p>
+                    </div>
+                    <div class="modal-footer p-1">
+                        <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                        <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                            data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>`)
+        }
+
+        function handleDelete(id) {
+            closeModalConfirmation()
+            window.location.href = "Customers/Delete?id=" + id;
+        }
+
+        function closeModalConfirmation() {
+            $('#modal-confirmation').css('display', 'none')
         }
 
     </script>

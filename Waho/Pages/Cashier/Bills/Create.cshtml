@@ -13,7 +13,7 @@
     <title>@ViewData["Title"] - Waho - Hoá đơn</title>
 </head>
 <body class="bg-waho-white">
-    <div class="mt-4">
+    <div class="mt-4 position-relative divBody">
         <h3>Tạo hoá đơn</h3>
         <div class="d-flex">
             <div class="form-container flex-grow-1 me-4">
@@ -27,7 +27,7 @@
                         </ul>
                     </div>
                     <hr />
-                    <div style="overflow:auto;">
+                    <div class="scroll-table">
                         <table class="table table-striped table-hover" id="bill-details-table" style="display:none; max-height:300px">
                             <thead>
                                 <tr class="text-center">
@@ -55,7 +55,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
                             </tbody>
                         </table>
                     </div>
@@ -66,26 +65,117 @@
             </div>
             <div class="form-container col-4">
                 <div class="p-4">
-                    <form method="post">
+                    <form method="post" id="billForm">
+
+                        @*insert model*@
+                        <div class="modal">
+                            <div id="insert-modal">
+                                <div class="row form-container py-4 mb-3">
+                                    <div class="m-auto">
+                                        <div>
+                                            <h4>Thông tin khách hàng</h4>
+                                            <hr />
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label class="control-label">Tên khách hàng</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-tags-fill"></i></span>
+                                                    <input class="form-control" id="customer-name" asp-for="Customer.CustomerName" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label class="control-label">Số điện thoại</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-telephone-fill"></i></span>
+                                                    <input type="number" class="form-control" id="customer-phone" asp-for="Customer.Phone" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label class="control-label">Ngày sinh</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-fill"></i></span>
+                                                    <input type="date" class="form-control" id="customer-dob" asp-for="Customer.Dob" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label class="control-label">Email</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-envelope-at-fill"></i></span>
+                                                    <input type="email" class="form-control" id="customer-email" asp-for="Customer.Email" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-6">
+                                                <label class="control-label">Phân loại</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-person-badge-fill"></i></span>
+                                                    <select id="option-primary" class="form-select" asp-for="Customer.TypeOfCustomer">
+                                                        <option value="-1" class="text-center"> ----- Chọn loại khách hàng -----</option>
+                                                        <option value="false">Cá nhân</option>
+                                                        <option value="true"> Công ty</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label class="control-label">Mã thuế</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-upc-scan"></i></span>
+                                                    <input type="text" class="form-control" asp-for="Customer.TaxCode">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Địa chỉ</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-building-fill"></i></span>
+                                                <input type="text" class="form-control" asp-for="Customer.Adress">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Ghi chú</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-card-text"></i></span>
+                                                <textarea type="text" class="form-control" asp-for="Customer.Description"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button id="btnSubmit" class="btn btn-primary me-2" type="button" onclick="fillBillCustomerInfo()">Tạo</button>
+                                            <button class="btn btn-outline-primary" type="button" onclick="modal('insert-modal', 0, 'scale(0)')">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*end insert model*@
+
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group position-relative">
                             <div class="input-group mb-3">
-                                <input id ="search-input-customer" type="text" class="form-control" placeholder="Tìm khách hàng(nhập tên, sđt)" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label> 
+                                <input id="search-input-customer" type="text" class="form-control" placeholder="Tìm khách hàng(nhập tên, sđt)" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label>
                             </div>
                             <ul class="result-search-input" id="customer-result">
                             </ul>
                         </div>
                         <hr />
                         <div id="bill-info">
+                            <div class="form-group mb-4">
+                                <a class="btn btn-primary" onclick="modal('insert-modal', 0, 'scale(1)');">
+                                    <i class="bi bi-person-plus-fill"></i> Thêm khách hàng
+                                </a>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label">Tên khách hàng</label>
-                                <input class="form-control" name="customerName" readonly />
-                                <input class="form-control" name="customerId" hidden />
+                                <input id="bill-customer-name" class="form-control" name="customerName" readonly />
+                                <input id="bill-customer-customerId" class="form-control" name="customerId" hidden />
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Số điện thoại</label>
-                                <input class="form-control" name="phone" readonly />
+                                <input id="bill-customer-phone" class="form-control" name="phone" readonly />
                             </div>
                             <input class="form-control" name="listBillDetail" hidden />
                             <input class="form-control" name="total" hidden />
@@ -99,21 +189,46 @@
                         </div>
                         <div class="form-group text-center mt-4">
                             <a asp-page="Index" class="btn btn-outline-primary me-2">Trở lại</a>
-                            <input type="submit" value="Tạo hoá đơn" class="btn btn-primary" />
+                            <input type="button" onclick="validateBill()" value="Tạo hoá đơn" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div>
-        
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
+
+        $(() => {
+            setTimeout(function () {
+                $("#success-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+                $("#error-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 3000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+        })
+
         var delayTimer;
         var billDetails = [];
+
+        function validateBill() {
+            if (!billDetails.length > 0) {
+                $(".divBody").append(`<div id="error-alert" class= "d-flex justify-content-end position-absolute toast-message" >
+                                    <div class="alert alert-danger text-center" > <h5>Vui lòng thêm sản phẩm!</h5></div >
+                                </div>`);
+            } else if (!$("#bill-customer-customerId").val()) {
+                $(".divBody").append(`<div id="error-alert" class= "d-flex justify-content-end position-absolute toast-message" >
+                                    <div class="alert alert-danger text-center" > <h5>Vui lòng thêm sản phẩm!</h5></div >
+                                </div>`);
+            } else {
+                $("#billForm").submit();
+            }
+        }
 
         $('#search-input-product').on('input', function () {
             clearTimeout(delayTimer);
@@ -126,46 +241,50 @@
                     success: function (data) {
                         // Xử lý dữ liệu trả về từ server
                         let product = "";
-                        if (data) {
+                        if (data && data.length > 0) {
                             data.map((dataItem) => {
                                 product += `<li class="result-search-items" id="pd-${dataItem.productId}" onclick="addBillDetail('${dataItem.productId}');">
-                    <table class="col-12">
-                        <tr>
-                            <th class="col-3">
-                                Mã sản phẩm
-                            </th>
-                            <th class="col-3">
-                                Tên sản phẩm
-                            </th>
-                            <th class="col-3">
-                                Đơn giá
-                            </th>
-                            <th class="col-3">
-                                Tồn kho
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                ${dataItem.productId}
-                                <input class="form-control" value="${dataItem.productId}" name="productId" hidden readonly />
-                            </td>
-                            <td>
-                                ${dataItem.productName}
-                                <input class="form-control" value="${dataItem.productName}" name="productName" hidden readonly />
-                            </td>
-                            <td>
-                                ${dataItem.unitPrice}
-                                <input class="form-control" value="${dataItem.unitPrice}" name="unitPrice" hidden readonly />
-                            </td>
-                            <td>
-                                ${dataItem.quantity}
-                                <input class="form-control" value="${dataItem.quantity}" name="quantity" hidden readonly />
-                            </td>
+                                    <table class="col-12">
+                                        <tr>
+                                            <th class="col-3">
+                                                Mã sản phẩm
+                                            </th>
+                                            <th class="col-3">
+                                                Tên sản phẩm
+                                            </th>
+                                            <th class="col-3">
+                                                Đơn giá
+                                            </th>
+                                            <th class="col-3">
+                                                Tồn kho
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ${dataItem.productId}
+                                                <input class="form-control" value="${dataItem.productId}" name="productId" hidden readonly />
+                                            </td>
+                                            <td>
+                                                ${dataItem.productName}
+                                                <input class="form-control" value="${dataItem.productName}" name="productName" hidden readonly />
+                                            </td>
+                                            <td>
+                                                ${dataItem.unitPrice}
+                                                <input class="form-control" value="${dataItem.unitPrice}" name="unitPrice" hidden readonly />
+                                            </td>
+                                            <td>
+                                                ${dataItem.quantity}
+                                                <input class="form-control" value="${dataItem.quantity}" name="quantity" hidden readonly />
+                                            </td>
 
-                        </tr>
-                    </table>
-                </li>`
+                                        </tr>
+                                    </table>
+                                </li>`
                             });
+                        } else if (searchQuery) {
+                            product = `<li class="result-search-items-noresult text-center">
+                                            <h6>Không tìm thấy sản phẩm nào<h6/>
+                                </li>`
                         }
                         $('#product-result').html(product)
                     },
@@ -175,6 +294,12 @@
                 });
             }, 500); // Thời gian chờ tính bằng mili giây
         });
+
+        function fillBillCustomerInfo() {
+            $("#bill-customer-name").val($("#customer-name").val());
+            $("#bill-customer-phone").val($("#customer-phone").val());
+            modal('insert-modal', 0, 'scale(0)');
+        }
 
         $('#search-input-customer').on('input', function () {
             clearTimeout(delayTimer);
@@ -187,32 +312,36 @@
                     success: function (data) {
                         // Xử lý dữ liệu trả về từ server
                         let customer = "";
-                        if (data) {
+                        if (data && data.length > 0) {
                             data.map((dataItem) => {
                                 customer += `<li class="result-search-items" id="c-${dataItem.customerId}" onclick="fillCustomerInfo('${dataItem.customerId}');">
-                    <table class="col-12">
-                        <tr>
-                            <th class="col-3">
-                                Tên khách hàng
-                            </th>
-                            <th class="col-3">
-                                Số điện thoại
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                ${dataItem.customerName}
-                                <input class="form-control" value="${dataItem.customerName}" name="customerName" hidden readonly />
-                                <input class="form-control" value="${dataItem.customerId}" name="customerId" hidden readonly />
-                            </td>
-                            <td>
-                                ${dataItem.phone}
-                                <input class="form-control" value="${dataItem.phone}" name="phone" hidden readonly />
-                            </td>
-                        </tr>
-                    </table>
-                </li>`
+                                    <table class="col-12">
+                                        <tr>
+                                            <th class="col-3">
+                                                Tên khách hàng
+                                            </th>
+                                            <th class="col-3">
+                                                Số điện thoại
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ${dataItem.customerName}
+                                                <input class="form-control" value="${dataItem.customerName}" name="customerName" hidden readonly />
+                                                <input class="form-control" value="${dataItem.customerId}" name="customerId" hidden readonly />
+                                            </td>
+                                            <td>
+                                                ${dataItem.phone}
+                                                <input class="form-control" value="${dataItem.phone}" name="phone" hidden readonly />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </li>`
                             });
+                        } else if (searchQuery) {
+                            customer = `<li class="result-search-items-noresult text-center">
+                                            <h6>Không tìm thấy khách hàng nào<h6/>
+                                        </li>`
                         }
                         $('#customer-result').html(customer)
                     },
@@ -242,8 +371,8 @@
             }
         }
 
-        function fillCustomerInfo(id){
-            // lấy thông tin khách hàng 
+        function fillCustomerInfo(id) {
+            // lấy thông tin khách hàng
             var customerName = $('#c-' + id + ' input[name=customerName]').val();
             var phone = $('#c-' + id + ' input[name=phone]').val();
             var customerId = $('#c-' + id + ' input[name=customerId]').val();
@@ -254,7 +383,7 @@
             $('#bill-info input[name=customerName]').val(customerName);
             $('#bill-info input[name=customerId]').val(customerId);
             $('#bill-info input[name=phone]').val(phone);
-            
+
         }
 
         function addBillDetail(id) {
@@ -313,12 +442,12 @@
             }
             console.log(billDetails)
             delayTimer = setTimeout(function () {
-                
+
 
                 // Tính tổng số tiền của tất cả sản phẩm, sau khi đã áp dụng giảm giá
-                
+
                 const total = billDetails.reduce((sum, billDetail) => {
-                    const price = billDetail.unitPrice * billDetail.quantity * (1 - billDetail.discount)||0;
+                    const price = billDetail.unitPrice * billDetail.quantity * (1 - billDetail.discount) || 0;
                     return sum + price;
                 }, 0);
 
@@ -328,7 +457,7 @@
                 });
 
                 $('#bill-info input[name=listBillDetail]').val(JSON.stringify(billDetails));
-                console.log("list",$('#bill-info input[name=listBillDetail]').val())
+                console.log("list", $('#bill-info input[name=listBillDetail]').val())
 
                 $('#total').html(total.toFixed(2))
                 console.log(total.toFixed(2))

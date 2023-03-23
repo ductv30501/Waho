@@ -28,10 +28,7 @@ namespace Waho.Pages.Cashier.Bills
         [BindProperty]
         public Bill Bill { get; set; } = default!;
 
-        [BindProperty]
         public List<BillDetail> billDetails { get; set; } = default!;
-
-        private Employee employee { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -43,15 +40,6 @@ namespace Waho.Pages.Cashier.Bills
 
             Bill = await _context.Bills.Include(b => b.UserNameNavigation).Include(b => b.Customer).FirstOrDefaultAsync(m => m.BillId == id);
             billDetails = await _context.BillDetails.Include(bd => bd.Product).Where(bd => bd.BillId == id).ToListAsync();
-            var lbillProducts = await _context.BillDetails.Include(bd => bd.Product).Where(bd => bd.BillId == id).Select(x => new
-            {
-                productId = x.ProductId,
-                quantity = x.Quantity,
-                discount = x.Discount,
-                unitPrice = x.Product.UnitPrice,
-            }).ToListAsync();
-
-            ViewData["billProducts"] = lbillProducts;
 
             return Page();
         }
@@ -60,26 +48,10 @@ namespace Waho.Pages.Cashier.Bills
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            string customerId = HttpContext.Request.Form["customerId"];
-            string billId = HttpContext.Request.Form["billId"];
-            string total = HttpContext.Request.Form["total"];
-            string listBillDetail = HttpContext.Request.Form["listBillDetail"];
-            List<BillDetail> billDetails = JsonConvert.DeserializeObject<List<BillDetail>>(listBillDetail);
-
-            Bill.CustomerId = int.Parse(customerId);
-            Bill.Total = decimal.Parse(total.ToString());
 
             try
             {
                 _context.Attach(Bill).State = EntityState.Modified;
-
-                foreach (var billDetail in billDetails)
-                {
-                    // Thiết lập giá trị BillId cho bản ghi BillDetail
-                    billDetail.BillId = Bill.BillId;
-                    _context.BillDetails.Update(billDetail);
-                }
-
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = "Sửa hoá đơn thành công!";
