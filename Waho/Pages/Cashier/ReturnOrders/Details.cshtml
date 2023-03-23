@@ -37,15 +37,19 @@
     @*end filter*@
     @if (Model.message != null)
     {
-        <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
+        <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+            <div class="alert alert-danger text-center">@Model.message</div>
+        </div>
     }
     @if (Model.successMessage != null)
     {
-        <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
+        <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+            <div class="alert alert-success text-center">@Model.successMessage</div>
+        </div>
     }
     <div class="row">
         <div class="col-lg-2" style="background-color: #fff; border-radius: 10px; padding:10px;margin-right: 10px">
-            <div class="row">
+            <div>
                 <form method="post" asp-page="./Details" id="inventorySheetForm">
                     <div class="wt-widgettitle">
                         <h2>Thông tin hóa đơn hoàn</h2>
@@ -73,9 +77,9 @@
                             <input name="description" asp-for="@(Model.ReturnOrder.Description)" value="@(Model.ReturnOrder.Description)" />
                         </div>
                     </div>
-                    <div style="margin-top:20px">
+                    <div class="form-group text-center mt-4">
+                        <a class="btn btn-outline-primary me-2" asp-page="./Index"> Quay lại</a>
                         <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
-                        <a class="btn btn-primary" asp-page="./Index"> Quay lại</a>
                     </div>
                 </form>
             </div>
@@ -152,4 +156,40 @@
     <script src="https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
+    <scrip>
+        var delayTimer;
+
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+                $("#error-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 3000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+
+            $('#search-input-bill').keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    event.preventDefault();
+                    // Thực hiện các hành động cần thiết khi người dùng nhấn phím Enter
+                }
+            });
+
+            var delayTimer;
+            $('#search-input-bill').on('input', function () {
+                clearTimeout(delayTimer);
+                delayTimer = setTimeout(function () {
+                    $('#billListForm').submit()
+                }, 500); // Thời gian chờ tính bằng mili giây
+            });
+
+        });
+    </scrip>
 </body>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

@@ -148,6 +148,34 @@
         var delayTimer;
         var billDetails = [];
 
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#success-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+                $("#error-alert").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 3000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+
+            $('#search-input-bill').keypress(function (event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    event.preventDefault();
+                    // Thực hiện các hành động cần thiết khi người dùng nhấn phím Enter
+                }
+            });
+
+            var delayTimer;
+            $('#search-input-bill').on('input', function () {
+                clearTimeout(delayTimer);
+                delayTimer = setTimeout(function () {
+                    $('#billListForm').submit()
+                }, 500); // Thời gian chờ tính bằng mili giây
+            });
+
+        });
+
         $('#search-input-product').on('input', function () {
             clearTimeout(delayTimer);
             delayTimer = setTimeout(function () {

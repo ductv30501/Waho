@@ -138,7 +138,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
                 pageIndex = 1;
             }
             message = TempData["message"] as string;
-            successMessage = TempData["successMessage"] as string;
+            successMessage = TempData["SuccessMessage"] as string;
             if (_context.ReturnOrders != null)
             {
                 ReturnOrder = _dataService.getreturnOrderPagingAndFilter(pageIndex, pageSize, textSearch, employeeID,status, raw_dateFrom, raw_dateTo);
