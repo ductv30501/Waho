@@ -35,33 +35,19 @@ namespace Waho.Pages.Cashier.Bills
             {
                 return NotFound();
             }
-
-            var bill = await _context.Bills.FirstOrDefaultAsync(m => m.BillId == id);
-
-            if (bill == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                Bill = bill;
-            }
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.Bills == null)
-            {
-                return NotFound();
-            }
             var bill = await _context.Bills.FindAsync(id);
 
             if (bill != null)
             {
                 Bill = bill;
-                _context.Bills.Remove(Bill);
+                Bill.Active = false;
+                _context.Attach(Bill).State = EntityState.Modified; 
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Xoá thành công hoá đơn!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy hoá đơn!";
             }
 
             return RedirectToPage("./Index");

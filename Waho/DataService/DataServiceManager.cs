@@ -132,6 +132,7 @@ namespace Waho.DataService
             }
 
             bills = query.Include(b => b.Customer)
+                    .Include(b => b.UserNameNavigation)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -279,7 +280,7 @@ namespace Waho.DataService
         }
 
         // paging return orders
-        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName,string status, string raw_dateFrom, string raw_dateTo)
+        public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName, string status, string raw_dateFrom, string raw_dateTo)
         {
             // filter by status and date
             Boolean _status = status == "true" ? true : false;
@@ -301,7 +302,7 @@ namespace Waho.DataService
             {
                 raw_dateTo = "";
             }
-            
+
             List<ReturnOrder> returnOrders = new List<ReturnOrder>();
             var query = _context.ReturnOrders.Include(i => i.UserNameNavigation)
                                                 .Include(i => i.Customer)

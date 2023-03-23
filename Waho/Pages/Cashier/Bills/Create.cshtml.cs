@@ -25,6 +25,9 @@ namespace Waho.Pages.Cashier.Bills
             _author = author;
         }
 
+        [BindProperty]
+        public Customer Customer { get; set; } = default!;
+
         [BindProperty(SupportsGet = true)]
         public int TotalCount { get; set; } = 0;
 
@@ -105,14 +108,29 @@ namespace Waho.Pages.Cashier.Bills
             if (employeeJson != null)
             {
                 employee = JsonSerializer.Deserialize<Employee>(employeeJson);
+            }
+
+            if (!string.IsNullOrEmpty(customerId))
+            {
+                Bill.CustomerId = int.Parse(customerId);
+            }
+            else
+            {
+                _context.Customers.Add(Customer);
+                int resultAddCustomer = _context.SaveChanges();
+                if (resultAddCustomer != 0)
+                {
+                    Bill.CustomerId = Customer.CustomerId;
+                }
                 
             }
+
             Bill.UserName = employee.UserName;
-            Bill.CustomerId = int.Parse(customerId);
             Bill.Date = DateTime.Now;
             Bill.Active = true;
-            Bill.BillStatus = "pending";
+            Bill.BillStatus = "done";
             Bill.Total = decimal.Parse(total);
+
 
             _context.Bills.Add(Bill);
             int result = _context.SaveChanges();

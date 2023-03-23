@@ -36,7 +36,7 @@
     left: 0;
     top: 0;
     display: block;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
     height: 100%;
     width: 100%;
     transform: scale(0);
@@ -44,6 +44,46 @@
     z-index: 99;
     display: flex;
 }
+
+.modal-confirmation {
+    position: fixed;
+    display: none;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    animation: fadeIn linear 0.5s;
+    z-index: 99;
+}
+
+.modal-content {
+    margin: auto;
+    animation: growth linear 0.2s;
+}
+
+    .modal-content.modal-content-confirmation {
+        min-width: 400px;
+        border-left: 5px solid #ffb702;
+        color: #ffb702;
+        top: -20px;
+        animation: slideInBottom linear 0.2s;
+        border-radius: 6px;
+    }
+
+.modal-content-confirmation .modal-content {
+    border: 0;
+}
+
+.modal-confirm-content-title {
+    font-size: 1.4rem;
+}
+
+.modal-body p {
+    color: black;
+    margin: 0;
+}
+
 
 #insert-modal {
     margin: auto;
@@ -191,4 +231,35 @@
     margin-right: 6px;
     margin-top:8px;
     z-index: 10;
+}
+
+@keyframes growth {
+    from {
+        scale: 0;
+    }
+
+    to {
+        scale: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInBottom {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
