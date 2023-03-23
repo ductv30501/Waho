@@ -31,7 +31,7 @@ namespace Waho.DataService
         {
             return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.UserName == userName);
         }
-        public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch)
+        public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch,string title)
         {
             List<Employee> employees = new List<Employee>();
             var query = _context.Employees.Where(s => s.Active == true);
@@ -42,6 +42,10 @@ namespace Waho.DataService
                                     || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
                                     || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
                                     || e.Role.ToString().Contains(textSearch));
+            }
+            if (title != "all")
+            {
+                query = query.Where(e => e.Role == int.Parse(title));
             }
             employees = query.OrderBy(s => s.UserName)
                          .Skip((pageIndex - 1) * pageSize)
@@ -176,7 +180,7 @@ namespace Waho.DataService
         }
 
         // paging product
-        public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize, string textSearch, int subCategoryID, int categoryID)
+        public List<Product> GetProductsPagingAndFilter(int pageIndex, int pageSize, string textSearch, int subCategoryID, int categoryID,string location,int priceFrom, int priceTo,string inventoryLevel)
         {
 
             List<Product> products = new List<Product>();
@@ -194,7 +198,39 @@ namespace Waho.DataService
                                 || p.Supplier.Branch.ToLower().Contains(textSearch.ToLower())
                                 || p.SubCategory.SubCategoryName.ToLower().Contains(textSearch.ToLower()));
             }
-
+            //filter location
+            if (location != "all")
+            {
+                query = query.Where(p => p.Location == location);
+            }
+            //filter price range
+            if (priceTo > 0)
+            {
+                if (priceFrom > 0)
+                {
+                    query = query.Where(p => p.UnitPrice >= priceFrom && p.UnitPrice <= priceTo);
+                }
+                else
+                {
+                    query = query.Where(p => p.UnitPrice <= priceTo);
+                }
+            }
+            if (priceFrom > 0)
+            {
+                query = query.Where(p => p.UnitPrice >= priceFrom);
+            }
+            // filter inventory
+            if (inventoryLevel != "all")
+            {
+                if (inventoryLevel == "min")
+                {
+                    query = query.Where(p => p.Quantity < p.InventoryLevelMin);
+                }
+                else
+                {
+                    query = query.Where(p => p.Quantity > p.InventoryLevelMax);
+                }
+            }
             products = query.Where(p => p.SubCategory.CategoryId == categoryID)
                     .Include(p => p.SubCategory)
                     .ThenInclude(s => s.Category)
