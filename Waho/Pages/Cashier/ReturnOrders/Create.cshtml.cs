@@ -64,10 +64,12 @@ namespace Waho.Pages.Cashier.ReturnOrders
             //validate number of  product
             if (billCategory == 1)
             {
+                //get details in the bill of customer
                 List<BillDetail> _billDetails = _context.BillDetails.Where(b => b.BillId == Int32.Parse(idBill)).ToList();
                 Boolean check = false;
                 foreach (var item in _billDetails)
                 {
+                    // the details return
                     foreach (var itemReturn in billDetails)
                     {
                         if (item.ProductId == itemReturn.ProductId)

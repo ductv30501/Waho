@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
 using Waho.DataService;
@@ -98,6 +99,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            Console.WriteLine("debug");
             InventorySheet _inventorySheetUpdate = new InventorySheet();
             var req = HttpContext.Request;
             //get data form form submit 
@@ -118,6 +120,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             _inventorySheetUpdate.Description = raw_description;
             _inventorySheetUpdate.Active = true;
             _context.Attach(_inventorySheetUpdate).State = EntityState.Modified;
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -140,6 +143,53 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
                     throw;
                 }
 
+            }
+        }
+        public async Task<IActionResult> OnPostUpdateDetail()
+        {
+            var req = HttpContext.Request;
+            //get data form form submit 
+            string currennumbers = req.Form["CurNwareHouse"];
+            int inventorySheetID =Int32.Parse(req.Form["inventorySheetID"]);
+            string productIDs = req.Form["productIDUpdate"];
+            string productQuantity = req.Form["Quantity"];
+            string[] currennumbersList = currennumbers.Split(',');
+            string[] productIDsList = productIDs.Split(',');
+            string[] productQuantityList = productQuantity.Split(',');
+            int count = 0;
+            foreach (var i in currennumbersList)
+            {
+                int currentNumber = Int32.Parse(i);
+                int productID = Int32.Parse(productIDsList[count]);
+                int quantity = Int32.Parse(productQuantityList[count]);
+                // update product information in inventorySheet
+                InventorySheetDetail _inventorySheetDetail = new InventorySheetDetail();
+                _inventorySheetDetail = await _context.InventorySheetDetails.FirstOrDefaultAsync(p => p.ProductId == productID && p.InventorySheetId == inventorySheetID);
+                _inventorySheetDetail.CurNwareHouse = currentNumber;
+                _context.Attach(_inventorySheetDetail).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                // update information of product in product list
+                Product product = new Product();
+                product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == productID);
+                product.Quantity = quantity;
+                _context.Attach(product).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                //message
+                successMessage = "lưu thông tin sản phẩm thành công";
+                TempData["successMessage"] = successMessage;
+                count++;
+            }
+
+            try
+            {
+                //success message
+                successMessage = "Lưu thông tin sản phẩm kiểm tra thành công";
+                TempData["SuccessMessage"] = successMessage;
+                return RedirectToPage("./Details", new { inventorySheetID });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Page();
             }
         }
         private bool InventorySheetDetailExists(int id)

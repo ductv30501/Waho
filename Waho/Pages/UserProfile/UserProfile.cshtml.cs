@@ -14,9 +14,9 @@ namespace Waho.Pages.UserProfile
         }
         [BindProperty]
         public Employee employee { get; set; }
-        public async void OnGet(string? userName)
+        public async void OnGet(string userName)
         {
-            employee = await _context.Employees.FindAsync(userName);
+            employee =  _context.Employees.Find(userName);
         }
     }
 }
