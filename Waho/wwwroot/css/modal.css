@@ -115,11 +115,12 @@
     color: #012970;
 }
     .nav-profile img {
-        max-height: 36px;
+        max-height: 50px;
     }
     .nav-profile span {
-        font-size: 14px;
+        font-size: 20px;
         font-weight: 600;
+        color:black;
     }
 .menuUser li {
     list-style-type: none;
@@ -149,7 +150,7 @@
         font-size: 18px;
     }
     .dropdown-menu .dropdown-header h3 {
-        font-size: 30px;
+        font-size: 20px;
         color:black;
     }
 
@@ -181,7 +182,7 @@
     }
 
     .dropdown-menu .dropdown-item:hover {
-        background-color: #f6f9ff;
+        background-color: #FF9966;
     }
 .eyebutton {
     position: absolute;
@@ -192,3 +193,55 @@
     margin-top:8px;
     z-index: 10;
 }
+.menu li{
+    list-style-type: none;
+    transition: 0.5s;
+    position: relative;
+    padding:0;
+    margin:0;
+}
+
+    .menu li ul {
+        position: absolute;
+        background-color: white;
+        list-style-type: none;
+        display: none;
+        /*text-align: center;*/
+        font-size: 15px;
+        width: 300px;
+        padding: 0;
+        margin: 0;
+        z-index: 10;
+        left: 0;
+        top: 70px;
+        text-align: left;
+        border-radius: 2px;
+        border: 1px solid #f6f9ff;
+        background-color: white;
+    }
+
+    .menu li:hover > ul {
+        display: block;
+    }
+.menu ul li {
+    width: 100%;
+    padding: 20px;
+    margin-right: 10px;
+    font-size: 18px;
+    line-height: 0;
+    border: 1px solid #f6f9ff;
+}
+    .menu ul li a {
+        text-decoration: none;
+        color:black;
+    }
+    .menu ul li:hover {
+        background-color: #FF9966;
+    }
+.lable-navbar{
+    padding:20px;
+    font-size:20px;
+}
+    .lable-navbar:hover {
+        color: #ff6533;
+    }

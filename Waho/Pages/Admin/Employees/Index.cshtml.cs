@@ -41,6 +41,8 @@ namespace Waho.Pages.Admin.Employees
         }
         [BindProperty(SupportsGet = true)]
         public IList<Employee> Employee { get;set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string title { get; set; } = "all";
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -64,19 +66,32 @@ namespace Waho.Pages.Admin.Employees
             {
                 textSearch = "";
             }
-            TotalCount = _context.Employees
+            string raw_title = HttpContext.Request.Query["title"];
+            if (!string.IsNullOrWhiteSpace(raw_title))
+            {
+                title = raw_title.Trim();
+            }
+            else
+            {
+                title = "all";
+            }
+            var query = _context.Employees
                             .Where(e => e.EmployeeName.ToLower().Contains(textSearch) || e.Email.ToLower().Contains(textSearch)
                                     || e.Dob.ToString().ToLower().Contains(textSearch) || e.Title.ToLower().Contains(textSearch)
                                     || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
                                     || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
                                     || e.Role.ToString().Contains(textSearch))
-                            .Where(e => e.Active == true)
-                            .Count();
+                            .Where(e => e.Active == true);
+            if (title != "all")
+            {
+                query = query.Where(e => e.Role == int.Parse(title));
+            }
+            TotalCount = query.Count();
             message = TempData["message"] as string;
             successMessage = TempData["successMessage"] as string;
             if (_context.Employees != null)
             {
-                Employee = _dataService.getEmployeePaging(pageIndex, pageSize, textSearch);
+                Employee = _dataService.getEmployeePaging(pageIndex, pageSize, textSearch, title);
             }
             return Page();
         }
