@@ -24,18 +24,6 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                @if (employee.Role == 1)
-                {
-                    <a class="navbar-brand" asp-area="" asp-page="/Admin/Index">
-                        <div class="d-flex">
-                            <h2 class="mx-auto d-flex align-items-center">
-                                <img src="~/img/wahologo.png" width="60px" height="60px" />Wa<span class="primary-color">Ho</span>
-                            </h2>
-                        </div>
-                    </a>
-                }
-                else
-                {
                 <a class="navbar-brand" asp-area="" asp-page="/WarehouseStaff/Index">
                     <div class="d-flex">
                         <h2 class="mx-auto d-flex align-items-center">
@@ -43,88 +31,70 @@
                         </h2>
                     </div>
                 </a>
-                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <div class="d-flex">
+                    <ul class="navbar-nav flex-grow-1">
                         @if (employee.Role == 1)
                         {
-                            <ul class="menu">
-                                <li>
-                                    <div class="lable-navbar">
-                                        <span class="d-none d-md-block"><i class="bi bi-people-fill"></i> Admin</span>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <a asp-page="/Admin/Customers/Index">
-                                                <i class="bi bi-people-fill"></i> Khách Hàng
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a asp-page="/Admin/Employees/Index">
-                                                <i class="bi bi-person-fill-gear"></i> Nhân Viên
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a asp-page="/Admin/Suppliers/Index">
-                                                <i class="bi bi-person-lines-fill"></i> Nhà Cung Cấp
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        }
-
-                        <ul class="menu">
-                            <li>
-                                <div class="lable-navbar">
-                                    <span class="d-none d-md-block"><i class="bi bi-box-seam-fill"></i> Sản phẩm </span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <a asp-page="/WarehouseStaff/Products/Index">
-                                            <i class="bi bi-box-seam-fill"></i> Sản phẩm
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a asp-page="/WarehouseStaff/InventorySheetManager/Index">
-                                            <i class="bi bi-box2-fill"></i> Kiểm Kho
-                                        </a>
-                                    </li>
-                                </ul>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Admin/Customers/Index"><p><i class="bi bi-people-fill"></i> Khách Hàng</p></a>
                             </li>
-                        </ul>
-                        @if (employee.Role == 1)
-                        {
-                            <ul class="menu">
-                                <li>
-                                    <div class="lable-navbar">
-                                        <span class="d-none d-md-block"><i class="bi bi-receipt-cutoff"></i> Thu ngân</span>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <a asp-page="/Cashier/Bills/Index">
-                                                <i class="bi bi-receipt-cutoff"></i> Hóa Đơn
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a asp-page="/Cashier/Orders/Index">
-                                                <i class="bi bi-truck"></i> Vận Đơn
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a asp-page="/Cashier/ReturnOrders/Index">
-                                                <i class="bi bi-receipt"></i> Hoàn Đơn
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Admin/Employees/Index"><p><i class="bi bi-person-fill-gear"></i> Nhân Viên</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Admin/Suppliers/Index"><p><i class="bi bi-person-lines-fill"></i> Nhà Cung Cấp</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/Products/Index"><p><i class="bi bi-box-seam-fill"></i> Sản Phẩm</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/InventorySheetManager/Index"><p><i class="bi bi-box2-fill"></i> Kiểm Kho</p></a>
+                            </li>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Orders/Index"><p><i class="bi bi-truck"></i> Vận Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/ReturnOrders/Index"><p><i class="bi bi-receipt"></i> Hoàn Đơn</p></a>
+                            </li>
                         }
-                    </div>
+                        @if (employee.Role == 3)
+                        {
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/Products/Index"><p><i class="bi bi-box-seam-fill"></i> Sản Phẩm</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/WarehouseStaff/InventorySheetManager/Index"><p><i class="bi bi-box2-fill"></i> Kiểm Kho</p></a>
+                            </li>
+                        }
+                        @if (employee.Role == 2)
+                        {
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Orders/Index"><p><i class="bi bi-truck"></i> Vận Đơn</p></a>
+                            </li>
+                            <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                            <li class="nav-item m-1">
+                                <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/ReturnOrders/Index"><p><i class="bi bi-receipt"></i> Hoàn Đơn</p></a>
+                            </li>
+                        }
+                    </ul>
                     <ul class="menuUser">
                         <li>
                             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
@@ -196,15 +166,6 @@
                             </ul><!-- End Profile Dropdown Items -->
                         </li><!-- End Profile Nav -->
                     </ul>
-                    @*<ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Register"><p><i class="bi bi-person-plus-fill"></i> Đăng ký</p></a>
-                        </li>
-                        <h6 class="d-flex align-self-center m-0 vertical">|</h6>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index"><p><i class="bi bi-person-fill-lock"></i> Đăng nhập</p></a>
-                        </li>
-                    </ul>*@
                 </div>
             </div>
         </nav>

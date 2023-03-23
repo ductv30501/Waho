@@ -29,17 +29,10 @@ namespace Waho.Pages.Cashier.Bills
         public Customer Customer { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
-        public int TotalCount { get; set; } = 0;
-
-        [BindProperty(SupportsGet = true)]
-        public Bill bill { get; set; }
-
-        [BindProperty(SupportsGet = true)]
         public List<BillDetail> billDetails { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public BillDetail billDetail { get; set; }
-
 
         [BindProperty(SupportsGet = true)]
         public List<Product> products { get; set; }

@@ -141,6 +141,8 @@ a {
 .wt-widgettitle {
     margin-bottom: 10px;
     padding-bottom: 17px;
+    font-weight: 700;
+    font-size: 20px;
     border-bottom: 1px solid #ddd;
 }
 
@@ -307,10 +309,22 @@ a {
     max-width: 450px;
     z-index: 99;
 }
-
     .toast-message + .toast-message {
         margin-top: 20px;
     }
+
+.toast-mess {
+    animation: slideInLeft 0.3s linear, fadeOut linear 1s 5s forwards;
+    top: 5px;
+    right: -360px;
+    box-shadow: 0, 5px, 8px rgba(0, 0, 0, 0.08);
+    max-width: 450px;
+    z-index: 99;
+}
+    .toast-mess + .toast-mess {
+        margin-top: 20px;
+    }
+    
 
 @keyframes slideInLeft {
     from {

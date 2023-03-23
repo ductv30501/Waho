@@ -82,149 +82,197 @@
     </div>
     @*end update model*@
     @*start filter*@
-    <div style=" padding:10px;margin-top: 20px; border-radius: 10px;" class="col-lg-12">
-        <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" style="margin-bottom: 20px; ">
-            <div class="d-flex">
-                <h3 class="me-4">Nhà cung cấp</h3>
-                <div class="form-group me-4">
-                    <select id="inputState" class="form-control" asp-for="@Model.pageSize" onchange="this.form.submit()">
-                        <option value="5"> 5 hàng</option>
-                        <option value="10">10 hàng</option>
-                        <option value="15">15 hàng</option>
-                        <option value="20">20 hàng</option>
-                    </select>
-                </div>
-                <div class="form-group flex-grow-1 me-4">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" asp-for="textSearch" placeholder="Nhập thông tin nhân viên" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                        <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+    <div class="bg-waho-white">
+        <div class="mt-4 position-relative bodydiv">
+            <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title" style="margin-bottom: 20px; ">
+                <div class="d-flex">
+                    <h3 class="me-4">Nhân viên</h3>
+                    <div class="form-group flex-grow-1 me-4">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" asp-for="textSearch" placeholder="Nhập thông tin nhân viên" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <button class="input-group-text btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group me-4">
+                        <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
+                            <i class="bi bi-plus-circle-fill" asp-page="Create"> Thêm mới</i>
+                        </button>
                     </div>
                 </div>
-                <div class="form-group me-4">
-                    <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
-                        <i class="bi bi-plus-circle-fill" asp-page="Create"> Thêm mới</i>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    @*end filter*@
-    @if (Model.message != null)
-    {
-        <div id="notification" class="w-50 alert alert-danger">@Model.message</div>
-    }
-    @if (Model.successMessage != null)
-    {
-        <div id="notificationSuccess" class="w-50 alert alert-success">@Model.successMessage</div>
-    }
-    <div class="col-lg-12" style="overflow-x: auto; background-color: #fff; border-radius: 10px; padding:10px;margin-left:10px">
-        @if (Model.TotalCount > 0)
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Tên nhân viên
-                        </th>
-                        <th>
-                            Chức vụ
-                        </th>
-                        <th>
-                            Ngày sinh
-                        </th>
-                        <th>
-                            Địa chỉ
-                        </th>
-                        <th>
-                            Số điện thoại
-                        </th>
-                        <th>
-                            Ghi chú
-                        </th>
-                        <th>
-                            Phân quyền
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Employee)
+                @*end filter*@
+                @if (Model.message != null)
+                {
+                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+                        <div class="alert alert-danger text-center"><h5>@Model.message</h5></div>
+                    </div>
+                }
+                @if (Model.successMessage != null)
+                {
+                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+                        <div class="alert alert-success text-center"><h5>@Model.successMessage</h5></div>
+                    </div>
+                }
+                <div class="d-flex">
+                    <div class="d-flex flex-column col-2 me-4">
+                        <div class="form-group col-6 mx-auto mb-3">
+                            <select id="inputState" class="form-select" asp-for="@Model.pageSize" onchange="this.form.submit()">
+                                <option value="5"> 5 hàng</option>
+                                <option value="10">10 hàng</option>
+                                <option value="15">15 hàng</option>
+                                <option value="20">20 hàng</option>
+                            </select>
+                        </div>
+                        @*title*@
+                        <div class="row form-container py-4 mb-3">
+                            <div class="m-auto">
+                                <div>
+                                    <h6>Chức vụ</h6>
+                                    <hr />
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="this.form.submit()" asp-checked="@Model.title=='all'" asp-for="@(Model.title)" value="all" type="radio" />
+                                    <label class="form-check-label">
+                                        Tất cả
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="this.form.submit()" asp-checked="@Model.title=='1'" asp-for="@(Model.title)" value="1" type="radio" />
+                                    <label class="form-check-label">
+                                        Admin
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="this.form.submit()" asp-checked="@Model.title=='3'" asp-for="@(Model.title)" value="3" type="radio" />
+                                    <label class="form-check-label">
+                                        Nhân viên kho
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="this.form.submit()" asp-checked="@Model.title=='2'" asp-for="@(Model.title)" value="2" type="radio" />
+                                    <label class="form-check-label">
+                                        Thu ngân
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.TotalCount > 0)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EmployeeName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @{
-                                    var date = "";
-                                    if (item.Dob != null)
+                        <div class="flex-grow-1 form-container px-3">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Tên nhân viên
+                                        </th>
+                                        <th>
+                                            Chức vụ
+                                        </th>
+                                        <th>
+                                            Ngày sinh
+                                        </th>
+                                        <th>
+                                            Địa chỉ
+                                        </th>
+                                        <th>
+                                            Số điện thoại
+                                        </th>
+                                        <th>
+                                            Ghi chú
+                                        </th>
+                                        <th>
+                                            Phân quyền
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Employee)
                                     {
-                                        date = item.Dob.Value.Day + "/" + item.Dob.Value.Month + "/" + item.Dob.Value.Year;
-                                    }
-                                }
-                                @date
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Address)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Phone)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Note)
-                            </td>
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EmployeeName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Title)
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var date = "";
+                                                    if (item.Dob != null)
+                                                    {
+                                                        date = item.Dob.Value.Day + "/" + item.Dob.Value.Month + "/" + item.Dob.Value.Year;
+                                                    }
+                                                }
+                                                @date
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Phone)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Note)
+                                            </td>
 
-                            @if (item.Role == 1)
-                            {
-                                <td>Admin</td>
-                            }
-                            else
-                            {
-                                if (item.Role == 2)
-                                {
-                                    <td>Thu Ngân</td>
-                                }
-                                else
-                                {
-                                    <td>Nhân viên kho</td>
-                                }
-                            }
-                            <td>
-                                <a onclick="getEmployeeDetail('@(item.UserName)')">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>|
-                                <a asp-page="./Delete" asp-route-id="@item.UserName"><i class="bi bi-trash3-fill text-danger"></i></a>
-                            </td>
-                        </tr>
+                                            @if (item.Role == 1)
+                                            {
+                                                <td>Admin</td>
+                                            }
+                                            else
+                                            {
+                                                if (item.Role == 2)
+                                                {
+                                                    <td>Thu Ngân</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>Nhân viên kho</td>
+                                                }
+                                            }
+                                            <td>
+                                                <a onclick="getEmployeeDetail('@(item.UserName)')">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>|
+                                                <a asp-page="./Delete" asp-route-id="@item.UserName"><i class="bi bi-trash3-fill text-danger"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="text-center mt-5">
+                                <div class="pagination">
+                                    <ul class="pagination">
+                                        @if (Model.pageIndex > 1)
+                                        {
+                                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize"
+                                                asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">Trước</a></li>
+                                        }
+                                        @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
+                                        {
+                                            <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i"
+                                           asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">@i</a>
+                                            </li>
+                                        }
+                                        @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
+                                        {
+                                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)"
+                                           asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">Sau</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </tbody>
-            </table>
-            <div class="text-center mt-5">
-                <div class="pagination">
-                    <ul class="pagination">
-                        @if (Model.pageIndex > 1)
-                        {
-                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">Trước</a></li>
-                        }
-                        @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
-                        {
-                            <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">@i</a></li>
-                        }
-                        @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
-                        {
-                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch">Sau</a></li>
-                        }
-                    </ul>
+                    else
+                    {
+                        <div class="text-center">Không có nhân viên nào phù hợp</div>
+                    }
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="text-center">Không có nhân viên nào phù hợp</div>
-        }
+            </form>
+        </div>
     </div>
 </body>
 <script>
@@ -242,7 +290,7 @@
                 $("#dob").val(formatDate(data.dob));
                 if (data.hireDate == null) {
                     $("#hireDate").val("");
-                }else{
+                } else {
                     $("#hireDate").val(formatDate(data.hireDate));
                 }
                 $("#phone").val(data.phone);
@@ -275,5 +323,34 @@
 
         return [year, month, day].join('-');
     }
-    
+
+    var delayTimer;
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#success-alert").fadeOut("slow", function () {
+                $(this).remove();
+            });
+            $("#error-alert").fadeOut("slow", function () {
+                $(this).remove();
+            });
+        }, 3000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
+
+        $('#search-input-bill').keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                event.preventDefault();
+                // Thực hiện các hành động cần thiết khi người dùng nhấn phím Enter
+            }
+        });
+
+        var delayTimer;
+        $('#search-input-bill').on('input', function () {
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function () {
+                $('#billListForm').submit()
+            }, 500); // Thời gian chờ tính bằng mili giây
+        });
+
+    });
 </script>
