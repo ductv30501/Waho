@@ -61,18 +61,24 @@ namespace Waho.Pages.Admin.Employees
                 return RedirectToPage("./Index");
             }
             _Employee.Dob = DateTime.Parse(raw_dob);
-            if (string.IsNullOrEmpty(raw_hireDate))
+            if (!string.IsNullOrEmpty(raw_hireDate))
             {
-                message = "Bạn điền ngày vào công ty";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
+                _Employee.Dob = DateTime.Parse(raw_hireDate);
             }
-            _Employee.Dob = DateTime.Parse(raw_hireDate);
+            
             if (string.IsNullOrEmpty(raw_email))
             {
                 message = "Bạn điền email của nhân viên";
                 TempData["message"] = message;
                 return RedirectToPage("./Index");
+            }
+            if (string.IsNullOrEmpty(req.Form["activeUpdate"]))
+            {
+                _Employee.Active = false;
+            }
+            else
+            {
+                _Employee.Active = true;
             }
             _Employee.Email = raw_email;
             _Employee.Note = raw_note;

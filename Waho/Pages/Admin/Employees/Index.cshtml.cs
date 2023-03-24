@@ -80,8 +80,7 @@ namespace Waho.Pages.Admin.Employees
                                     || e.Dob.ToString().ToLower().Contains(textSearch) || e.Title.ToLower().Contains(textSearch)
                                     || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
                                     || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
-                                    || e.Role.ToString().Contains(textSearch))
-                            .Where(e => e.Active == true);
+                                    || e.Role.ToString().Contains(textSearch));
             if (title != "all")
             {
                 query = query.Where(e => e.Role == int.Parse(title));

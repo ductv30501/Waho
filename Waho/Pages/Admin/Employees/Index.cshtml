@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="labels">Ngày vào</label>
-                        <input name="hireDate" id="hireDate" class="form-control input" type="date" required />
+                        <input name="hireDate" id="hireDate" class="form-control input" type="date" />
                     </div>
                     <div class="col-md-4">
                         <label class="labels">Số điện thoại</label>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Khu vực</label>
-                        <input name="region" id="region" class="form-control input" type="text" placeholder="Nhập khu vực" required />
+                        <input name="region" id="region" class="form-control input" type="text" placeholder="Nhập khu vực" />
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -71,6 +71,13 @@
                             <option value="2">Thu ngân</option>
                             <option value="3">Nhân viên kho</option>
                         </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Kích hoạt tài khoản</label>
+                        <div class="form-check">
+                            <input name="activeUpdate" id="activeUpdate" type="checkbox" class="col-1 form-check-input" style="width:20px; height:20px" />
+                            <lable class="form-check-label">kích hoạt</lable>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center mt-5">
@@ -183,6 +190,9 @@
                                         <th>
                                             Phân quyền
                                         </th>
+                                        <th>
+                                            Trạng thái tài khoản
+                                        </th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -231,11 +241,20 @@
                                                     <td>Nhân viên kho</td>
                                                 }
                                             }
-                                            <td>
+                                            @if (item.Active)
+                                            {
+                                                <td>Đã kích hoạt</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Chưa kích hoạt</td>
+                                            }
+                                            <td class="d-flex align-items-center justify-content-between">
                                                 <a onclick="getEmployeeDetail('@(item.UserName)')">
-                                                    <i class="bi bi-pencil-fill"></i>
-                                                </a>|
-                                                <a asp-page="./Delete" asp-route-id="@item.UserName"><i class="bi bi-trash3-fill text-danger"></i></a>
+                                                    <i class="bi bi-pencil-square icon-table icon-edit"></i>
+                                                </a>
+                                                <h6 class="m-0 vertical">|</h6>
+                                                <a asp-page="./Delete" asp-route-id="@item.UserName"><i class="bi bi-trash3-fill icon-table icon-delete"></i></a>
                                             </td>
                                         </tr>
                                     }
@@ -246,18 +265,22 @@
                                     <ul class="pagination">
                                         @if (Model.pageIndex > 1)
                                         {
-                                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize"
-                                                asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">Trước</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize"
+                                           asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">Trước</a>
+                                            </li>
                                         }
                                         @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                         {
-                                            <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i"
+                                            <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active">
+                                                <a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i"
                                            asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">@i</a>
                                             </li>
                                         }
                                         @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                         {
-                                            <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)"
+                                            <li class="page-item">
+                                                <a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)"
                                            asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title">Sau</a>
                                             </li>
                                         }
@@ -275,6 +298,7 @@
         </div>
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
     // supplier details
     function getEmployeeDetail(userName) {
@@ -299,6 +323,12 @@
                 $("#email").val(data.email);
                 $("#note").val(data.note);
                 $("#role").val(data.role);
+                if (data.active) {
+                    $("#activeUpdate").prop("checked", true);
+                } else {
+                    $("#activeUpdate").prop("checked", false);
+                }
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);

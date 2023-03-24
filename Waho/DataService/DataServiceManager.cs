@@ -34,7 +34,7 @@ namespace Waho.DataService
         public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch,string title)
         {
             List<Employee> employees = new List<Employee>();
-            var query = _context.Employees.Where(s => s.Active == true);
+            var query = _context.Employees.Where(s => s.Active == true || s.Active == false);
             if (!string.IsNullOrEmpty(textSearch))
             {
                 query = query.Where(e => e.EmployeeName.ToLower().Contains(textSearch) || e.Email.ToLower().Contains(textSearch)

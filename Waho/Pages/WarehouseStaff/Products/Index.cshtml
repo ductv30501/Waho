@@ -101,9 +101,12 @@
                             }
                         </select>
                     </div>
-                    <div class="col-md-6 mt-4">
-                        <input id="checkBoxDate" class="checkBoxDate" type="checkbox" />
-                        <label class="labels" onclick="showInsertDate()">Sản phẩm có hạn sử dụng</label>
+                    <div class="col-md-6">
+                        <label class="labels">Sản phẩm có hạn sử dụng</label>
+                        <div class="form-check" >
+                            <input id="checkBoxDate" onclick="showInsertDate()" class="col-1 form-check-input" style="width:20px; height:20px" type="checkbox" />
+                            <label class="form-check-label" >Sản phẩm có hạn sử dụng</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-2 insertDate" style="display:none" id="insertDate">
@@ -301,9 +304,12 @@
                             }
                         </select>
                     </div>
-                    <div class="col-md-6 mt-4">
-                        <input id="checkBoxDateUpdate" name="checkBoxDateUpdate" class="checkBoxDate" type="checkbox" />
-                        <label class="labels" onclick="showInsertDate()">Sản phẩm có hạn sử dụng</label>
+                    <div class="col-md-6">
+                        <label class="labels">Sản phẩm có hạn sử dụng</label>
+                        <div class="form-check">
+                            <input id="checkBoxDateUpdate" name="checkBoxDateUpdate" onclick="showInsertDate()" class="col-1 form-check-input" style="width:20px; height:20px" type="checkbox" />
+                            <label class="form-check-label" >Sản phẩm có hạn sử dụng</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-2 insertDate" style="display:none" id="insertDate">

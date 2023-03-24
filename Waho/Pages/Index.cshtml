@@ -62,12 +62,12 @@
     function showPassword() {
         var passwordType = $('#ePassInput').attr('type');
         if (passwordType === 'password') {
-            $('#ePassInput').html("");
-            $('#ePassInput').html("<i class=\"bi bi-eye-slash\"></i>");
+            $('.eyebutton').html("");
+            $('.eyebutton').html("<i class=\"bi bi-eye-slash\"></i>");
             $('#ePassInput').attr('type', 'text');
         } else {
-            $('#ePassInput').html("");
-            $('#ePassInput').html("<i class=\"bi bi-eye\"></i>");
+            $('.eyebutton').html("");
+            $('.eyebutton').html("<i class=\"bi bi-eye\"></i>");
             $('#ePassInput').attr('type', 'password');
         }
     }
