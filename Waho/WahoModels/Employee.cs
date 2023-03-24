@@ -40,7 +40,7 @@ namespace Waho.WahoModels
         [EmailAddress(ErrorMessage = "phải nhập đúng định dạng email vd: youremail@gmail.com")]
         [Display(Name = "EMAIL")]
         public string Email { get; set; }
-        public bool? Active { get; set; }
+        public bool Active { get; set; }
 
         public virtual WahoInformation Waho { get; set; }
         public virtual ICollection<Bill> Bills { get; set; }
