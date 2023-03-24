@@ -247,7 +247,8 @@ namespace Waho.DataService
         {
             DateTime dateFrom = DateTime.Now;
             DateTime dateTo = DateTime.Now;
-            DateTime defaultDate = DateTime.Parse("0001-01-01");
+            //DateTime defaultDate = DateTime.Parse("0001-01-01");
+            //&& (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0)
             if (!string.IsNullOrEmpty(raw_dateFrom))
             {
                 dateFrom = DateTime.Parse(raw_dateFrom);
@@ -269,10 +270,24 @@ namespace Waho.DataService
                                                 .Where(i => i.Active == true)
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower()));
-            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            //filter date
+            if (!string.IsNullOrEmpty(raw_dateFrom))
             {
-                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+                if (!string.IsNullOrEmpty(raw_dateTo))
+                {
+                    query = query.Where(i => i.Date >=dateFrom && i.Date <= dateTo);
+                }
+                else
+                {
+                    query = query.Where(i => i.Date >= dateFrom);
+                }
+
             }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                query = query.Where(i => i.Date <= dateTo);
+            }
+
             if (!string.IsNullOrEmpty(userName))
             {
                 query = query.Where(i => i.UserName.Contains(userName));
@@ -352,10 +367,21 @@ namespace Waho.DataService
             {
                 query = query.Where(i => i.State == _status);
             }
-            DateTime defaultDate = DateTime.Parse("0001-01-01");
-            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            if (!string.IsNullOrEmpty(raw_dateFrom))
             {
-                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+                if (!string.IsNullOrEmpty(raw_dateTo))
+                {
+                    query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+                }
+                else
+                {
+                    query = query.Where(i => i.Date >= dateFrom);
+                }
+
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                query = query.Where(i => i.Date <= dateTo);
             }
 
             returnOrders = query

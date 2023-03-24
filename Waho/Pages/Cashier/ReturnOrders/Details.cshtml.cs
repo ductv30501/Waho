@@ -122,8 +122,8 @@ namespace Waho.Pages.Cashier.ReturnOrders
             {
                 //message
                 message = "Ngày tạo đơn không được để trống";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
+                TempData["ErrorMessage"] = message;
+                return Page();
             }
             _returnOrderUpdate.Date = DateTime.Parse(raw_date);
             _returnOrderUpdate.Description = raw_description;
@@ -132,16 +132,16 @@ namespace Waho.Pages.Cashier.ReturnOrders
             {
                 //message
                 message = "Số tiền đã trả khách không được để trống";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
+                TempData["ErrorMessage"] = message;
+                return Page();
             }
-            _returnOrderUpdate.PaidCustomer = Int32.Parse(raw_paidCustomer);
+            _returnOrderUpdate.PaidCustomer = decimal.Parse(raw_paidCustomer);
             if (string.IsNullOrWhiteSpace(raw_payCustomer))
             {
                 //message
                 message = "Số tiền cần trả khách không được để trống";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
+                TempData["ErrorMessage"] = message;
+                return Page();
             }
             if (string.IsNullOrWhiteSpace(raw_state))
             {
@@ -151,14 +151,14 @@ namespace Waho.Pages.Cashier.ReturnOrders
             {
                 _returnOrderUpdate.State = true;
             }
-            _returnOrderUpdate.PayCustomer = Int32.Parse(raw_payCustomer);
+            _returnOrderUpdate.PayCustomer = decimal.Parse(raw_payCustomer);
             _context.Attach(_returnOrderUpdate).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
                 //success message
                 successMessage = "Chỉnh sửa thông tin phiếu thành công";
-                TempData["successMessage"] = successMessage;
+                TempData["SuccessMessage"] = successMessage;
                 return RedirectToPage("./Index");
             }
             catch (DbUpdateConcurrencyException)
@@ -167,8 +167,8 @@ namespace Waho.Pages.Cashier.ReturnOrders
                 {
                     //message
                     message = "Không tìm thấy hoàn đơn nào phù hợp";
-                    TempData["message"] = message;
-                    return RedirectToPage("./Index");
+                    TempData["ErrorMessage"] = message;
+                    return Page();
                 }
                 else
                 {

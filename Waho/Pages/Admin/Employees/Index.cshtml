@@ -88,8 +88,89 @@
         </div>
     </div>
     @*end update model*@
+    @*insert model*@
+    <div class="modal">
+        <div id="insert-modal">
+            <form asp-page="./Create" method="post">
+                <div class="col-md-6">
+                    <h4 class="text-right">Thông tin nhân viên</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <label class="labels">Tên Nhân viên</label>
+                        <input name="employeeName" id="employeeName" class="form-control input" type="text" placeholder="Nhập tên nhân viên" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="labels">Tên tài khoản</label>
+                        <input name="userName" id="userName" class="form-control input" type="text" placeholder="Nhập tên tài khoản" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="labels">Chức vụ</label>
+                        <input name="title" id="title" class="form-control input" type="text" placeholder="Nhập chức vụ" required />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <label class="labels">Ngày sinh</label>
+                        <input name="dob" id="dob" class="form-control input" type="date" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="labels">Ngày vào</label>
+                        <input name="hireDate" id="hireDate" class="form-control input" type="date" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="labels">Số điện thoại</label>
+                        <input name="phone" id="phone" class="form-control input" type="text" placeholder="Nhập số điện thoại" required />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Địa chỉ</label>
+                        <input name="addrress" id="addrress" class="form-control input" type="text" placeholder="Nhập địa chỉ" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Khu vực</label>
+                        <input name="region" id="region" class="form-control input" type="text" placeholder="Nhập khu vực" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Email</label>
+                        <input name="email" id="email" class="form-control input" type="text" placeholder="Nhập email" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Ghi chú</label>
+                        <input name="note" id="note" class="form-control input" type="text" placeholder="Ghi chú" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Phân quyền</label>
+                        <select name="role" id="role" class="form-control input" aria-label="Default select example">
+                            <option value="1">Admin</option>
+                            <option value="2">Thu ngân</option>
+                            <option value="3">Nhân viên kho</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Kích hoạt tài khoản</label>
+                        <div class="form-check">
+                            <input name="activeInsert" id="activeInsert" type="checkbox" class="col-1 form-check-input" style="width:20px; height:20px" />
+                            <lable class="form-check-label">kích hoạt</lable>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5">
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
+                    <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 1, 'scale(0)')">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @*end insert model*@
     @*start filter*@
     <div class="bg-waho-white">
+        <div class="modal-confirmation" id="modal-confirmation"></div>
         <div class="mt-4 position-relative bodydiv">
             <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title" style="margin-bottom: 20px; ">
                 <div class="d-flex">
@@ -101,7 +182,7 @@
                         </div>
                     </div>
                     <div class="form-group me-4">
-                        <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(1)');">
+                        <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 1, 'scale(1)');">
                             <i class="bi bi-plus-circle-fill" asp-page="Create"> Thêm mới</i>
                         </button>
                     </div>
@@ -109,13 +190,13 @@
                 @*end filter*@
                 @if (Model.message != null)
                 {
-                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-mess">
                         <div class="alert alert-danger text-center"><h5>@Model.message</h5></div>
                     </div>
                 }
                 @if (Model.successMessage != null)
                 {
-                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-mess">
                         <div class="alert alert-success text-center"><h5>@Model.successMessage</h5></div>
                     </div>
                 }
@@ -254,7 +335,9 @@
                                                     <i class="bi bi-pencil-square icon-table icon-edit"></i>
                                                 </a>
                                                 <h6 class="m-0 vertical">|</h6>
-                                                <a asp-page="./Delete" asp-route-id="@item.UserName"><i class="bi bi-trash3-fill icon-table icon-delete"></i></a>
+                                                <a onclick="deleteEmployee('@item.UserName','@item.EmployeeName','@item.Title')">
+                                                    <i class="bi bi-trash3-fill icon-table icon-delete"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     }
@@ -383,4 +466,47 @@
         });
 
     });
+
+    //delete employy
+    function deleteEmployee(id, name, title) {
+        renderConfirmationModal(id, name, title)
+        $('#modal-confirmation').css('display', 'flex')
+    }
+
+    function renderConfirmationModal(id, name, title) {
+        $('#modal-confirmation').html(`
+                                <div class="modal-dialog ">
+                                    <div class="modal-content modal-content-confirmation">
+                                        <div class=" modal-header p-1">
+                                            <h6 class="modal-title ms-3">
+                                                <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                                                Xác nhận muốn xoá nhân viên này?
+                                            </h6>
+                                            <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                                                <i class="bi bi-x-lg"></i>
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h6>Thông tin hoá đơn:</h6>
+                                            <p>Mã nhân viên: ${id}</p>
+                                            <p>Tên nhân viên: ${name}</p>
+                                            <p>Chức vụ: ${title}</p>
+                                        </div>
+                                        <div class="modal-footer p-1">
+                                            <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                                            <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                                                data-bs-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>`)
+    }
+
+    function handleDelete(id) {
+        closeModalConfirmation()
+        window.location.href = "Employees/Delete?id=" + id;
+    }
+
+    function closeModalConfirmation() {
+        $('#modal-confirmation').css('display', 'none')
+    }
 </script>

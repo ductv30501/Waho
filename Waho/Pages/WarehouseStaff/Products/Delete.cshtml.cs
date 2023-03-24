@@ -43,10 +43,11 @@ namespace Waho.Pages.WarehouseStaff.Products
                 // message
                 successMessage = "Xóa thành công sản phẩm ra khỏi danh sách";
                 TempData["successMessage"] = successMessage;
+                return RedirectToPage("./Index");
             }
             message = "không tìm thấy sản phẩm";
             TempData["message"] = message;
-            return RedirectToPage("./Index");
+            return Page();
         }
     }
 }
