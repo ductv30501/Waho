@@ -116,7 +116,7 @@
                 </div>
                 <div class="text-center mt-5">
                     <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
-                    <button id="btnSubmit" class="btn btn-primary" type="button" onclick="DeleteSupplier()">Xóa</button>
+                    @*<button id="btnSubmit" class="btn btn-primary" type="button" onclick="DeleteSupplier()">Xóa</button>*@
                     <button class="btn btn-primary" type="button" onclick="modal('update-modal', 1, 'scale(0)')">Đóng</button>
                 </div>
             </form>
@@ -125,6 +125,7 @@
     @*end update model*@
     @*start filter*@
     <div class="bg-waho-white">
+        <div class="modal-confirmation" id="modal-confirmation"></div>
         <div class="mt-4 position-relative bodydiv">
             <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" style="margin-bottom: 20px; ">
                 <div class="d-flex">
@@ -160,20 +161,20 @@
                 @*end filter*@
                 @if (Model.message != null)
                 {
-                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-mess">
                         <div class="alert alert-danger text-center"><h5>@Model.message</h5></div>
                     </div>
                 }
                 @if (Model.successMessage != null)
                 {
-                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-mess">
                         <div class="alert alert-success text-center"><h5>@Model.successMessage</h5></div>
                     </div>
                 }
 
                 @if (Model.TotalCount > 0)
                 {
-                    <div class="flex-grow-1 form-container px-3">
+                    <div class="flex-grow-1 form-container px-3 w-100">
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
@@ -232,9 +233,13 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Description)
                                         </td>
-                                        <td>
+                                        <td class="d-flex align-items-center justify-content-between">
                                             <a onclick="getSupplierDetail(@(item.SupplierId))">
                                                 <i class="bi bi-pencil-square icon-table icon-edit"></i>
+                                            </a>
+                                            <h6 class="m-0 vertical">|</h6>
+                                            <a onclick="deleteSupplier('@item.SupplierId','@item.CompanyName','@item.Address')">
+                                                <i class="bi bi-trash3-fill icon-table icon-delete"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -305,23 +310,46 @@
         modal('update-modal', 1, 'scale(1)')
     }
     //delete Supplier
-    function DeleteSupplier() {
-        var supplierID = $("#supplierID").val().toString();
-        if (confirm("Bạn có chắc chắn muốn xóa khách hàng này không?")) {
-            $.ajax({
-                url: '/Admin/Suppliers/Delete',
-                type: 'GET',
-                data: { supplierID: supplierID },
-                success: function (data) {
-                    // handle success
-                    alert("xóa thành công khách hàng ra khỏi danh sách");
-                    window.location.reload();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-                }
-            });
-        }
+    function deleteSupplier(id, name, address) {
+        renderConfirmationModal(id, name, address)
+        $('#modal-confirmation').css('display', 'flex')
+    }
+
+    function renderConfirmationModal(id, name, address) {
+        $('#modal-confirmation').html(`
+                            <div class="modal-dialog ">
+                                <div class="modal-content modal-content-confirmation">
+                                    <div class=" modal-header p-1">
+                                        <h6 class="modal-title ms-3">
+                                            <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                                            Xác nhận muốn xoá nhà cung cấp này?
+                                        </h6>
+                                        <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                                            <i class="bi bi-x-lg"></i>
+                                        </h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6>Thông tin hoá đơn:</h6>
+                                        <p>Mã nhà cung cấp: ${id}</p>
+                                        <p>Tên công ty: ${name}</p>
+                                        <p>Địa chỉ: ${address}</p>
+                                    </div>
+                                    <div class="modal-footer p-1">
+                                        <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                                        <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                                            data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>`)
+    }
+
+    function handleDelete(id) {
+        closeModalConfirmation()
+        window.location.href = "Suppliers/Delete?supplierID=" + id;
+    }
+
+    function closeModalConfirmation() {
+        $('#modal-confirmation').css('display', 'none')
     }
 
     var delayTimer;
@@ -353,5 +381,7 @@
         });
 
     });
+
+    
 </script>
 
