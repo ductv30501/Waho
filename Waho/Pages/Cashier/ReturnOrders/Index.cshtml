@@ -64,6 +64,12 @@
                                 <h6>Nhân viên</h6>
                                 <hr />
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-checked="@Model.employeeID=='all'" asp-for="@(Model.employeeID)" value="all" type="radio" />
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
+                            </div>
                             @foreach (var item in Model.employees)
                             {
                                 <div class="form-check">
@@ -109,6 +115,12 @@
                             <div>
                                 <h6>Trạng thái</h6>
                                 <hr />
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status == 'all'" name="status" type="radio" value="all">
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status == 'false'" name="status" type="radio" value="false">

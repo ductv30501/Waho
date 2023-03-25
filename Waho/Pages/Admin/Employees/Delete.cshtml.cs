@@ -46,7 +46,7 @@ namespace Waho.Pages.Admin.Employees
                 _context.Attach(Employee).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 // message
-                successMessage = "Xóa thành công nhân viên ra khỏi danh sách";
+                successMessage = "Vô hiệu hóa thành công tài khoản";
                 TempData["successMessage"] = successMessage;
                 return RedirectToPage("./Index");
             }

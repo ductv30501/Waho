@@ -288,7 +288,7 @@ namespace Waho.DataService
                 query = query.Where(i => i.Date <= dateTo);
             }
 
-            if (!string.IsNullOrEmpty(userName))
+            if (userName != "all")
             {
                 query = query.Where(i => i.UserName.Contains(userName));
             }
@@ -334,7 +334,7 @@ namespace Waho.DataService
         public List<ReturnOrder> getreturnOrderPagingAndFilter(int pageIndex, int pageSize, string textSearch, string userName, string status, string raw_dateFrom, string raw_dateTo)
         {
             // filter by status and date
-            Boolean _status = status == "true" ? true : false;
+           
             DateTime dateFrom = DateTime.Now;
             DateTime dateTo = DateTime.Now;
             if (!string.IsNullOrEmpty(raw_dateFrom))
@@ -358,13 +358,17 @@ namespace Waho.DataService
             var query = _context.ReturnOrders.Include(i => i.UserNameNavigation)
                                                 .Include(i => i.Customer)
                                                 .Where(i => i.Active == true)
-                                                .Where(i => i.UserName.Contains(userName))
                                                 .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                                             || i.Description.ToLower().Contains(textSearch.ToLower())
                                                             || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
-
-            if (!string.IsNullOrEmpty(status))
+            if (userName != "all")
             {
+                query = query.Where(i => i.UserName.Contains(userName));
+            }
+
+            if (status != "all")
+            {
+                Boolean _status = status == "true" ? true : false;
                 query = query.Where(i => i.State == _status);
             }
             if (!string.IsNullOrEmpty(raw_dateFrom))
