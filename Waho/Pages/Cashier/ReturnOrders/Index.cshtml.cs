@@ -32,7 +32,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
 
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
-        public string employeeID { get; set; } = "";
+        public string employeeID { get; set; } = "all";
         [BindProperty(SupportsGet = true)]
         public string dateFrom { get; set; }
 
@@ -41,7 +41,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
         private string raw_pageSize, raw_textSearch, raw_EmployeeSearch, raw_status, raw_dateFrom, raw_dateTo;
         //list employee
         public List<Employee> employees { get; set; }
-        public string status { get; set; }
+        public string status { get; set; } = "all";
         public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
@@ -71,7 +71,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
             }
             else
             {
-                employeeID = "";
+                employeeID = "all";
             }
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
@@ -86,12 +86,13 @@ namespace Waho.Pages.Cashier.ReturnOrders
             if (!string.IsNullOrWhiteSpace(raw_status))
             {
                 status = raw_status;
+                
             }
             else
             {
-                status = "";
+                status = "all";
             }
-            Boolean _status = status == "true" ? true : false;
+            
             raw_dateFrom = HttpContext.Request.Query["dateFrom"];
             raw_dateTo = HttpContext.Request.Query["dateTo"];
 
@@ -118,11 +119,15 @@ namespace Waho.Pages.Cashier.ReturnOrders
                            .Where(i => i.Active == true)
                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                    || i.Description.ToLower().Contains(textSearch.ToLower())
-                                   || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()))
-                           .Where(i => i.UserName == employeeID || employeeID == "");
-            // check status to filter
-            if (!string.IsNullOrEmpty(status))
+                                   || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+            if (employeeID != "all")
             {
+                query = query.Where(i => i.UserName == employeeID);
+            }
+            // check status to filter
+            if (status != "all")
+            {
+                Boolean _status = status == "true" ? true : false;
                 query = query.Where(i => i.State == _status);
             }
             // compare date to filter

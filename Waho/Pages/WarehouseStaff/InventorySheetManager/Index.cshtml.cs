@@ -35,7 +35,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; } = "";
         [BindProperty(SupportsGet = true)]
-        public string employeeID { get; set; } = "";
+        public string employeeID { get; set; } = "all";
         [BindProperty(SupportsGet = true)]
         public string dateFrom { get; set; }
 
@@ -74,7 +74,7 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             }
             else
             {
-                employeeID = "";
+                employeeID = "all";
             }
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
@@ -111,8 +111,11 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             var query = _context.InventorySheets.Include(p => p.UserNameNavigation)
                            .Where(i => i.Active == true)
                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch)
-                                   || i.Description.ToLower().Contains(textSearch))
-                           .Where(i => i.UserName == employeeID || employeeID == "");
+                                   || i.Description.ToLower().Contains(textSearch));
+            if (employeeID != "all")
+            {
+                query = query.Where(i => i.UserName == employeeID);
+            }
             // compare date to filter
             if (!string.IsNullOrEmpty(raw_dateFrom))
             {
