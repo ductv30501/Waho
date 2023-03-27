@@ -79,6 +79,7 @@
                                             <hr />
                                         </div>
                                         <div class="row">
+                                            <span id="customerValid" class="text-danger"></span>
                                             <div class="form-group col-6">
                                                 <label class="control-label">Tên khách hàng</label>
                                                 <div class="input-group">
@@ -340,6 +341,20 @@
         });
 
         function fillOrderCustomerInfo() {
+            // Lấy danh sách tất cả các input trong form
+            var inputs = $('#insert-modal input');
+
+            // Duyệt qua từng input để kiểm tra giá trị
+            for (var i = 0; i < inputs.length; i++) {
+                var inputValue = inputs[i].value;
+
+                // Nếu giá trị là rỗng, hiển thị cảnh báo và dừng submit
+                if (inputValue === '') {
+                    $("#customerValid").html('Vui lòng nhập giá trị cho tất cả các trường!');
+                    return;
+                }
+            }
+
             $("#bill-customer-name").val($("#customer-name").val());
             $("#bill-customer-phone").val($("#customer-phone").val());
             modal('insert-modal', 0, 'scale(0)');

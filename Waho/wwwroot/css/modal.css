@@ -238,7 +238,7 @@
     }
 
 .eyebutton {
-    background-color: white;
+    background-color: transparent;
     border-left: 0;
     cursor:pointer;
     position:absolute;

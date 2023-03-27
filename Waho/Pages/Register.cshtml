@@ -114,9 +114,9 @@
                         <label class="control-label">Mật khẩu</label>
                         <div class="input-group" style="position:relative">
                             <span class="input-group-text span-input-primary"><i class="bi bi-key-fill"></i></span>
-                            <input type="password" asp-for="Employee.Password" id="ePassInput" class="form-control" placeholder="Nhập mật khẩu">
-                            <div class="eyebutton" onclick="showPassword()">
-                                <i class="bi bi-eye"></i>
+                            <input type="password" asp-for="Employee.Password" id="EpassInput" class="form-control" placeholder="Nhập mật khẩu">
+                            <div id="ePassInput" class="eyebutton input-group-text " onclick="showPassword()">
+                                <i class="bi bi-eye-slash-fill eye-icon"></i>
                             </div>
                         </div>
                         <span asp-validation-for="Employee.Password" class="text-danger"></span>
@@ -134,15 +134,15 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
     function showPassword(){
-        var passwordType = $('#ePassInput').attr('type');
-        if (passwordType === 'password') {
-            $('.eyebutton').html("");
-            $('.eyebutton').html("<i class=\"bi bi-eye-slash\"></i>");
-            $('#ePassInput').attr('type', 'text');
-        } else { 
-            $('.eyebutton').html("");
-            $('.eyebutton').html("<i class=\"bi bi-eye\"></i>");
-            $('#ePassInput').attr('type', 'password');
+        var passwordType = $('#EpassInput').attr('type');
+        if (passwordType == 'password') {
+            $('#ePassInput').html('');
+            $('#ePassInput').html('<i class="bi bi-eye-fill"></i>');
+            $('#EpassInput').attr('type', 'text');
+        } else {
+            $('#ePassInput').html('');
+            $('#ePassInput').html(`<i class="bi bi-eye-slash-fill eye-icon"></i>`);
+            $('#EpassInput').attr('type', 'password');
         }
     }
 
