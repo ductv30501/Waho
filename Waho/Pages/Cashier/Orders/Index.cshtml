@@ -1,5 +1,5 @@
 ﻿@page
-@model Waho.Pages.Cashier.Bills.IndexModel
+@model Waho.Pages.Cashier.Orders.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,25 +9,25 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Waho - Hoá đơn</title>
+    <title>@ViewData["Title"] - Waho - Vận đơn</title>
 </head>
 <body class="bg-waho-white">
     <div class="modal-confirmation" id="modal-confirmation">
     </div>
     <div class="mt-4 position-relative bodydiv">
-        <form id="billListForm" method="get" asp-page="./Index" style="margin-bottom: 20px;">
+        <form id="orderListForm" method="get" asp-page="./Index" style="margin-bottom: 20px;">
             <div class="d-flex">
-                <h3 class="col-2 me-4">Hoá đơn</h3>
+                <h3 class="col-2 me-4">Vận đơn</h3>
                 <div class="d-flex col-10 justify-content-between">
                     <div class="form-group col-6 me-4">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" asp-for="@Model.textSearch" id="search-input-bill" placeholder="Nhập mã hoá đơn, tên khách hàng" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control" asp-for="textSearch" id="search-input-order" placeholder="Nhập mã vận đơn, tên khách hàng , tên shipper" aria-label="Recipient's username" aria-describedby="basic-addon2">
                             <label class="input-group-text span-input-primary"><i class="bi bi-search"></i></label>
                         </div>
                     </div>
                     <div class="form-group me-4">
                         <a class="btn btn-primary" asp-page="./create">
-                            <i class="bi bi-plus-circle-fill"></i> Thêm hoá đơn
+                            <i class="bi bi-plus-circle-fill"></i> Thêm vận đơn
                         </a>
                     </div>
                 </div>
@@ -87,6 +87,33 @@
                     <div class="row form-container py-4 mb-3">
                         <div class="m-auto">
                             <div>
+                                <h6>Ngày dự kiến nhận hàng</h6>
+                                <hr />
+                            </div>
+                            <div class="form-group">
+                                <span id="estDateValid" class="text-danger"></span>
+                                <label class="control-label">Từ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-minus-fill"></i></span>
+                                    <input asp-for="@Model.estDateFrom" type="date" class="form-control" id="estDateFrom">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Đến</label>
+                                <div class="input-group">
+                                    <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-plus-fill"></i></span>
+                                    <input asp-for="@Model.estDateTo" type="date" class="form-control" id="estDateTo">
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="btn btn-primary" type="button" onclick="checkDate();">Lọc</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="clearDate();">Xoá</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-container py-4 mb-3">
+                        <div class="m-auto">
+                            <div>
                                 <h6>Tình trạng</h6>
                                 <hr />
                             </div>
@@ -97,9 +124,27 @@
                                 </label>
                             </div>
                             <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='notDelivery'" name="status" type="radio" value="notDelivery">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Chưa giao hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='pending'" name="status" type="radio" value="pending">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Đang giao hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='done'" name="status" type="radio" value="done">
                                 <label class="form-check-label" for="flexCheckDefault">
-                                    Đã thanh toán
+                                    Đã giao hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='cantDelivery'" name="status" type="radio" value="cantDelivery">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    không giao được
                                 </label>
                             </div>
                             <div class="form-check">
@@ -144,13 +189,19 @@
                             <thead>
                                 <tr>
                                     <th class="tbProductName">
-                                        Mã hoá đơn
+                                        Mã vận đơn
                                     </th>
                                     <th class="tbImportPrice">
                                         Ngày tạo
                                     </th>
                                     <th class="tbImportPrice">
+                                        Ngày dự kiến
+                                    </th>
+                                    <th class="tbImportPrice">
                                         Khách hàng
+                                    </th>
+                                    <th class="tbImportPrice">
+                                        Người giao
                                     </th>
                                     <th class="tbImportPrice">
                                         Tình trạng
@@ -162,33 +213,69 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Bills)
+                                @foreach (var item in Model.Orders)
                                 {
                                     <tr>
                                         <td class="tbProductName">
-                                            @Html.DisplayFor(modelItem => item.BillId)
+                                            @Html.DisplayFor(modelItem => item.OderId)
                                         </td>
                                         <td class="tbImportPrice">
                                             @{
-                                                DateTime date = (DateTime)item.Date;
-                                                @date.ToString("dd/MM/yyyy");
+                                                DateTime date = (DateTime)item.OrderDate;
+                                                @date.ToString("dd/MM/yyyy")
+                                                ;
+                                            }
+                                        </td>
+                                        <td class="tbImportPrice">
+                                            @{
+                                                DateTime date1 = (DateTime)item.EstimatedDate;
+                                                @date1.ToString("dd/MM/yyyy")
+                                                ;
                                             }
                                         </td>
                                         <td class="tbImportPrice">
                                             @Html.DisplayFor(modelItem => item.Customer.CustomerName)
                                         </td>
                                         <td class="tbImportPrice">
-                                            @(item.BillStatus == "done" ? "Đã xong" : "Đã huỷ")
+                                            @Html.DisplayFor(modelItem => item.Shipper.ShipperName)
                                         </td>
+                                        @switch (item.OderState)
+                                        {
+                                            case "notDelivery":
+                                                <td class="tbImportPrice">
+                                                    Chưa giao hàng
+                                                </td>
+                                                break;
+                                            case "pending":
+                                                <td class="tbImportPrice">
+                                                    Đang giao
+                                                </td>
+                                                break;
+                                            case "done":
+                                                <td class="tbImportPrice">
+                                                    Đã giao
+                                                </td>
+                                                break;
+                                            case "cantDelivery":
+                                                <td class="tbImportPrice">
+                                                    Không giao được
+                                                </td>
+                                                break;
+                                            case "cancel":
+                                                <td class="tbImportPrice">
+                                                    Đã huỷ
+                                                </td>
+                                                break;
+                                        }
                                         <td class="tbImportPrice">
                                             @(item.Active == true ? "Chưa xoá" : "Đã xoá")
                                         </td>
                                         <td class="d-flex align-items-center justify-content-between">
-                                            <a asp-page="Edit" asp-route-id="@item.BillId">
+                                            <a asp-page="Edit" asp-route-id="@item.OderId">
                                                 <i class="bi bi-pencil-square icon-table icon-edit"></i>
                                             </a>
                                             <h6 class="m-0 vertical">|</h6>
-                                            <a onclick="deleteBill('@item.BillId','@item.Customer.CustomerName','@item.Customer.Phone')">
+                                            <a onclick="deleteBill('@item.OderId','@item.Customer.CustomerName','@item.Customer.Phone','@item.Shipper.ShipperName','@item.Shipper.Phone')">
                                                 <i class="bi bi-trash3-fill icon-table icon-delete"></i>
                                             </a>
                                         </td>
@@ -201,15 +288,15 @@
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {
-                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Trước</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-estDateFrom="@Model.estDateFrom" asp-route-estDateTo="@Model.estDateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Trước</a></li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
-                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">@i</a></li>
+                                        <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-estDateFrom="@Model.estDateFrom" asp-route-estDateTo="@Model.estDateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">@i</a></li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
-                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Sau</a></li>
+                                        <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" asp-route-estDateFrom="@Model.estDateFrom" asp-route-estDateTo="@Model.estDateTo" asp-route-active="@Model.active" asp-route-status="@Model.status">Sau</a></li>
                                     }
                                 </ul>
                             </div>
@@ -219,12 +306,12 @@
                 else
                 {
                     <div class="flex-grow-1 d-flex align-items-center form-container">
-                        <h5 class="m-auto">Không có hoá đơn nào phù hợp</h5>
+                        <h5 class="m-auto">Không có vận đơn nào phù hợp</h5>
                     </div>
                 }
             </div>
         </form>
-        
+
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
@@ -242,7 +329,7 @@
                 });
             }, 3000); // thời gian để tự động ẩn thông báo (tính bằng mili giây)
 
-            $('#search-input-bill').keypress(function (event) {
+            $('#search-input-order').keypress(function (event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
                     event.preventDefault();
@@ -251,19 +338,37 @@
             });
 
             var delayTimer;
-            $('#search-input-bill').on('input', function () {
+            $('#search-input-order').on('input', function () {
                 clearTimeout(delayTimer);
                 delayTimer = setTimeout(function () {
-                    $('#billListForm').submit()
+                    $('#orderListForm').submit()
                 }, 500); // Thời gian chờ tính bằng mili giây
             });
 
         });
 
+        function checkDate() {
+            const dateFrom = $('#estDateFrom').val();
+            const dateTo = $('#estDateTo').val();
+
+            // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
+            if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
+                $("#estDateValid").html(`Chưa nhập đủ ngày bắt đầu!`)
+
+            } else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
+                $("#estDateValid").html(`Chưa nhập đủ ngày kết thúc!`)
+            }
+            else if (Date.parse(dateFrom) > Date.parse(dateTo)) {
+                $("#estDateValid").html(`Ngày bắt đầu lớn hơn ngày kết thúc!`)
+            }
+            else {
+                $('#orderListForm').submit()
+            }
+        }
+
         function validateForSubmit() {
             const dateFrom = $('#dateFrom').val();
             const dateTo = $('#dateTo').val();
-
 
             // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
             if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
@@ -276,52 +381,61 @@
                 $("#dateValid").html(`Ngày bắt đầu lớn hơn ngày kết thúc!`)
             }
             else {
-                $('#billListForm').submit()
+                $('#orderListForm').submit()
             }
+        }
+
+
+        function clearDate() {
+            $('#estDateFrom').val("");
+            $('#estDateTo').val("");
+            $('#orderListForm').submit()
         }
 
         function clearForSubmit() {
             $('#dateFrom').val("");
             $('#dateTo').val("");
-            $('#billListForm').submit()
+            $('#orderListForm').submit()
         }
 
-        function deleteBill(id, name, phone) {
-            renderConfirmationModal(id, name, phone)
+        function deleteBill(id, name, phone, sname, sphone) {
+            renderConfirmationModal(id, name, phone, sname, sphone)
             $('#modal-confirmation').css('display', 'flex')
         }
 
-        function renderConfirmationModal(id, name, phone) {
+        function renderConfirmationModal(id, name, phone, sname, sphone) {
             $('#modal-confirmation').html(`
-                    <div class="modal-dialog ">
-                        <div class="modal-content modal-content-confirmation">
-                            <div class=" modal-header p-1">
-                                <h6 class="modal-title ms-3">
-                                    <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
-                                    Xác nhận muốn xoá hoá đơn này?
-                                </h6>
-                                <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
-                                    <i class="bi bi-x-lg"></i>
-                                </h5>
-                            </div>
-                            <div class="modal-body">
-                                <h6>Thông tin hoá đơn:</h6>
-                                <p>Mã hoá đơn: ${id}</p>
-                                <p>Tên khách hàng: ${name}</p>
-                                <p>Số điện thoại: ${phone}</p>
-                            </div>
-                            <div class="modal-footer p-1">
-                                <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
-                                <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
-                                    data-bs-dismiss="modal">Đóng</button>
-                            </div>
-                        </div>
-                    </div>`)
+                                                                    <div class="modal-dialog ">
+                                                                        <div class="modal-content modal-content-confirmation">
+                                                                            <div class=" modal-header p-1">
+                                                                                <h6 class="modal-title ms-3">
+                                                                                    <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                                                                                    Xác nhận muốn xoá hoá đơn này?
+                                                                                </h6>
+                                                                                <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                                                                                    <i class="bi bi-x-lg"></i>
+                                                                                </h5>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <h6>Thông tin vận đơn:</h6>
+                                                                                <p>Mã vận đơn: ${id}</p>
+                                                                                <p>Tên khách hàng: ${name}</p>
+                                                                                <p>Số điện thoại: ${phone}</p>
+                                                                                <p>Tên người giao: ${sname}</p>
+                                                                                <p>Số điện thoại: ${sphone}</p>
+                                                                            </div>
+                                                                            <div class="modal-footer p-1">
+                                                                                <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                                                                                <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                                                                                    data-bs-dismiss="modal">Đóng</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>`)
         }
 
         function handleDelete(id) {
             closeModalConfirmation()
-            window.location.href = "Bills/Delete?id=" + id;
+            window.location.href = "Orders/Delete?id=" + id;
         }
 
         function closeModalConfirmation() {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Waho.DataService;
 using Waho.WahoModels;
 
-namespace Waho.Pages.Cashier.Bills
+namespace Waho.Pages.Cashier.Orders
 {
     public class IndexModel : PageModel
     {
@@ -31,7 +31,6 @@ namespace Waho.Pages.Cashier.Bills
 
         [BindProperty(SupportsGet = true)]
         public int TotalCount { get; set; } = 0;
-
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
 
@@ -42,6 +41,12 @@ namespace Waho.Pages.Cashier.Bills
         public string dateTo { get; set; }
 
         [BindProperty(SupportsGet = true)]
+        public string estDateFrom { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string estDateTo { get; set; }
+
+        [BindProperty(SupportsGet = true)]
         public string status { get; set; } = "all";
 
         [BindProperty(SupportsGet = true)]
@@ -49,7 +54,7 @@ namespace Waho.Pages.Cashier.Bills
 
         private string raw_number, raw_textSearch;
 
-        public IList<Bill> Bills { get; set; } = default!;
+        public IList<Oder> Orders { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -77,27 +82,36 @@ namespace Waho.Pages.Cashier.Bills
 
             dateFrom = HttpContext.Request.Query["dateFrom"];
             dateTo = HttpContext.Request.Query["dateTo"];
+            estDateFrom = HttpContext.Request.Query["estDateFrom"];
+            estDateTo = HttpContext.Request.Query["estDateTo"];
 
 
             //get bill list 
-            var raw_filterForTotalCount = _context.Bills
-                             .Include(b => b.Customer)
-                             .Where(b => (b.BillId.ToString().Contains(textSearch)
-                                 || b.Customer.CustomerName.Contains(textSearch)));
+            var raw_filterForTotalCount = _context.Oders
+                             .Include(o => o.Customer)
+                             .Include(o=>o.Shipper)
+                             .Where(o => (o.OderId.ToString().Contains(textSearch)
+                                 || o.Shipper.ShipperName.Contains(textSearch)
+                                 || o.Customer.CustomerName.Contains(textSearch)));
 
             if (active != "all")
             {
-                raw_filterForTotalCount = raw_filterForTotalCount.Where(b => (b.Active.ToString().Contains(active)));
+                raw_filterForTotalCount = raw_filterForTotalCount.Where(o => (o.Active.ToString().Contains(active)));
             }
 
             if (status != "all")
             {
-                raw_filterForTotalCount = raw_filterForTotalCount.Where(b => (b.BillStatus.Contains(status)));
+                raw_filterForTotalCount = raw_filterForTotalCount.Where(o => (o.OderState.Contains(status)));
             }
 
             if (!string.IsNullOrEmpty(dateFrom))
             {
-                raw_filterForTotalCount = raw_filterForTotalCount.Where(b => (b.Date >= DateTime.Parse(dateFrom) && b.Date <= DateTime.Parse(dateTo)));
+                raw_filterForTotalCount = raw_filterForTotalCount.Where(o => (o.OrderDate >= DateTime.Parse(dateFrom) && o.OrderDate <= DateTime.Parse(dateTo)));
+            }
+
+            if (!string.IsNullOrEmpty(estDateTo))
+            {
+                raw_filterForTotalCount = raw_filterForTotalCount.Where(o => (o.EstimatedDate >= DateTime.Parse(estDateFrom) && o.EstimatedDate <= DateTime.Parse(estDateTo)));
             }
 
             TotalCount = raw_filterForTotalCount.Count();
@@ -107,10 +121,10 @@ namespace Waho.Pages.Cashier.Bills
             {
                 pageIndex = 1;
             }
-            
-            if (_context.Bills != null)
+
+            if (_context.Oders != null)
             {
-                Bills = _dataService.GetBillsPagingAndFilter(pageIndex, pageSize, textSearch, status, dateFrom, dateTo, active);
+                Orders = _dataService.GetOrdersPagingAndFilter(pageIndex, pageSize, textSearch, status, dateFrom, estDateFrom, estDateTo, dateTo, active);
             }
 
             return Page();

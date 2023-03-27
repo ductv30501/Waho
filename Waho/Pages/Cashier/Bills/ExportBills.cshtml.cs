@@ -51,15 +51,14 @@ namespace Waho.Pages.Cashier.Bills
             worksheet.Cells[4, 2].Value = Bill.BillStatus.Equals("done") ? "Đã xong" : "Đã huỷ";
             worksheet.Cells[5, 1].Value = "Ghi chú: ";
             worksheet.Cells[5, 2].Value = Bill.Descriptions;
-            worksheet.Cells[6, 1].Value = "Tổng giá tiền: ";
-            worksheet.Cells[6, 2].Value = Bill.Total;
+            
 
-            worksheet.Cells[8, 1].Value = "Mã sản phẩm";
-            worksheet.Cells[8, 2].Value = "Tên sản phẩm";
-            worksheet.Cells[8, 3].Value = "Số lượng";
-            worksheet.Cells[8, 4].Value = "Giảm giá(%)";
-            worksheet.Cells[8, 5].Value = "Đơn giá(đ)";
-            worksheet.Cells[8, 6].Value = "Tồn kho";
+            worksheet.Cells[7, 1].Value = "Mã sản phẩm";
+            worksheet.Cells[7, 2].Value = "Tên sản phẩm";
+            worksheet.Cells[7, 3].Value = "Số lượng";
+            worksheet.Cells[7, 4].Value = "Giảm giá(%)";
+            worksheet.Cells[7, 5].Value = "Đơn giá(đ)";
+            worksheet.Cells[7, 6].Value = "Tồn kho";
 
             worksheet.Cells[1, 4].Value = "Tên khách hàng:";
             worksheet.Cells[1, 5].Value = Bill.Customer.CustomerName;
@@ -71,7 +70,7 @@ namespace Waho.Pages.Cashier.Bills
             worksheet.Cells[4, 5].Value = Bill.Customer.TaxCode;
 
             // set data rows
-            int rowIndex = 9;
+            int rowIndex = 8;
             foreach (var item in billDetails)
             {
                 worksheet.Cells[rowIndex, 1].Value = item.ProductId;
@@ -82,6 +81,9 @@ namespace Waho.Pages.Cashier.Bills
                 worksheet.Cells[rowIndex, 6].Value = item.Product.Quantity;
                 rowIndex++;
             }
+            rowIndex++;
+            worksheet.Cells[rowIndex, 5].Value = "Tổng giá tiền: ";
+            worksheet.Cells[rowIndex, 6].Value = Bill.Total;
 
             // save Excel package to a file
             string webRootPath = _hostingEnvironment.WebRootPath;

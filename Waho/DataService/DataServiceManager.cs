@@ -425,5 +425,47 @@ namespace Waho.DataService
             return _context.ReturnOrders
                                 .Where(b => b.Date == date).ToList();
         }
+
+        internal IList<Oder> GetOrdersPagingAndFilter(int pageIndex, int pageSize, string textSearch, string status, string dateFrom, string estDateFrom, string estDateTo, string dateTo, string active)
+        {
+            List<Oder> orders = new List<Oder>();
+            //default 
+            var query = from o in _context.Oders select o;
+
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                query = query.Where(o => (o.OderId.ToString().Contains(textSearch)
+                                 || o.Shipper.ShipperName.Contains(textSearch)
+                                 || o.Customer.CustomerName.Contains(textSearch)));
+            }
+
+            if (active != "all")
+            {
+                query = query.Where(o => (o.Active.ToString().Contains(active)));
+            }
+
+            if (status != "all")
+            {
+                query = query.Where(o => (o.OderState.Contains(status)));
+            }
+
+            if (!string.IsNullOrEmpty(dateFrom))
+            {
+                query = query.Where(o => (o.OrderDate >= DateTime.Parse(dateFrom) && o.OrderDate <= DateTime.Parse(dateTo)));
+            }
+
+            if (!string.IsNullOrEmpty(estDateTo))
+            {
+                query = query.Where(o => (o.EstimatedDate >= DateTime.Parse(estDateFrom) && o.EstimatedDate <= DateTime.Parse(estDateTo)));
+            }
+
+            orders = query.Include(o => o.Customer)
+                    .Include(o => o.Shipper)
+                    .Include(b => b.UserNameNavigation)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+            return orders;
+        }
     }
 }

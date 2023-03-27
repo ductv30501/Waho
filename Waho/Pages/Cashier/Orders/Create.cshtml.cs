@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Waho.Pages.Cashier.Bills
+namespace Waho.Pages.Cashier.Orders
 {
     public class CreateModel : PageModel
     {
@@ -29,19 +29,16 @@ namespace Waho.Pages.Cashier.Bills
         public Customer Customer { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
-        public List<BillDetail> billDetails { get; set; }
-
-        [BindProperty(SupportsGet = true)]
-        public BillDetail billDetail { get; set; }
+        public OderDetail OrderDetail { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public List<Product> products { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public List<Customer> customers { get; set; }
+        public List<Shipper> Shippers { get; set; }
 
         [BindProperty]
-        public Bill Bill { get; set; }
+        public Oder Order { get; set; }
 
         private Employee employee { get; set; }
 
@@ -55,7 +52,7 @@ namespace Waho.Pages.Cashier.Bills
             return Page();
         }
 
-        public async Task<IActionResult> OnGetProducts(string? q)
+        public async Task<IActionResult> OnGetShippers(string? q)
         {
             if (string.IsNullOrWhiteSpace(q) || string.IsNullOrEmpty(q))
             {
@@ -63,27 +60,9 @@ namespace Waho.Pages.Cashier.Bills
             }
             else
             {
-                products = await _context.Products.Where(p => (p.ProductName.ToLower().Contains(q.ToLower()) || p.ProductId.ToString().Contains(q)))
-                    .Where(p => p.Active == true)
-                    .Where(p => p.Quantity > 0)
+                Shippers = await _context.Shippers.Where(s => (s.ShipperName.ToLower().Contains(q.ToLower()) || s.Phone.Contains(q)))
                     .Take(5).ToListAsync();
-                return new JsonResult(products);
-            }
-        }
-
-
-        public async Task<IActionResult> OnGetCustomers(string? q)
-        {
-            if (string.IsNullOrWhiteSpace(q) || string.IsNullOrEmpty(q))
-            {
-                return new JsonResult("");
-            }
-            else
-            {
-                customers = await _context.Customers.Where(c => (c.CustomerName.ToLower().Contains(q.ToLower()) || c.Phone.Contains(q)))
-                    .Where(c => c.Active == true)
-                    .Take(5).ToListAsync();
-                return new JsonResult(customers);
+                return new JsonResult(Shippers);
             }
         }
 
@@ -92,9 +71,14 @@ namespace Waho.Pages.Cashier.Bills
         {
 
             string customerId = HttpContext.Request.Form["customerId"];
+            string estDate = HttpContext.Request.Form["estDate"];
+            string cod = HttpContext.Request.Form["cod"];
+            string region = HttpContext.Request.Form["region"];
+            string shipperId = HttpContext.Request.Form["shipperId"];
+            string payed = HttpContext.Request.Form["payed"];
             string total = HttpContext.Request.Form["total"];
-            string listBillDetail = HttpContext.Request.Form["listBillDetail"];
-            List<BillDetail> billDetails = JsonConvert.DeserializeObject<List<BillDetail>>(listBillDetail);
+            string listOrderDetail = HttpContext.Request.Form["listOrderDetail"];
+            List<OderDetail> orderDetails = JsonConvert.DeserializeObject<List<OderDetail>>(listOrderDetail);
 
             var employeeJson = HttpContext.Session.GetString("Employee");
 
@@ -105,7 +89,7 @@ namespace Waho.Pages.Cashier.Bills
 
             if (!string.IsNullOrEmpty(customerId))
             {
-                Bill.CustomerId = int.Parse(customerId);
+                Order.CustomerId = int.Parse(customerId);
             }
             else
             {
@@ -118,46 +102,52 @@ namespace Waho.Pages.Cashier.Bills
                 string address = HttpContext.Request.Form["address"];
                 string description = HttpContext.Request.Form["description"];
 
-                Customer.CustomerName= name;
+                Customer.CustomerName = name;
                 Customer.Adress = address;
                 Customer.Description = description;
-                Customer.Email= email;
-                Customer.Phone= phone;
+                Customer.Email = email;
+                Customer.Phone = phone;
                 Customer.Dob = DateTime.Parse(dob);
                 Customer.TypeOfCustomer = bool.Parse(type);
-                Customer.TaxCode=tax;
+                Customer.TaxCode = tax;
                 Customer.Active = true;
 
                 _context.Customers.Add(Customer);
                 int resultAddCustomer = _context.SaveChanges();
                 if (resultAddCustomer != 0)
                 {
-                    Bill.CustomerId = Customer.CustomerId;
+                    Order.CustomerId = Customer.CustomerId;
                 }
-                
             }
 
-            Bill.UserName = employee.UserName;
-            Bill.Date = DateTime.Now;
-            Bill.Active = true;
-            Bill.BillStatus = "done";
-            Bill.Total = decimal.Parse(total);
+            Order.ShipperId = int.Parse(shipperId);
+            Order.UserName = employee.UserName;
+            Order.OrderDate = DateTime.Now;
+            Order.Active = true;
+            Order.OderState = "notDelivery";
+            Order.Total = decimal.Parse(total);
+            if (!string.IsNullOrEmpty(payed))
+            {
+                Order.Deposit = decimal.Parse(payed);
+            }
+            Order.Cod = cod;
+            Order.EstimatedDate = DateTime.Parse(estDate);
+            Order.Region = region;
 
-
-            _context.Bills.Add(Bill);
+            _context.Oders.Add(Order);
             int result = _context.SaveChanges();
             if (result != 0)
             {
-                foreach (var billDetail in billDetails)
+                foreach (var orderDetail in orderDetails)
                 {
                     // Thiết lập giá trị BillId cho bản ghi BillDetail
-                    billDetail.BillId = Bill.BillId;
+                    orderDetail.OderId = Order.OderId;
                 }
 
                 // Thêm bản ghi BillDetail vào context
-                _context.BillDetails.AddRange(billDetails);
+                _context.OderDetails.AddRange(orderDetails);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Tạo hoá đơn thành công!";
+                TempData["SuccessMessage"] = "Tạo vận đơn thành công!";
             }
 
 

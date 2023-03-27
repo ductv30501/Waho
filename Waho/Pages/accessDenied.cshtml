@@ -3,18 +3,24 @@
 @{
 }
 <div class="row d-flex">
-    <div class="col-md-4 mx-auto form-container login-container" style="width:700px">
+    <div class="col-md-4 mx-auto form-container access-denied" style="width:700px">
         <div class="pb-4 px-3">
             <div class="d-flex mt-4">
                 <h1 class="mx-auto d-flex align-items-center">
                     <img src="~/img/wahologo.png" width="50px" height="50px" />Wa<span class="primary-color">Ho</span>
                 </h1>
             </div>
-            <div class="d-flex " style="width:100%">
-            <h4>Bạn không có quyền truy cập vào </h4><h4 class="primary-color" style="margin-left: 10px">@Model.ReturnUrl</h4>
+            <div class="d-flex flex-column">
+                <h3 class="m-auto">Yêu cầu truy cập bị từ chối </h3>
+                <div class="mx-auto mt-4">
+                    <img src="~/img/accessdenied.png" width="644px" height="300px" />
+                </div>
             </div>
             <hr />
-            <a asp-page="./Index" style="font-size:20px">vui lòng hãy đăng nhập <i class="bi bi-people-fill"></i></a>
+            <div class="d-flex flex-column">
+                <div class="m-auto"><h5>Bạn không có quyền để truy cập vào vai trò:</h5><h5 class="primary-color ms-5">@Model.ReturnUrl</h5></div>
+                <a class="btn btn-primary mx-auto mt-4" asp-page="./Index"><i class="bi bi-box-arrow-in-left"></i> Vui lòng hãy đăng nhập </a>
+            </div>
         </div>
     </div>
 </div>

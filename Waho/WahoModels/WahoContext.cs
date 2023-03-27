@@ -293,6 +293,10 @@ namespace Waho.WahoModels
             {
                 entity.Property(e => e.OderId).HasColumnName("oderID");
 
+                entity.Property(e => e.Active)
+                    .HasColumnName("active")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Cod)
                     .HasMaxLength(10)
                     .HasColumnName("cod")
@@ -327,7 +331,6 @@ namespace Waho.WahoModels
                     .HasColumnName("total");
 
                 entity.Property(e => e.UserName)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
