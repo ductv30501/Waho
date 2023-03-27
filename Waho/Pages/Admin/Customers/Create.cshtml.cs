@@ -58,7 +58,10 @@ namespace Waho.Pages.Admin.Customers
             Customer.Active = true;
             Customer.Description = note;
             Customer.TaxCode = tax;
-            Customer.Dob = DateTime.Parse(raw_dob);
+            if (!string.IsNullOrEmpty(raw_dob))
+            {
+                Customer.Dob = DateTime.Parse(raw_dob);
+            }
             Customer.TypeOfCustomer = Boolean.Parse(raw_type);
 
             _context.Customers.Add(Customer);

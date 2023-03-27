@@ -66,7 +66,7 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Phân quyền</label>
-                        <select name="role" id="role" class="form-control input" aria-label="Default select example">
+                        <select name="role" id="role" class="form-select" aria-label="Default select example">
                             <option value="1">Admin</option>
                             <option value="2">Thu ngân</option>
                             <option value="3">Nhân viên kho</option>
@@ -146,7 +146,7 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Phân quyền</label>
-                        <select name="role" id="role" class="form-control input" aria-label="Default select example">
+                        <select name="role" id="role" class="form-select" aria-label="Default select example">
                             <option value="1">Admin</option>
                             <option value="2">Thu ngân</option>
                             <option value="3">Nhân viên kho</option>
@@ -243,6 +243,32 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row form-container py-4">
+                        <div class="m-auto">
+                            <div>
+                                <h6>Trạng thái</h6>
+                                <hr />
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='all'" type="radio" value="all" id="CheckDefault">
+                                <label class="form-check-label" for="CheckDefault">
+                                    Tất cả
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='true'" type="radio" value="true">
+                                <label class="form-check-label" for="CheckDefault">
+                                    Kích hoạt
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status=='false'" type="radio" value="false">
+                                <label class="form-check-label" for="CheckDefault">
+                                    Vô hiệu hoá
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                     @if (Model.TotalCount > 0)
                     {
@@ -343,8 +369,8 @@
                                     }
                                 </tbody>
                             </table>
-                            <div class="text-center mt-5">
-                                <div class="pagination">
+                            <div class="d-flex mt-5">
+                                <div class="pagination m-auto">
                                     <ul class="pagination">
                                         @if (Model.pageIndex > 1)
                                         {

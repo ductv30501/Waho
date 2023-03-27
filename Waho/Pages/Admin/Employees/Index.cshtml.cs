@@ -32,6 +32,8 @@ namespace Waho.Pages.Admin.Employees
 
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string status { get; set; } = "all";
         private string raw_pageSize, raw_textSearch;
         public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
@@ -81,6 +83,10 @@ namespace Waho.Pages.Admin.Employees
                                     || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
                                     || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
                                     || e.Role.ToString().Contains(textSearch));
+            if (status != "all")
+            {
+                query = query.Where(c => (c.Active.ToString().Contains(status)));
+            }
             if (title != "all")
             {
                 query = query.Where(e => e.Role == int.Parse(title));
@@ -90,7 +96,7 @@ namespace Waho.Pages.Admin.Employees
             successMessage = TempData["successMessage"] as string;
             if (_context.Employees != null)
             {
-                Employee = _dataService.getEmployeePaging(pageIndex, pageSize, textSearch, title);
+                Employee = _dataService.getEmployeePaging(pageIndex, pageSize, textSearch, title,status);
             }
             return Page();
         }

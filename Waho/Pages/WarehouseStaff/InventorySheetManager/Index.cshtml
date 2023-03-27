@@ -30,7 +30,7 @@
                         <label class="labels">Ngày kiểm kho</label>
                         <input name="date" id="date" type="date" class="form-control input" required />
                         <label class="labels">Miêu tả</label>
-                        <input name="description" type="text" class="form-control input" placeholder="nhập Miêu tả" required />
+                        <input name="description" type="text" class="form-control input" placeholder="nhập Miêu tả" />
                     </div>
                     <div class="col-md-6">
                         <label for="excel-file">Excel File:</label>
@@ -71,13 +71,13 @@
 
             @if (TempData["message"] != null)
             {
-                <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+                <div id="error-alert" class="d-flex justify-content-end position-absolute toast-mess">
                     <div class="alert alert-danger text-center"><h5>@TempData["message"]</h5></div>
                 </div>
             }
             @if (TempData["successMessage"] != null)
             {
-                <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+                <div id="success-alert" class="d-flex justify-content-end position-absolute toast-mess">
                     <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
                 </div>
             }
@@ -197,8 +197,8 @@
                                 }
                             </tbody>
                         </table>
-                        <div class="text-center mt-5">
-                            <div class="pagination">
+                        <div class="d-flex mt-5">
+                            <div class="pagination m-auto">
                                 <ul class="pagination">
                                     @if (Model.pageIndex > 1)
                                     {

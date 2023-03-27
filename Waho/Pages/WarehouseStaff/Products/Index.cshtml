@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="labels">Trọng lượng</label>
-                        <input name="weight" type="number" min="1" class="form-control input" placeholder="Trọng lượng" required />
+                        <input name="weight" type="number" min="1" class="form-control input" placeholder="Trọng lượng" />
                     </div>
                     <div class="col-md-4">
                         <label class="labels">Vị trí</label><br />
@@ -79,7 +79,7 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Miêu tả</label>
-                        <input name="description" type="text" class="form-control input" placeholder="nhập Miêu tả" required />
+                        <input name="description" type="text" class="form-control input" placeholder="nhập Miêu tả" />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Loại sản phẩm</label>
@@ -131,83 +131,59 @@
     <div class="modal">
         <div class="row" id="more-modal">
             <div class="col-lg-4">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Tên sản phẩm" checked id="productName" onclick="showProperty('tbProductName')" class="col-lg-6 btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Tên sản phẩm</i>
+                <div class="form-check d-flex">
+                    <input type="checkbox" value="Tên sản phẩm" checked id="productName" onclick="showProperty('tbProductName')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Tên sản phẩm</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Giá nhập" checked id="importPrice" onclick="showProperty('tbImportPrice')" class="col-lg-6 btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Giá nhập</i>
+                <div class="form-check d-flex">
+                    <input type="checkbox" value="Giá nhập" checked id="importPrice" onclick="showProperty('tbImportPrice')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Giá nhập</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Đơn giá" checked id="unitPrice" onclick="showProperty('tbUnitPrice')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Đơn giá</i>
+                <div class="form-check d-flex">
+                    <input type="checkbox" value="Đơn giá" checked id="unitPrice" onclick="showProperty('tbUnitPrice')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Đơn giá</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Giá tại kho" id="unitInStock" onclick="showProperty('tbUnitInStock')" class="col-lg-6 btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Giá tại kho</i>
+                <div class="form-check d-flex">
+                    <input type="checkbox" value="Giá tại kho" id="unitInStock" onclick="showProperty('tbUnitInStock')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Giá tại kho</label>
                 </div>
             </div>
 
             <div class="col-lg-4">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Thương hiệu" id="trademark" onclick="showProperty('tbTrademark')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Thương hiệu</i>
+                <div class="form-check d-flex">
+                        <input type="checkbox" value="Thương hiệu" id="trademark" onclick="showProperty('tbTrademark')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Thương hiệu</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Trọng lượng" id="weight" onclick="showProperty('tbWeight')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Trọng lượng</i>
+                <div class="form-check d-flex">
+                        <input type="checkbox" value="Trọng lượng" id="weight" onclick="showProperty('tbWeight')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Trọng lượng</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Vị trí" id="location" checked onclick="showProperty('tbLocation')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Vị trí</i>
+                <div class="form-check d-flex">
+                        <input type="checkbox" value="Vị trí" id="location" checked onclick="showProperty('tbLocation')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Vị trí</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Đơn vị" id="unit" onclick="showProperty('tbUnit')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Đơn vị</i>
+                <div class="form-check d-flex">
+                        <input type="checkbox" value="Đơn vị" id="unit" onclick="showProperty('tbUnit')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Đơn vị</label>
                 </div>
             </div>
 
             <div class="col-lg-4">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Định Mức tồn Min" id="inventoryLevelMin" onclick="showProperty('tbInventoryLevelMin')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Định Mức tồn Min</i>
+                <div class="form-check d-flex" >
+                        <input type="checkbox" value="Định Mức tồn Min" id="inventoryLevelMin" onclick="showProperty('tbInventoryLevelMin')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Định Mức tồn Min</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Định Mức tồn Max" id="inventoryLevelMax" onclick="showProperty('tbInventoryLevelMax')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Định Mức tồn Max</i>
+                <div class="form-check d-flex">
+                        <input type="checkbox" value="Định Mức tồn Max" id="inventoryLevelMax" onclick="showProperty('tbInventoryLevelMax')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Định Mức tồn Max</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Mô tả" id="description" onclick="showProperty('tbDescription')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Mô tả</i>
+                <div class="form-check d-flex">
+                        <input type="checkbox" value="Mô tả" id="description" onclick="showProperty('tbDescription')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Mô tả</label>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="checkbox" value="Số lượng" checked id="description" onclick="showProperty('tbQuantity')" class="btn btn-primary w-75 m-2" />
-                    </div>
-                    <i class="col-lg-6 labels">Số lượng</i>
+                <div class="form-check d-flex">
+                    <input type="checkbox" value="Số lượng" checked id="description" onclick="showProperty('tbQuantity')" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" />
+                    <label class="form-check-label">Số lượng</label>
                 </div>
             </div>
             <div class="text-center mt-5">
@@ -248,15 +224,15 @@
                 <div class="row mt-2">
                     <div class="col-md-4">
                         <label class="labels">Số lượng</label><br />
-                        <input name="quantityUpdate" id="quantity" type="number" min="1" class="form-control input" placeholder="Vị trí" required />
+                        <input name="quantityUpdate" id="quantityUpdate" type="number" min="1" class="form-control input" placeholder="Vị trí" required />
                     </div>
                     <div class="col-md-4">
                         <label class="labels">Trọng lượng</label>
-                        <input name="weightUpdate" id="weightUpdate" type="number" min="1" class="form-control input" placeholder="Trọng lượng" required />
+                        <input name="weightUpdate" id="weightUpdate" type="number" min="1" class="form-control input" placeholder="Trọng lượng"  />
                     </div>
                     <div class="col-md-4">
                         <label class="labels">Vị trí</label><br />
-                        <input name="locationUpdate" id="locationUpdateUpdate" type="text" class="form-control input" placeholder="Vị trí" required />
+                        <input name="locationUpdate" id="locationUpdate" type="text" class="form-control input" placeholder="Vị trí" required />
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -282,7 +258,7 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Miêu tả</label>
-                        <input name="descriptionUpdate" id="descriptionUpdate" type="text" class="form-control input" placeholder="nhập Miêu tả" required />
+                        <input name="descriptionUpdate" id="descriptionUpdate" type="text" class="form-control input" placeholder="nhập Miêu tả"  />
                     </div>
                     <div class="col-md-6">
                         <label class="labels">Loại sản phẩm</label>
@@ -534,7 +510,7 @@
                                 </div>
                                 <div class="form-group w-100 mx-auto mb-3">
                                     <select class="form-select" asp-for="@Model.supplierName" onchange="this.form.submit()">
-                                        <option value="all">tất cả</option>
+                                        <option value="all">Tất cả</option>
                                         @foreach (var item in Model.suppliers)
                                         {
                                             <option value="@item.SupplierId.ToString()"> @(item.CompanyName)</option>
@@ -672,8 +648,8 @@
                                     }
                                 </tbody>
                             </table>
-                            <div class="text-center mt-5">
-                                <div class="pagination">
+                            <div class="d-flex mt-5">
+                                <div class="pagination m-auto">
                                     <ul class="pagination">
                                         @if (Model.pageIndex > 1)
                                         {
