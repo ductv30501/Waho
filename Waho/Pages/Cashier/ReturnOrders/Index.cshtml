@@ -12,6 +12,7 @@
 </head>
 
 <body style="background: #f2f2f2">
+    <div class="modal-confirmation" id="modal-confirmation"></div>
     @*start filter*@
     <div class="mt-4 position-relative bodydiv">
         <form id="returnOrderIndexForm" method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize"
@@ -35,13 +36,13 @@
             @*end filter*@
             @if (TempData["ErrorMessage"] != null)
             {
-                <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+                <div id="error-alert" class="d-flex justify-content-end position-absolute toast-mess">
                     <div class="alert alert-danger text-center"><h5>@TempData["ErrorMessage"]</h5></div>
                 </div>
             }
             @if (TempData["SuccessMessage"] != null)
             {
-                <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+                <div id="success-alert" class="d-flex justify-content-end position-absolute toast-mess">
                     <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
                 </div>
             }
@@ -63,6 +64,12 @@
                                 <h6>Nhân viên</h6>
                                 <hr />
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-checked="@Model.employeeID=='all'" asp-for="@(Model.employeeID)" value="all" type="radio" />
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
+                            </div>
                             @foreach (var item in Model.employees)
                             {
                                 <div class="form-check">
@@ -82,6 +89,7 @@
                                 <hr />
                             </div>
                             <div class="form-group">
+                                <span id="dateValid" class="text-danger"></span>
                                 <label class="control-label">Từ</label>
                                 <div class="input-group">
                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-calendar-minus-fill"></i></span>
@@ -97,6 +105,7 @@
                             </div>
                             <div class="text-center mt-4">
                                 <button class="btn btn-primary" type="button" onclick="validateForSubmit();">Lọc</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="clearForSubmit();">Xoá</button>
                             </div>
                         </div>
                     </div>
@@ -106,6 +115,12 @@
                             <div>
                                 <h6>Trạng thái</h6>
                                 <hr />
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status == 'all'" name="status" type="radio" value="all">
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" onclick="this.form.submit()" asp-for="@Model.status" asp-checked="@Model.status == 'false'" name="status" type="radio" value="false">
@@ -189,8 +204,9 @@
                                         <td class="d-flex align-items-center justify-content-between">
                                             <a asp-page="./Details" asp-route-returnOrderID="@item.ReturnOrderId">
                                                 <i class="bi bi-pencil-square icon-table icon-edit"></i>
-                                            </a>|
-                                            <a asp-page="./Delete" asp-route-id="@item.ReturnOrderId">
+                                            </a>
+                                            <h6 class="m-0 vertical">|</h6>
+                                            <a onclick="deleteReturn('@item.ReturnOrderId','@item.Date','@item.UserNameNavigation.EmployeeName')">
                                                 <i class="bi bi-trash3-fill icon-table icon-delete"></i>
                                             </a>
                                         </td>
@@ -279,17 +295,59 @@
             const dateFrom = $('#dateFrom').val();
             const dateTo = $('#dateTo').val();
             // Kiểm tra xem giá trị ngày đã nhập đủ 4 số cho phần năm hay chưa
-            if (!(dateFrom.length === 10 && dateFrom.charAt(4) === '-' && dateFrom.charAt(7) === '-')) {
-                alert("Chưa nhập đủ ngày bắt đầu!")
-            } else if (!(dateTo.length === 10 && dateTo.charAt(4) === '-' && dateTo.charAt(7) === '-')) {
-                alert("Chưa nhập đủ ngày kết thúc!")
-            }
-            else if (Date.parse(dateFrom) > Date.parse(dateTo)) {
-                alert("Ngày bắt đầu lớn hơn ngày kết thúc!")
+            if (Date.parse(dateFrom) > Date.parse(dateTo)) {
+                $("#dateValid").html(`Ngày bắt đầu lớn hơn ngày kết thúc!`)
             }
             else {
                 $('#returnOrderIndexForm').submit()
             }
         }
+        function clearForSubmit() {
+            $('#dateFrom').val("");
+            $('#dateTo').val("");
+            $('#returnOrderIndexForm').submit()
+        }
+        function deleteReturn(id, date, name) {
+            renderConfirmationModal(id, date, name)
+            $('#modal-confirmation').css('display', 'flex')
+        }
+
+        function renderConfirmationModal(id, date, name) {
+            $('#modal-confirmation').html(`
+                                    <div class="modal-dialog ">
+                                        <div class="modal-content modal-content-confirmation">
+                                            <div class=" modal-header p-1">
+                                                <h6 class="modal-title ms-3">
+                                                    <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                                                    Xác nhận muốn xoá hoàn đơn này?
+                                                </h6>
+                                                <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h6>Thông tin hoá đơn:</h6>
+                                                <p>Mã phiếu: ${id}</p>
+                                                <p>Ngày nhận: ${date}</p>
+                                                <p>Người nhận: ${name}</p>
+                                            </div>
+                                            <div class="modal-footer p-1">
+                                                <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                                                <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                                                    data-bs-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>`)
+        }
+
+        function handleDelete(id) {
+            closeModalConfirmation()
+            window.location.href = "ReturnOrders/Delete?id=" + id;
+        }
+
+        function closeModalConfirmation() {
+            $('#modal-confirmation').css('display', 'none')
+        }
+
     </script>
 </body>

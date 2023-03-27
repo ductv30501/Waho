@@ -101,9 +101,12 @@
                             }
                         </select>
                     </div>
-                    <div class="col-md-6 mt-4">
-                        <input id="checkBoxDate" class="checkBoxDate" type="checkbox" />
-                        <label class="labels" onclick="showInsertDate()">Sản phẩm có hạn sử dụng</label>
+                    <div class="col-md-6">
+                        <label class="labels">Sản phẩm có hạn sử dụng</label>
+                        <div class="form-check" >
+                            <input id="checkBoxDate" onclick="showInsertDate()" class="col-1 form-check-input" style="width:20px; height:20px" type="checkbox" />
+                            <label class="form-check-label" >Sản phẩm có hạn sử dụng</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-2 insertDate" style="display:none" id="insertDate">
@@ -301,9 +304,12 @@
                             }
                         </select>
                     </div>
-                    <div class="col-md-6 mt-4">
-                        <input id="checkBoxDateUpdate" name="checkBoxDateUpdate" class="checkBoxDate" type="checkbox" />
-                        <label class="labels" onclick="showInsertDate()">Sản phẩm có hạn sử dụng</label>
+                    <div class="col-md-6">
+                        <label class="labels">Sản phẩm có hạn sử dụng</label>
+                        <div class="form-check">
+                            <input id="checkBoxDateUpdate" name="checkBoxDateUpdate" onclick="showInsertDate()" class="col-1 form-check-input" style="width:20px; height:20px" type="checkbox" />
+                            <label class="form-check-label" >Sản phẩm có hạn sử dụng</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-2 insertDate" style="display:none" id="insertDate">
@@ -318,7 +324,7 @@
                 </div>
                 <div class="text-center mt-5">
                     <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
-                    <button id="btnSubmit" class="btn btn-primary" type="button" onclick="DeleteProduct()">Xóa</button>
+                    @*<button id="btnSubmit" class="btn btn-primary" type="button" onclick="DeleteProduct()">Xóa</button>*@
                     <button class="btn btn-primary" type="button" onclick="modal('update-modal', 2, 'scale(0)')">Đóng</button>
                 </div>
             </form>
@@ -348,6 +354,7 @@
     @*end upload model*@
     @*start filter*@
     <div class="bg-waho-white">
+        <div class="modal-confirmation" id="modal-confirmation"></div>
         <div class="mt-4 position-relative bodydiv">
             <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
                   asp-route-subCategory="@Model.subCategoryID" asp-route-location="@Model.location"
@@ -393,13 +400,13 @@
                 @*end filter*@
                 @if (TempData["message"] != null)
                 {
-                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-message">
+                    <div id="error-alert" class="d-flex justify-content-end position-absolute toast-mess">
                         <div class="alert alert-danger text-center"><h5>@TempData["message"]</h5></div>
                     </div>
                 }
                 @if (TempData["successMessage"] != null)
                 {
-                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-message">
+                    <div id="success-alert" class="d-flex justify-content-end position-absolute toast-mess">
                         <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
                     </div>
                 }
@@ -656,6 +663,10 @@
                                                 <a onclick="getProductDetail(@(item.ProductId))">
                                                     <i class="bi bi-pencil-square icon-table icon-edit"></i>
                                                 </a>
+                                                <h6 class="m-0 vertical">|</h6>
+                                                <a onclick="deleteProduct('@item.ProductId','@item.ProductName')">
+                                                    <i class="bi bi-trash3-fill icon-table icon-delete"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     }
@@ -779,23 +790,63 @@
         }
 
         //delete Product
-        function DeleteProduct() {
-            var productID = $("#productIDUpdate").val().toString();
-            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
-                $.ajax({
-                    url: '/WarehouseStaff/Products/Delete',
-                    type: 'GET',
-                    data: { productID: productID },
-                    success: function (data) {
-                        // handle success
-                        alert("xóa thành công sản phẩm ra khỏi danh sách");
-                        window.location.reload();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus, errorThrown);
-                    }
-                });
-            }
+        //function DeleteProduct() {
+        //    var productID = $("#productIDUpdate").val().toString();
+        //    if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+        //        $.ajax({
+        //            url: '/WarehouseStaff/Products/Delete',
+        //            type: 'GET',
+        //            data: { productID: productID },
+        //            success: function (data) {
+        //                // handle success
+        //                alert("xóa thành công sản phẩm ra khỏi danh sách");
+        //                window.location.reload();
+        //            },
+        //            error: function (jqXHR, textStatus, errorThrown) {
+        //                console.log(textStatus, errorThrown);
+        //            }
+        //        });
+        //    }
+        //}
+        function deleteProduct(id, name ) {
+            renderConfirmationModal(id, name)
+            $('#modal-confirmation').css('display', 'flex')
+        }
+
+        function renderConfirmationModal(id, name ) {
+            $('#modal-confirmation').html(`
+                                    <div class="modal-dialog ">
+                                        <div class="modal-content modal-content-confirmation">
+                                            <div class=" modal-header p-1">
+                                                <h6 class="modal-title ms-3">
+                                                    <i class="bi bi-exclamation-triangle-fill modal-confirm-content-title"></i>
+                                                    Xác nhận muốn xoá sản phẩm này?
+                                                </h6>
+                                                <h5 class="toast__close mb-0" onclick="closeModalConfirmation()">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h6>Thông tin hoá đơn:</h6>
+                                                <p>Mã sản phẩm: ${id}</p>
+                                                <p>Tên sản phẩm: ${name}</p>
+                                            </div>
+                                            <div class="modal-footer p-1">
+                                                <button type="button" class="btn btn-primary" onclick="handleDelete('${id}')">Xác nhận</button>
+                                                <button type="button" onclick=" closeModalConfirmation()" class="btn btn-outline-primary"
+                                                    data-bs-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>`)
+        }
+
+        function handleDelete(id) {
+            closeModalConfirmation()
+            window.location.href = "Products/Delete?productID=" + id;
+        }
+
+        function closeModalConfirmation() {
+            $('#modal-confirmation').css('display', 'none')
         }
 
         var delayTimer;

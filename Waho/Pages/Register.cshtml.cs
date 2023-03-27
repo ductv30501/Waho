@@ -28,16 +28,35 @@ namespace Waho.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             Employee _employee = await _context.Employees.FindAsync(Employee.UserName);
-            if (_employee == null)
+            if (_context.Employees == null)
             {
-                Employee.WahoId = 1;
-                Employee.Active = true;
-                _context.Employees.Add(Employee);
-                await _context.SaveChangesAsync();
-                Message = "tạo tài khoản thành công";
-                return RedirectToPage("./Index");
+                if (_employee == null)
+                {
+                    Employee.WahoId = 1;
+                    Employee.Active = true;
+                    Employee.Role = 1;
+                    _context.Employees.Add(Employee);
+                    await _context.SaveChangesAsync();
+                    Message = "tạo tài khoản thành công, hãy quay lại đăng nhập";
+                    TempData["successMessage"] = Message;
+                    return Page();
+                }
             }
-            Message = "tài khoản đã tồn tại";
+            else
+            {
+                if (_employee == null)
+                {
+                    Employee.WahoId = 1;
+                    Employee.Active = false;
+                    _context.Employees.Add(Employee);
+                    await _context.SaveChangesAsync();
+                    Message = "tạo tài khoản thành công, hãy liên hệ admin để được kích hoạt tài khoản";
+                    TempData["successMessage"] = Message;
+                    return Page();
+                }
+            }
+
+            TempData["message"] = "tài khoản đã tồn tại";
             return Page();
         }
     }

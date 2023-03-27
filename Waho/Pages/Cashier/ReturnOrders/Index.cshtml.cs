@@ -32,16 +32,16 @@ namespace Waho.Pages.Cashier.ReturnOrders
 
         [BindProperty(SupportsGet = true)]
         public string textSearch { get; set; }
-        public string employeeID { get; set; } = "";
+        public string employeeID { get; set; } = "all";
         [BindProperty(SupportsGet = true)]
-        public DateTime dateFrom { get; set; }
+        public string dateFrom { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public DateTime dateTo { get; set; }
+        public string dateTo { get; set; }
         private string raw_pageSize, raw_textSearch, raw_EmployeeSearch, raw_status, raw_dateFrom, raw_dateTo;
         //list employee
         public List<Employee> employees { get; set; }
-        public string status { get; set; }
+        public string status { get; set; } = "all";
         public IndexModel(Waho.WahoModels.WahoContext context, DataServiceManager dataService, Author author)
         {
             _context = context;
@@ -71,7 +71,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
             }
             else
             {
-                employeeID = "";
+                employeeID = "all";
             }
             raw_textSearch = HttpContext.Request.Query["textSearch"];
             if (!string.IsNullOrWhiteSpace(raw_textSearch))
@@ -86,18 +86,19 @@ namespace Waho.Pages.Cashier.ReturnOrders
             if (!string.IsNullOrWhiteSpace(raw_status))
             {
                 status = raw_status;
+                
             }
             else
             {
-                status = "";
+                status = "all";
             }
-            Boolean _status = status == "true" ? true : false;
+            
             raw_dateFrom = HttpContext.Request.Query["dateFrom"];
             raw_dateTo = HttpContext.Request.Query["dateTo"];
 
             if (!string.IsNullOrEmpty(raw_dateFrom))
             {
-                dateFrom = DateTime.Parse(raw_dateFrom);
+                dateFrom = raw_dateFrom;
             }
             else
             {
@@ -105,7 +106,7 @@ namespace Waho.Pages.Cashier.ReturnOrders
             }
             if (!string.IsNullOrEmpty(raw_dateTo))
             {
-                dateTo = DateTime.Parse(raw_dateTo);
+                dateTo = raw_dateTo;
             }
             else
             {
@@ -118,18 +119,33 @@ namespace Waho.Pages.Cashier.ReturnOrders
                            .Where(i => i.Active == true)
                            .Where(i => i.UserNameNavigation.EmployeeName.ToLower().Contains(textSearch.ToLower())
                                    || i.Description.ToLower().Contains(textSearch.ToLower())
-                                   || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()))
-                           .Where(i => i.UserName == employeeID || employeeID == "");
-            // check status to filter
-            if (!string.IsNullOrEmpty(status))
+                                   || i.Customer.CustomerName.ToLower().Contains(textSearch.ToLower()));
+            if (employeeID != "all")
             {
+                query = query.Where(i => i.UserName == employeeID);
+            }
+            // check status to filter
+            if (status != "all")
+            {
+                Boolean _status = status == "true" ? true : false;
                 query = query.Where(i => i.State == _status);
             }
             // compare date to filter
-            DateTime defaultDate = DateTime.Parse("0001-01-01");
-            if (!string.IsNullOrEmpty(raw_dateFrom) && !string.IsNullOrEmpty(raw_dateTo) && (dateFrom.CompareTo(defaultDate) != 0 || dateTo.CompareTo(defaultDate) != 0))
+            if (!string.IsNullOrEmpty(raw_dateFrom))
             {
-                query = query.Where(i => i.Date >= dateFrom && i.Date <= dateTo);
+                if (!string.IsNullOrEmpty(raw_dateTo))
+                {
+                    query = query.Where(i => i.Date >= DateTime.Parse(dateFrom) && i.Date <= DateTime.Parse(dateTo));
+                }
+                else
+                {
+                    query = query.Where(i => i.Date >= DateTime.Parse(dateFrom));
+                }
+
+            }
+            if (!string.IsNullOrEmpty(raw_dateTo))
+            {
+                query = query.Where(i => i.Date <= DateTime.Parse(dateTo));
             }
             TotalCount = query.Count();
             //gán lại giá trị pageIndex khi page index vợt quá pageSize khi filter

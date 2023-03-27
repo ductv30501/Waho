@@ -34,9 +34,9 @@
                         </div>
                     </a>
                 }
-                else
+                @if (employee.Role == 2)
                 {
-                    <a class="navbar-brand" asp-area="" asp-page="/Cashier/Index">
+                    <a class="navbar-brand" asp-area="" asp-page="/Cashier/Bills/Index">
                         <div class="d-flex">
                             <h2 class="mx-auto d-flex align-items-center">
                                 <img src="~/img/wahologo.png" width="50px" height="50px" />Wa<span class="primary-color">Ho</span>
@@ -96,31 +96,47 @@
                                     </ul>
                                 </li>
                             </ul>
+                            <ul class="menu">
+                                <li>
+                                    <div class="lable-navbar">
+                                        <span class="d-none d-md-block"><i class="bi bi-receipt-cutoff"></i> Thu ngân</span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <a asp-page="/Cashier/Bills/Index">
+                                                <i class="bi bi-receipt-cutoff"></i> Hóa Đơn
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-page="/Cashier/Orders/Index">
+                                                <i class="bi bi-truck"></i> Vận Đơn
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-page="/Cashier/ReturnOrders/Index">
+                                                <i class="bi bi-receipt"></i> Hoàn Đơn
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         }
-                        <ul class="menu">
-                            <li>
-                                <div class="lable-navbar">
-                                    <span class="d-none d-md-block"><i class="bi bi-receipt-cutoff"></i> Thu ngân</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <a asp-page="/Cashier/Bills/Index">
-                                            <i class="bi bi-receipt-cutoff"></i> Hóa Đơn
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a asp-page="/Cashier/Orders/Index">
-                                            <i class="bi bi-truck"></i> Vận Đơn
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a asp-page="/Cashier/ReturnOrders/Index">
-                                            <i class="bi bi-receipt"></i> Hoàn Đơn
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                        @if (employee.Role == 2)
+                        {
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item m-1">
+                                    <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Bills/Index"><p><i class="bi bi-receipt-cutoff"></i> Hóa Đơn</p></a>
+                                </li>
+                                <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                                <li class="nav-item m-1">
+                                    <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/Orders/Index"><p><i class="bi bi-truck"></i> Vận Đơn</p></a>
+                                </li>
+                                <h6 class="d-flex align-self-center m-0 vertical">|</h6>
+                                <li class="nav-item m-1">
+                                    <a class="nav-link text-dark d-flex align-self-center" asp-area="" asp-page="/Cashier/ReturnOrders/Index"><p><i class="bi bi-receipt"></i> Hoàn Đơn</p></a>
+                                </li>
+                            </ul>
+                        }
                     </div>
                     <ul class="menuUser">
                         <li>
@@ -156,7 +172,7 @@
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center" asp-page="/UserProfile/UserProfile" asp-route-userName="@employee.UserName">
                                         <i class="bi bi-person"></i>
-                                        <span>My Profile</span>
+                                        <span>Thông tin cá nhân</span>
                                     </a>
                                 </li>
                                 <li>

@@ -42,15 +42,15 @@ namespace Waho.Pages.Admin.Suppliers
 
             var req = HttpContext.Request;
             //get data form form submit 
-            string raw_supplierID = req.Form["supplierID"];
-            string raw_conpanyName = req.Form["companyName"];
-            string raw_addres = req.Form["address"];
-            string raw_city = req.Form["city"];
-            string raw_region = req.Form["region"];
-            string raw_phone = req.Form["phone"];
-            string raw_taxCode = req.Form["taxCode"];
-            string raw_branch = req.Form["branch"];
-            string raw_description = req.Form["description"];
+            string raw_supplierID = req.Form["supplierIDUpdate"];
+            string raw_conpanyName = req.Form["companyNameUpdate"];
+            string raw_addres = req.Form["addressUpdate"];
+            string raw_city = req.Form["cityUpdate"];
+            string raw_region = req.Form["regionUpdate"];
+            string raw_phone = req.Form["phoneUpdate"];
+            string raw_taxCode = req.Form["taxCodeUpdate"];
+            string raw_branch = req.Form["branchUpdate"];
+            string raw_description = req.Form["descriptionUpdate"];
 
             Supplier.SupplierId = Int32.Parse(raw_supplierID);
             //validate
@@ -70,21 +70,7 @@ namespace Waho.Pages.Admin.Suppliers
                 return RedirectToPage("./Index");
             }
             Supplier.Address = raw_addres;
-            if (string.IsNullOrEmpty(raw_city))
-            {
-                //message
-                message = "Thành phố cung cấp không được để trống";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
-            }
             Supplier.City = raw_city;
-            if (string.IsNullOrEmpty(raw_region))
-            {
-                //message
-                message = "Khu vực của cung cấp không được để trống";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
-            }
             Supplier.Region = raw_region;
             if (string.IsNullOrEmpty(raw_phone))
             {
@@ -102,46 +88,17 @@ namespace Waho.Pages.Admin.Suppliers
                 return RedirectToPage("./Index");
             }
             Supplier.TaxCode = raw_taxCode;
-            if (string.IsNullOrEmpty(raw_branch))
-            {
-                //message
-                message = "Khi nhánh của cung cấp không được để trống";
-                TempData["message"] = message;
-                return RedirectToPage("./Index");
-            }
             Supplier.Branch = raw_branch;
             Supplier.Description = raw_description;
             Supplier.Active = true;
 
             _context.Attach(Supplier).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SupplierExists(Supplier.SupplierId))
-                {
-                    //message
-                    message = "Không tìm thấy nhà cung cấp tương ứng";
-                    TempData["message"] = message;
-                    return RedirectToPage("./Index");
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
             // success message
             successMessage = "Chỉnh sửa thông tin nhà cung cấp thành công";
             TempData["successMessage"] = successMessage;
             return RedirectToPage("./Index");
         }
 
-        private bool SupplierExists(int id)
-        {
-          return _context.Suppliers.Any(e => e.SupplierId == id);
-        }
     }
 }
