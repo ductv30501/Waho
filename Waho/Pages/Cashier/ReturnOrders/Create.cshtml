@@ -187,7 +187,7 @@
                     success: function (data) {
                         // Xử lý dữ liệu trả về từ server
                         let product = "";
-                        if (data) {
+                        if (data && data.length > 0) {
                             data.map((dataItem) => {
                                 product += `<li class="result-search-items" id="pd-${dataItem.productId}" onclick="addReturnDetail('${dataItem.productId}');">
                                     <table class="col-12">
@@ -227,6 +227,12 @@
                                     </table>
                                 </li>`
                             });
+                        }else{
+                            if (searchQuery){
+                                product = `<li class="result-search-items-noresult text-center" >
+                                                <h6> Không tìm thấy sản phẩm nào</h6>
+                                           </li>`
+                            }
                         }
                         $('#product-result').html(product)
                     },
@@ -248,7 +254,7 @@
                     success: function (data) {
                         // Xử lý dữ liệu trả về từ server
                         let customer = "";
-                        if (data) {
+                        if (data && data.length > 0) {
                             data.map((dataItem) => {
                                 customer += `<li class="result-search-items" id="c-${dataItem.customerId}" onclick="fillCustomerInfo('${dataItem.customerId}');">
                                     <table class="col-12">
@@ -274,6 +280,12 @@
                                     </table>
                                 </li>`
                             });
+                        }else{
+                            if (searchQuery){
+                                customer = `<li class="result-search-items-noresult text-center" >
+                                                <h6> Không tìm thấy khách hàng tương ứng</h6>
+                                           </li>`
+                            }
                         }
                         $('#customer-result').html(customer)
                     },
