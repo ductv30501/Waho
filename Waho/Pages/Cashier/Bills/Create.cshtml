@@ -77,6 +77,7 @@
                                             <hr />
                                         </div>
                                         <div class="row">
+                                            <span id="customerValid" class="text-danger"></span>
                                             <div class="form-group col-6">
                                                 <label class="control-label">Tên khách hàng</label>
                                                 <div class="input-group">
@@ -114,7 +115,7 @@
                                                 <div class="input-group">
                                                     <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-person-badge-fill"></i></span>
                                                     <select id="option-primary" class="form-select" name="type">
-                                                        <option value="-1" class="text-center"> ----- Chọn loại khách hàng -----</option>
+                                                        <option class="text-center"> ----- Chọn loại khách hàng -----</option>
                                                         <option value="false">Cá nhân</option>
                                                         <option value="true"> Công ty</option>
                                                     </select>
@@ -284,6 +285,20 @@
         });
 
         function fillBillCustomerInfo() {
+            // Lấy danh sách tất cả các input trong form
+            var inputs = $('#insert-modal input');
+
+            // Duyệt qua từng input để kiểm tra giá trị
+            for (var i = 0; i < inputs.length; i++) {
+                var inputValue = inputs[i].value;
+
+                // Nếu giá trị là rỗng, hiển thị cảnh báo và dừng submit
+                if (inputValue === '') {
+                    $("#customerValid").html('Vui lòng nhập giá trị cho tất cả các trường!');
+                    return;
+                }
+            }
+
             $("#bill-customer-name").val($("#customer-name").val());
             $("#bill-customer-phone").val($("#customer-phone").val());
 
