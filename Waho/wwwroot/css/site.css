@@ -15,4 +15,15 @@ html {
 
 body {
   margin-bottom: 60px;
+  overflow-x:hidden;
 }
+    body::-webkit-scrollbar {
+        background-color: #f3f3f3;
+        width: 8px;
+        height: 10px;
+    }
+
+    body::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+    }

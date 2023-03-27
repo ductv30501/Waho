@@ -5,3 +5,4 @@ function modal(id, position, transform) {
     modal[position].style.transform = transform;
     box.style.transform = transform;
 }
+

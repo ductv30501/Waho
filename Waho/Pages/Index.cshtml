@@ -38,11 +38,11 @@
                 </div>
                 <div class="form-group mb-3">
                     <label  class="control-label">Mật khẩu</label>
-                     <div class="input-group mb-3">
+                     <div class="input-group mb-3 password-group">
                         <span class="input-group-text span-input-primary" id="basic-addon1"><i class="bi bi-key-fill"></i></span>
-                        <input type="password" asp-for="Employee.Password" id="ePassInput" class="form-control" placeholder="Nhập mật khẩu">
-                        <div class="eyebutton" onclick="showPassword()">
-                            <i class="bi bi-eye"></i>
+                        <input type="password" asp-for="Employee.Password" id="EpassInput" class="form-control" placeholder="Nhập mật khẩu">
+                        <div id="ePassInput" class="eyebutton input-group-text " onclick="showPassword()">
+                            <i class="bi bi-eye-slash-fill eye-icon"></i>
                         </div>
                     </div>
                     <span asp-validation-for="Employee.Password" class="text-danger"></span>
@@ -60,15 +60,15 @@
 </div>
 <script>
     function showPassword() {
-        var passwordType = $('#ePassInput').attr('type');
+        var passwordType = $('#EpassInput').attr('type');
         if (passwordType === 'password') {
-            $('#ePassInput').html("");
-            $('#ePassInput').html("<i class=\"bi bi-eye-slash\"></i>");
-            $('#ePassInput').attr('type', 'text');
+            $('#ePassInput').html('');
+            $('#ePassInput').html('<i class="bi bi-eye-fill"></i>');
+            $('#EpassInput').attr('type', 'text');
         } else {
-            $('#ePassInput').html("");
-            $('#ePassInput').html("<i class=\"bi bi-eye\"></i>");
-            $('#ePassInput').attr('type', 'password');
+            $('#ePassInput').html('');
+            $('#ePassInput').html(`<i class="bi bi-eye-slash-fill eye-icon"></i>`);
+            $('#EpassInput').attr('type', 'password');
         }
     }
 </script>
