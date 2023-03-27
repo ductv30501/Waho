@@ -13,7 +13,7 @@ namespace Waho.Pages
         {
             _context = context;
         }
-        [BindProperty] public Employee Employee { get; set; } = default!;
+        [BindProperty] public Employee Employee { get; set; }
         [BindProperty]
         public string Message { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)

@@ -47,44 +47,60 @@
             <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
         </div>
     }
-    <div class="row">
-        <div class="col-lg-2" style="background-color: #fff; border-radius: 10px; padding:10px;margin-right: 10px">
-            <div>
-                <form method="post" asp-page="./Details" id="inventorySheetForm">
-                    <div class="wt-widgettitle">
-                        <h2>Thông tin hóa đơn hoàn</h2>
-                    </div>
-                    <div class="wt-widgetcontent">
-                        <div class="wt-categoriescontent">
-                            <label>Tên khách hàng</label>
-                            <div>@Model.ReturnOrder.Customer.CustomerName</div>
-                            <input name="customerID" type="hidden" value="@Model.ReturnOrder.CustomerId" />
-                            <label>Người tạo đơn</label>
-                            <div>@Model.ReturnOrder.UserNameNavigation.EmployeeName</div>
+    <div class="bg-waho-white">
+        <div class="my-4">
+            <div class="d-flex mt-2">
+                <form class="form-container col-3 p-3" method="post" asp-page="./Details" id="inventorySheetForm">
+                    <div id="bill-info">
+                    <lable >
+                        <h3>Thông tin hoàn đơn @Model.ReturnOrder.ReturnOrderId</h3>
+                    </lable>
+                    <hr/>
+                        <div class="form-group">
+                            <label class="control-label">Mã hóa đơn</label>
+                            <input class="form-control" value="@Model.ReturnOrder.BillId" readonly />
+                        </div>
+                        <div class="form-group">
+                                <label class="control-label">Tên khách hàng</label>
+                                <input class="form-control" value="@Model.ReturnOrder.Customer.CustomerName" readonly/>
+                                <input name="customerID" type="hidden" value="@Model.ReturnOrder.CustomerId" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Người tạo đơn</label>
+                            <input class="form-control" value="@Model.ReturnOrder.UserNameNavigation.EmployeeName" readonly />
                             <input name="employeeID" type="hidden" value="@Model.ReturnOrder.UserName" />
                             <input name="returnOrderID" type="hidden" value="@Model.ReturnOrder.ReturnOrderId" />
-                            <label>Số tiền cần trả khách</label>
-                            <input name="payCustomer" type="text" readonly value="@Model.ReturnOrder.PayCustomer" />
-                            <label>Số tiền đã trả khách</label>
-                            <input name="paidCustomer" type="text" value="@Model.ReturnOrder.PaidCustomer" />
-                            <label>Trạng thái</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Số tiền cần trả khách</label>
+                            <input class="form-control" name="payCustomer" type="text" value="@Model.ReturnOrder.PayCustomer" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Số tiền đã trả khách</label>
+                            <input class="form-control" name="paidCustomer" type="text" value="@Model.ReturnOrder.PaidCustomer" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Trạng thái</label>
                             <div class="form-check d-flex">
                                 <input name="state" type="checkbox" class="form-check-input" style="width:20px; height:20px; margin-left:10px; margin-right:10px;border:1px solid #FF9966" value="true" @(Model.ReturnOrder.State == true ? "checked":"") />
                                 <label class="form-check-label">Đã xử lý</label>
                             </div>
-                            <label>Ngày tạo</label>
-                            <input name="date" type="datetime" value="@Model.ReturnOrder.Date" />
-                            <label>Nội dung</label>
-                            <input name="description" asp-for="@(Model.ReturnOrder.Description)" value="@(Model.ReturnOrder.Description)" />
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label">Ngày tạo</label>
+                            <input class="form-control" name="date" type="datetime" value="@Model.ReturnOrder.Date" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Nội dung</label>
+                            <input class="form-control" type="text" name="description" value="@Model.ReturnOrder.Description" />
+                        </div>
                     <div class="form-group text-center mt-4">
                         <a class="btn btn-outline-primary me-2" asp-page="./Index"> Quay lại</a>
                         <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
                     </div>
+                    </div>
                 </form>
-            </div>
-        </div>
+            
         <div class="col-lg-9" style="overflow-x: auto; background-color: #fff; border-radius: 10px; padding:10px;margin-left:10px">
             @if (Model.TotalCount > 0)
             {
@@ -148,6 +164,8 @@
             {
                 <div class="text-center">Không có phiếu hoàn đơn nào</div>
             }
+        </div>
+            </div>
         </div>
     </div>
     <script src="../../../admin/js/tabler.min.js" defer></script>

@@ -59,9 +59,9 @@ namespace Waho.Pages.WarehouseStaff.Products
         public string location { get; set; } = "all";
         //filter price range 
         [BindProperty(SupportsGet = true)]
-        public int priceTo { get; set; } = 0;
+        public int priceTo { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int priceFrom { get; set; } = 0;
+        public int priceFrom { get; set; }
         [BindProperty(SupportsGet = true)]
         public string inventoryLevel { get; set; } = "all";
         public string supplierName { get; set; } = "all";
@@ -104,24 +104,24 @@ namespace Waho.Pages.WarehouseStaff.Products
                 location = "all";
             }
             // price range
-            string raw_priceFrom = HttpContext.Request.Query["priceFrom"];
-            if (!string.IsNullOrWhiteSpace(raw_priceFrom))
-            {
-                priceFrom = int.Parse(raw_priceFrom);
-            }
-            else
-            {
-                priceFrom = 0;
-            }
-            string raw_priceTo = HttpContext.Request.Query["priceTo"];
-            if (!string.IsNullOrWhiteSpace(raw_priceTo))
-            {
-                priceFrom = int.Parse(raw_priceTo);
-            }
-            else
-            {
-                priceFrom = 0;
-            }
+            //string raw_priceFrom = HttpContext.Request.Query["priceFrom"];
+            //if (!string.IsNullOrWhiteSpace(raw_priceFrom))
+            //{
+            //    priceFrom = int.Parse(raw_priceFrom);
+            //}
+            //else
+            //{
+            //    priceFrom = 0;
+            //}
+            //string raw_priceTo = HttpContext.Request.Query["priceTo"];
+            //if (!string.IsNullOrWhiteSpace(raw_priceTo))
+            //{
+            //    priceFrom = int.Parse(raw_priceTo);
+            //}
+            //else
+            //{
+            //    priceFrom = 0;
+            //}
             // inventory level
             string raw_inventoryLevel = HttpContext.Request.Query["inventoryLevel"];
             if (!string.IsNullOrWhiteSpace(raw_inventoryLevel))
