@@ -31,7 +31,7 @@ namespace Waho.DataService
         {
             return _context.Employees.Where(e => e.Active == true).FirstOrDefault(emp => emp.UserName == userName);
         }
-        public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch,string title)
+        public List<Employee> getEmployeePaging(int pageIndex, int pageSize, string textSearch,string title,string status)
         {
             List<Employee> employees = new List<Employee>();
             var query = _context.Employees.Where(s => s.Active == true || s.Active == false);
@@ -42,6 +42,10 @@ namespace Waho.DataService
                                     || e.Phone.ToLower().Contains(textSearch) || e.Region.ToLower().Contains(textSearch)
                                     || e.Address.ToLower().Contains(textSearch) || e.HireDate.ToString().ToLower().Contains(textSearch)
                                     || e.Role.ToString().Contains(textSearch));
+            }
+            if (status != "all")
+            {
+                query = query.Where(c => (c.Active.ToString().Contains(status)));
             }
             if (title != "all")
             {

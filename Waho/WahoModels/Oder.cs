@@ -20,7 +20,7 @@ namespace Waho.WahoModels
         public DateTime OrderDate { get; set; }
         public DateTime? EstimatedDate { get; set; }
         public decimal Total { get; set; }
-        public decimal Deposit { get; set; }
+        public decimal? Deposit { get; set; }
         public bool? Active { get; set; }
 
         public virtual Customer Customer { get; set; }

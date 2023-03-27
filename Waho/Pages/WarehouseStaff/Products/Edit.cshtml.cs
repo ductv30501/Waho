@@ -59,10 +59,11 @@ namespace Waho.Pages.WarehouseStaff.Products
             string raw_supplierID = req.Form["supplierIDUpdate"];
 
             Product.ProductId = Int32.Parse(raw_productID);
+            Product = _context.Products.Find(Product.ProductId);
             Product.ProductName = raw_productName;
-            if (string.IsNullOrWhiteSpace(raw_importPrice))
+            if (!string.IsNullOrWhiteSpace(raw_importPrice))
             {
-                int import_Price = Int32.Parse(raw_importPrice);
+                int import_Price = int.Parse(raw_importPrice);
                 if (import_Price > 0)
                 {
                     Product.ImportPrice = import_Price;
@@ -75,9 +76,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                     return RedirectToPage("./Index");
                 }
             }
-            if (string.IsNullOrWhiteSpace(raw_unitInStock))
+            if (!string.IsNullOrWhiteSpace(raw_unitInStock))
             {
-                int unitInStock = Int32.Parse(raw_unitInStock);
+                int unitInStock = int.Parse(raw_unitInStock);
                 if (unitInStock > 0)
                 {
                     Product.UnitInStock = unitInStock;
@@ -90,12 +91,11 @@ namespace Waho.Pages.WarehouseStaff.Products
                     return RedirectToPage("./Index");
                 }
             }
-            if (string.IsNullOrWhiteSpace(raw_unitPrice))
+            if (!string.IsNullOrWhiteSpace(raw_unitPrice))
             {
-                int unitPrice = Int32.Parse(raw_unitPrice);
-                if (unitPrice > 0)
+                if (int.Parse(raw_unitPrice) > 0)
                 {
-                    Product.UnitPrice = unitPrice;
+                    Product.UnitPrice = int.Parse(raw_unitPrice);
                 }
                 else
                 {
@@ -106,9 +106,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                 }
             }
             Product.Trademark = raw_trademark;
-            if (string.IsNullOrWhiteSpace(raw_quantity))
+            if (!string.IsNullOrWhiteSpace(raw_quantity))
             {
-                int quantity = Int32.Parse(raw_quantity);
+                int quantity = int.Parse(raw_quantity);
                 if (quantity > 0)
                 {
                     Product.Quantity = quantity;
@@ -121,12 +121,11 @@ namespace Waho.Pages.WarehouseStaff.Products
                     return RedirectToPage("./Index");
                 }
             }
-            if (string.IsNullOrWhiteSpace(raw_weight))
+            if (!string.IsNullOrWhiteSpace(raw_weight))
             {
-                int weight = Int32.Parse(raw_weight);
-                if (weight > 0)
+                if (int.Parse(raw_weight) > 0)
                 {
-                    Product.Weight = weight;
+                    Product.Weight = int.Parse(raw_weight);
                 }
                 else
                 {
@@ -139,9 +138,9 @@ namespace Waho.Pages.WarehouseStaff.Products
             Product.Location = raw_location;
             Product.Description = raw_description;
             Product.Unit = raw_unit;
-            if (string.IsNullOrWhiteSpace(raw_inventoryLevelMin))
+            if (!string.IsNullOrWhiteSpace(raw_inventoryLevelMin))
             {
-                int inventoryLevelMin = Int32.Parse(raw_inventoryLevelMin);
+                int inventoryLevelMin = int.Parse(raw_inventoryLevelMin);
                 if (inventoryLevelMin > 0)
                 {
                     Product.InventoryLevelMin = inventoryLevelMin;
@@ -154,9 +153,9 @@ namespace Waho.Pages.WarehouseStaff.Products
                     return RedirectToPage("./Index");
                 }
             }
-            if (string.IsNullOrWhiteSpace(raw_inventoryLevelMax))
+            if (!string.IsNullOrWhiteSpace(raw_inventoryLevelMax))
             {
-                int inventoryLevelMax = Int32.Parse(raw_inventoryLevelMax);
+                int inventoryLevelMax = int.Parse(raw_inventoryLevelMax);
                 if (inventoryLevelMax > 0)
                 {
                     Product.InventoryLevelMax = inventoryLevelMax;
