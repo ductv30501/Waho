@@ -109,9 +109,11 @@ namespace Waho.Pages.WarehouseStaff.Products
                 catch (Exception ex)
                 {
                     message = ex.Message;
+                    TempData["message"] = "Bạn tải lên sai file, vui lòng nhập đúng theo mẫu";
+                    return RedirectToPage("./Index");
                 }
             }
-            return Page();
+            //return Page();
 
 
         }

@@ -174,7 +174,7 @@
         <div class="mt-4 position-relative bodydiv">
             <form method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-title="@Model.title" style="margin-bottom: 20px; ">
                 <div class="d-flex">
-                    <h3 class="me-4">Nhân viên</h3>
+                    <h3 class="col-2 me-4">Nhân viên</h3>
                     <div class="form-group flex-grow-1 me-4">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" asp-for="textSearch" placeholder="Nhập thông tin nhân viên" aria-label="Recipient's username" aria-describedby="basic-addon2">
@@ -183,7 +183,7 @@
                     </div>
                     <div class="form-group me-4">
                         <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 1, 'scale(1)');">
-                            <i class="bi bi-plus-circle-fill" asp-page="Create"> Thêm mới</i>
+                            <i class="bi bi-plus-circle-fill" asp-page="Create"> </i>Thêm mới
                         </button>
                     </div>
                 </div>

@@ -18,6 +18,7 @@
                 <div class="col-md-6">
                     <h4 class="text-right">Thêm phiếu kiểm kho</h4>
                 </div>
+                <hr/>
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="labels">Người tạo phiếu</label>
@@ -53,7 +54,7 @@
         <div class="mt-4 position-relative bodydiv">
         <form id="InventoryIndexForm" method="get" asp-page="./Index" asp-route-pageIndex="@Model.pageIndex" asp-route-pageSize="@Model.pageSize"
                             asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID"
-                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo" style="margin-bottom: 20px; ">
+                  asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo" style="margin-bottom: 20px; ">
             <div class="d-flex">
                 <h3 class="col-2 me-4">Kiểm kho</h3>
                 <div class="form-group flex-grow-1 me-4">
@@ -204,21 +205,21 @@
                                     {
                                         <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex - 1)" asp-route-pageSize="@Model.pageSize"
                                             asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID"
-                                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Trước</a>
+                                            asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo">Trước</a>
                                         </li>
                                     }
                                     @for (int i = 1; i <= Math.Ceiling(Model.TotalCount / (double)Model.pageSize); i++)
                                     {
                                         <li class="page-item @(Model.pageIndex == i ? "active" : "") link-active"><a class="page-link link-paging" asp-page="./Index"
                                             asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch"
-                                            asp-route-employeeID="@Model.employeeID" asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">@i</a>
+                                           asp-route-employeeID="@Model.employeeID" asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo">@i</a>
                                         </li>
                                     }
                                     @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))
                                     {
                                         <li class="page-item"><a class="page-link link-paging" asp-page="./Index" asp-route-pageIndex="@(Model.pageIndex + 1)" asp-route-pageSize="@Model.pageSize"
                                             asp-route-textSearch="@Model.textSearch" asp-route-employeeID="@Model.employeeID"
-                                            asp-route-from="@Model.dateFrom" asp-route-to="@Model.dateTo">Sau</a>
+                                           asp-route-dateFrom="@Model.dateFrom" asp-route-dateTo="@Model.dateTo">Sau</a>
                                         </li>
                                     }
                                 </ul>

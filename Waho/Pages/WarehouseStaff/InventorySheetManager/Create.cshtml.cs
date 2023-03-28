@@ -136,9 +136,11 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
                 catch (Exception ex)
                 {
                     message = ex.Message;
+                    TempData["message"] = "Bạn đã tải lên không đúng file, vui lòng nhập đúng theo mẫu";
+                    return RedirectToPage("./Index");
                 }
             }
-            return Page();
+            //return Page();
 
         }
         private List<InventorySheetDetail> ReadExcel(string path)

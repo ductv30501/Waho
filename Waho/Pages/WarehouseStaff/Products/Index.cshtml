@@ -121,7 +121,7 @@
                 </div>
                 <div class="text-center mt-5">
                     <button id="btnSubmit" class="btn btn-primary" type="submit">Thêm sản phẩm</button>
-                    <button class="btn btn-primary" type="button" onclick="modal('insert-modal', 0, 'scale(0)')">Đóng</button>
+                    <button class="btn btn-outline-primary" type="button" onclick="modal('insert-modal', 0, 'scale(0)')">Đóng</button>
                 </div>
             </form>
         </div>
@@ -187,7 +187,7 @@
                 </div>
             </div>
             <div class="text-center mt-5">
-                <button class="btn btn-primary" type="button" onclick="modal('more-modal', 1, 'scale(0)')">Đóng</button>
+                <button class="btn btn-outline-primary" type="button" onclick="modal('more-modal', 1, 'scale(0)')">Đóng</button>
             </div>
         </div>
     </div>
@@ -301,7 +301,7 @@
                 <div class="text-center mt-5">
                     <button id="btnSubmit" class="btn btn-primary" type="submit">Lưu</button>
                     @*<button id="btnSubmit" class="btn btn-primary" type="button" onclick="DeleteProduct()">Xóa</button>*@
-                    <button class="btn btn-primary" type="button" onclick="modal('update-modal', 2, 'scale(0)')">Đóng</button>
+                    <button class="btn btn-outline-primary" type="button" onclick="modal('update-modal', 2, 'scale(0)')">Đóng</button>
                 </div>
             </form>
         </div>
@@ -666,7 +666,7 @@
                                                 <a class="page-link link-paging" asp-page="./Index"
                                            asp-route-pageIndex="@i" asp-route-pageSize="@Model.pageSize" asp-route-textSearch="@Model.textSearch" asp-route-subCategory="@Model.subCategoryID"
                                            asp-route-location="@Model.location" asp-route-priceFrom="@Model.priceFrom" asp-route-priceTo="@Model.priceTo"
-                                           asp-route-inventoryLevel="@Model.inventoryLevel" asp-route-supplierName="@Model.supplierName">@i</a>
+                                           asp-route-inventoryLevel="@Model.inventoryLevel" asp-route-supplierName="@Model.supplierName" >@i</a>
                                             </li>
                                         }
                                         @if (Model.pageIndex < Math.Ceiling(Model.TotalCount / (double)Model.pageSize))

@@ -88,22 +88,22 @@ namespace Waho.Pages.WarehouseStaff.InventorySheetManager
             raw_dateFrom = HttpContext.Request.Query["dateFrom"];
             raw_dateTo = HttpContext.Request.Query["dateTo"];
 
-            if (!string.IsNullOrEmpty(raw_dateFrom))
-            {
+            //if (!string.IsNullOrEmpty(raw_dateFrom))
+            //{
                 dateFrom = raw_dateFrom;
-            }
-            else
-            {
-                raw_dateFrom = "";
-            }
-            if (!string.IsNullOrEmpty(raw_dateTo))
-            {
+            //}
+            //else
+            //{
+            //    raw_dateFrom = "";
+            //}
+            //if (!string.IsNullOrEmpty(raw_dateTo))
+            //{
                 dateTo = raw_dateTo;
-            }
-            else
-            {
-                raw_dateTo = "";
-            }
+            //}
+            //else
+            //{
+            //    raw_dateTo = "";
+            //}
 
             // get list WareHouse Employee
             employees = await _context.Employees.Where(e => e.Role != 2).Where(e => e.Active== true).ToListAsync();

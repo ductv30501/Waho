@@ -182,10 +182,7 @@ namespace Waho.WahoModels
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
-                entity.Property(e => e.Active)
-                    .IsRequired()
-                    .HasColumnName("active")
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.Active).HasColumnName("active");
 
                 entity.Property(e => e.Address)
                     .HasMaxLength(50)
@@ -266,7 +263,7 @@ namespace Waho.WahoModels
             modelBuilder.Entity<InventorySheetDetail>(entity =>
             {
                 entity.HasKey(e => new { e.InventorySheetId, e.ProductId })
-                    .HasName("PK__Inventor__30B6C99160DCE9FB");
+                    .HasName("PK__Inventor__30B6C991F88FF862");
 
                 entity.ToTable("InventorySheetDetail");
 
@@ -280,13 +277,13 @@ namespace Waho.WahoModels
                     .WithMany(p => p.InventorySheetDetails)
                     .HasForeignKey(d => d.InventorySheetId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__inven__5441852A");
+                    .HasConstraintName("FK__Inventory__inven__4CA06362");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.InventorySheetDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Inventory__produ__5535A963");
+                    .HasConstraintName("FK__Inventory__produ__4D94879B");
             });
 
             modelBuilder.Entity<Oder>(entity =>
@@ -331,6 +328,7 @@ namespace Waho.WahoModels
                     .HasColumnName("total");
 
                 entity.Property(e => e.UserName)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userName");
 
@@ -501,7 +499,7 @@ namespace Waho.WahoModels
             modelBuilder.Entity<ReturnOrderProduct>(entity =>
             {
                 entity.HasKey(e => new { e.ProductId, e.ReturnOrderId })
-                    .HasName("PK__ReturnOr__5C6645AC82D41644");
+                    .HasName("PK__ReturnOr__5C6645AC4EC21971");
 
                 entity.ToTable("ReturnOrderProduct");
 
@@ -517,13 +515,13 @@ namespace Waho.WahoModels
                     .WithMany(p => p.ReturnOrderProducts)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReturnOrd__produ__5BE2A6F2");
+                    .HasConstraintName("FK__ReturnOrd__produ__5629CD9C");
 
                 entity.HasOne(d => d.ReturnOrder)
                     .WithMany(p => p.ReturnOrderProducts)
                     .HasForeignKey(d => d.ReturnOrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReturnOrd__retur__5CD6CB2B");
+                    .HasConstraintName("FK__ReturnOrd__retur__571DF1D5");
             });
 
             modelBuilder.Entity<Shipper>(entity =>
