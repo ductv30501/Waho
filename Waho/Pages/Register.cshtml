@@ -32,7 +32,7 @@
             @if (TempData["successMessage"] != null)
             {
                 <div id="success-alert" class="d-flex justify-content-end position-absolute toast-mess">
-                    <div class="alert alert-success text-center"><h5>@TempData["SuccessMessage"]</h5></div>
+                    <div class="alert alert-success text-center"><h5>@TempData["successMessage"]</h5></div>
                 </div>
             }
             <hr />
@@ -44,6 +44,7 @@
                         <div class="input-group">
                             <span class="input-group-text span-input-primary"><i class="bi bi-people-fill"></i></span>
                             <input type="text" asp-for="Employee.EmployeeName" id="eNameInput" class="form-control" placeholder="Nhập tên người dùng">
+                            <input type="hidden" asp-for="Employee.Active" value="false" class="form-control" placeholder="Nhập tên người dùng">
                         </div>
                         <span asp-validation-for="Employee.EmployeeName" class="text-danger"></span>
                     </div>
