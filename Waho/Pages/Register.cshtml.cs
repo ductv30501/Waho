@@ -13,7 +13,8 @@ namespace Waho.Pages
         {
             _context = context;
         }
-        [BindProperty] public Employee Employee { get; set; } = default!;
+        [BindProperty] 
+        public Employee Employee { get; set; } = default!;
         [BindProperty]
         public string Message { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -55,9 +56,6 @@ namespace Waho.Pages
                     return Page();
                 }
             }
-
-            TempData["message"] = "tài khoản đã tồn tại";
-            return Page();
         }
     }
 }
